@@ -1,0 +1,37 @@
+﻿@using TCU.English
+@using TCU.English.Utils
+@using TCU.English.Areas.Guest.Controllers
+@model TCU.English.Areas.Guest.Models.UserLogin
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Guest/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="row align-items-center py-5">
+    <div class="col-5 col-lg-7 mx-auto mb-5 mb-lg-0">
+        <div class="pr-lg-5"><img src="img/illustration.svg" alt="" class="img-fluid"></div>
+    </div>
+    <div class="col-lg-5 px-lg-4">
+        <h1 class="text-base text-primary text-uppercase mb-4">@Config.ProjectName</h1>
+        <h2 class="mb-4">Welcome to CMS!</h2>
+        <p class="text-muted">Please authentication before you can continue.</p>
+        @using (@Html.BeginForm(nameof(AuthenticationController.LogIn), NameUtils.ControllerName<AuthenticationController>(), FormMethod.Post, new { @id = "loginForm", @class = "mt-4" }))
+        {
+            <div class="form-group mb-4">
+                @Html.TextBoxFor(x => x.Identity, new { @type = "text", @placeholder = "Username", @class = "form-control border-0 shadow form-control-lg" })
+            </div>
+            <div class="form-group mb-4">
+                @Html.PasswordFor(x => x.Password, new { placeholder = "Password", @class = "form-control border-0 shadow form-control-lg text-violet" })
+            </div>
+            <div class="form-group mb-4">
+                <div class="custom-control custom-checkbox">
+                    @*<input id="customCheck1" type="checkbox" checked class="custom-control-input">*@
+                    @Html.CheckBoxFor(x => x.IsRemember, new { @class = "custom-control-input", @id = "customCheck1", @checked = "checked" })
+                    <label for="customCheck1" class="custom-control-label">Remember Me</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary shadow px-5">Log in</button>
+        }
+    </div>
+</div>
+<p class="mt-5 mb-0 text-gray-400 text-center">Design by <a href="@Config.ProjectPortfolioAddress" class="external text-gray-400">@Config.ProjectAuthor</a></p>
