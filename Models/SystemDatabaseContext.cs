@@ -6,7 +6,7 @@ namespace TCU.English.Models
     // https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/migrations?view=aspnetcore-3.1
     // dotnet tool install --global dotnet-ef
     // dotnet ef migrations add InitialCreate.Version.1
-    // dotnet ef database update InitialCreate.Version.1
+    // dotnet ef database update InitialCreate.Version.1 
     // dotnet ef database drop -f (Lệnh xóa database - cực kỳ nguy hiển)
     // dotnet ef migrations remove
     public class SystemDatabaseContext : DbContext
