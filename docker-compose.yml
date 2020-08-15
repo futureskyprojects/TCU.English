@@ -1,19 +1,21 @@
 ﻿version: "3"
 services:
   db:
+    container_name: TCU.English.Database
     image: mysql:5.7
     volumes:
-      - db_data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: tcu_english
-      MYSQL_DATABASE: tcu_english
-      MYSQL_USER: tcu_english
-      MYSQL_PASSWORD: tcu_english
+      #MYSQL_DATABASE: tcu_english
+      #MYSQL_USER: tcu_english
+      #MYSQL_PASSWORD: tcu_english
   tcuenglishapp:
+    container_name: TCU.English.System
     build: .
     depends_on:
       - db
-    restart: always
-volumes:
-  db_data:
+    links:
+      - db
+    #restart: always

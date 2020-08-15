@@ -13,6 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="entrypoint.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="entrypoint.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
@@ -36,7 +44,6 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
