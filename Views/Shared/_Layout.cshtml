@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <base href="/" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@ViewData["Title"] - TCU.English</title>
@@ -29,9 +30,7 @@
 <body>
     @RenderBody()
     <!-- navbar-->
-    @{
-        @await Component.InvokeAsync("HeaderMenu");
-    }
+    @await Component.InvokeAsync("HeaderMenu")
     <div class="d-flex align-items-stretch">
         <div id="sidebar" class="sidebar py-3">
             <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MAIN</div>

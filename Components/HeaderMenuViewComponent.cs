@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace TCU.English.Components
 {
+    [ViewComponent]
     public class HeaderMenuViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke()
         {
+            //return View($"/Views/Shared/{Utils.NameUtils.ViewComponentName<HeaderMenuViewComponent>()}/Default.cshtml");
+            //return View($"~/Views/Shared/{Utils.NameUtils.ViewComponentName<HeaderMenuViewComponent>()}/Default.cshtml");
             return View();
         }
     }

@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TCU.English.Areas.Guest.Models;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
 using TCU.English.Utils;
 
-namespace TCU.English.Areas.Guest.Controllers
+namespace TCU.English.Controllers
 {
     [AllowAnonymous]
-    [Area(nameof(Guest))]
     public class AuthenticationController : Controller
     {
         private readonly UserManager _UserManager;
@@ -42,7 +40,7 @@ namespace TCU.English.Areas.Guest.Controllers
         }
 
         // https://viblo.asia/p/su-dung-cookie-authentication-trong-aspnet-core-djeZ1VG8lWz
-        public async Task<IActionResult> LogIn(UserLogin userLogin)
+        public async Task<IActionResult> LogIn(Models.UserLogin userLogin)
         {
             if (ModelState.IsValid)
             {

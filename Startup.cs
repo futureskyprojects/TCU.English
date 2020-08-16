@@ -24,6 +24,11 @@ namespace TCU.English
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?tabs=aspnetcore2x&view=aspnetcore-3.1#iis-configuration
+            services.Configure<IISServerOptions>(options =>
+            {
+                //options.AutomaticAuthentication = false;
+            });
             // Thiết lập thêm CROS (https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1)
             services.AddCors();
 
@@ -81,14 +86,13 @@ namespace TCU.English
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapAreaControllerRoute(
-                    name: "AdminAreaRoute",
-                    areaName: nameof(Areas.Admin),
-                    pattern: nameof(Areas.Admin) + "/{controller:slugify=Login}/{action:slugify=Index}/{id:slugify?}");
+                //endpoints.MapAreaControllerRoute(
+                //    name: "AdminAreaRoute",
+                //    areaName: nameof(Areas.Admin),
+                //    pattern: nameof(Areas.Admin) + "/{controller:slugify=Login}/{action:slugify=Index}/{id:slugify?}");
 
-                endpoints.MapAreaControllerRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    areaName: nameof(Areas.Guest),
                     pattern: "{controller:slugify}/{action:slugify}/{id:slugify?}",
                     defaults: new { controller = "Home", action = "Index" });
             });

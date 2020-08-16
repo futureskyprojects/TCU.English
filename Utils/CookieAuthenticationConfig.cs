@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using TCU.English.Areas.Guest.Controllers;
+using TCU.English.Controllers;
 
 namespace TCU.English.Utils
 {

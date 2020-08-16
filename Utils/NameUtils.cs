@@ -11,5 +11,9 @@ namespace TCU.English.Utils
         {
             return typeof(T).Name.Replace("Controller", "");
         }
+        public static string ViewComponentName<T>()
+        {
+            return typeof(T).Name.Replace("ViewComponent", "");
+        }
     }
 }

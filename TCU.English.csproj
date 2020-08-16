@@ -9,15 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\**" />
+    <Content Remove="Areas\**" />
+    <EmbeddedResource Remove="Areas\**" />
+    <None Remove="Areas\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Shared\Components\HeaderMenu\Default.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="entrypoint.sh" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="entrypoint.sh" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,12 +41,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\" />
   </ItemGroup>
 
   <ItemGroup>

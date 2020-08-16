@@ -1,9 +1,8 @@
 ﻿@using TCU.English
 @using TCU.English.Utils
 @using System.Security.Claims
-@using TCU.English.Areas.Guest.Controllers
+@using TCU.English.Controllers
 @{
-    Layout = null;
     string avatar = User.ExtractValue(CustomClaimTypes.Avatar);
     string firstName = User.ExtractValue(ClaimTypes.GivenName);
     string lastName = User.ExtractValue(ClaimTypes.Surname);

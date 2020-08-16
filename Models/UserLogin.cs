@@ -1,4 +1,4 @@
-﻿namespace TCU.English.Areas.Guest.Models
+﻿namespace TCU.English.Models
 {
     public class UserLogin
     {

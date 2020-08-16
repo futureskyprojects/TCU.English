@@ -9,7 +9,7 @@ using TCU.English.Models;
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    [Migration("20200815145939_InitialCreate.Version.1")]
+    [Migration("20200816052956_InitialCreate.Version.1")]
     partial class InitialCreateVersion1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
