@@ -60,8 +60,8 @@ namespace TCU.English.Data
                 Username = "administration",
                 Email = "administration@tcu.english.edu.vn",
                 HashPassword = PasswordHasher.HashPassword(Base64Utils.Base64Decode("MTIzNDU2")),
-                FirstName = "TCU English",
-                LastName = "Administration",
+                FirstName = "System",
+                LastName = "Admin",
                 Avatar = "http://www.tcu.edu.vn/sites/www/dataupload/files/cms/trung%20tam%201.png",
                 BirthDay = DateTime.Now,
                 Active = true

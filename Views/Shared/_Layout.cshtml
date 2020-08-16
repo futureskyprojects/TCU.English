@@ -4,7 +4,7 @@
     <base href="/" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@ViewData["Title"] - TCU.English</title>
+    <title>@ViewData["Title"] | TCU.English</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
@@ -48,10 +48,18 @@
     <script src="vendor/popper.js/umd/popper.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    @* <script src="vendor/chart.js/Chart.min.js"></script> *@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <script src="js/charts-home.js"></script>
+    @* <script src="js/charts-home.js"></script> *@
     <script src="js/front.js"></script>
+    <!-- Javascript for make menu item active -->
+    <script>
+        $('a.sidebar-link').each(function(i, obj) {
+            if (obj.attributes['href'].value == $(location).attr('href').split('#')[0].replace(window.location.origin,'')) {
+                $(obj).addClass('active');
+            }
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
