@@ -22,22 +22,22 @@ namespace TCU.English.Models
         public static UserType NormalUser = new UserType
         {
             UserTypeName = nameof(ROLE_NORMAL_USER),
-            Description = "Người dùng, học viên thông thường"
+            Description = "Learner"
         };
         public static UserType ManagerUser = new UserType
         {
             UserTypeName = nameof(ROLE_MANAGER_USER),
-            Description = "Quản lý người dùng"
+            Description = "User Manager"
         };
         public static UserType All = new UserType
         {
             UserTypeName = nameof(ROLE_ALL),
-            Description = "Quản lý hệ thống"
+            Description = "System Manager"
         };
         public static UserType ManagerLibrary = new UserType
         {
             UserTypeName = nameof(ROLE_MANAGER_LIBRARY),
-            Description = "Quản lý thư viện câu hỏi"
+            Description = "Question Library Manager"
         };
         //==================================================//
 

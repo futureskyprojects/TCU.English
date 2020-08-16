@@ -1,1 +1,157 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="pt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-5 mb-lg-0">
+                <div class="card-header">
+                    <h2 class="h6 mb-0 text-uppercase">Skills assessment</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-gray mb-5">Summarize your skills through tests.</p>
+                    <div class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row">
+                        <div class="left d-flex align-items-center">
+                            <div class="icon icon-lg shadow mr-3 text-gray"><i class="fab fa-dropbox"></i></div>
+                            <div class="text">
+                                <h6 class="mb-0 d-flex align-items-center"> <span>Listening</span><span class="dot dot-sm ml-2 bg-violet"></span></h6><small class="text-gray">Evaluate your listening skills</small>
+                            </div>
+                        </div>
+                        <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-violet">
+                            <h5>10/10</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row">
+                        <div class="left d-flex align-items-center">
+                            <div class="icon icon-lg shadow mr-3 text-gray"><i class="fab fa-apple"></i></div>
+                            <div class="text">
+                                <h6 class="mb-0 d-flex align-items-center"> <span>Reading</span><span class="dot dot-sm ml-2 bg-green"></span></h6><small class="text-gray">Evaluate your reading skills</small>
+                            </div>
+                        </div>
+                        <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-green">
+                            <h5>10/10</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row">
+                        <div class="left d-flex align-items-center">
+                            <div class="icon icon-lg shadow mr-3 text-gray"><i class="fas fa-shopping-basket"></i></div>
+                            <div class="text">
+                                <h6 class="mb-0 d-flex align-items-center"> <span>Speaking</span><span class="dot dot-sm ml-2 bg-blue"></span></h6><small class="text-gray">Evaluate your speaking skills</small>
+                            </div>
+                        </div>
+                        <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-blue">
+                            <h5>0/0</h5>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-start align-items-sm-center mb-4 flex-column flex-sm-row">
+                        <div class="left d-flex align-items-center">
+                            <div class="icon icon-lg shadow mr-3 text-gray"><i class="fab fa-android"></i></div>
+                            <div class="text">
+                                <h6 class="mb-0 d-flex align-items-center"> <span>Writing</span><span class="dot dot-sm ml-2 bg-red"></span></h6><small class="text-gray">Evaluate your writing skills</small>
+                            </div>
+                        </div>
+                        <div class="right ml-5 ml-sm-0 pl-3 pl-sm-0 text-red">
+                            <h5>0/0</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4">
+                <div class="flex-grow-1 d-flex align-items-center">
+                    <div class="dot mr-3 bg-violet"></div>
+                    <div class="text">
+                        <h6 class="mb-0">Completed tests</h6><span class="text-gray">Total 6543 tests</span>
+                    </div>
+                </div>
+                <div class="icon bg-violet text-white"><i class="fas fa-clipboard-check"></i></div>
+            </div>
+            <div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4">
+                <div class="flex-grow-1 d-flex align-items-center">
+                    <div class="dot mr-3 bg-green"></div>
+                    <div class="text">
+                        <h6 class="mb-0">Passed tests</h6><span class="text-gray">Total 6543 tests</span>
+                    </div>
+                </div>
+                <div class="icon bg-green text-white"><i class="fas fa-dollar-sign"></i></div>
+            </div>
+            <div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4">
+                <div class="flex-grow-1 d-flex align-items-center">
+                    <div class="dot mr-3 bg-blue"></div>
+                    <div class="text">
+                        <h6 class="mb-0">Faild tests</h6><span class="text-gray">Total 0 tests</span>
+                    </div>
+                </div>
+                <div class="icon bg-blue text-white"><i class="fas fa-user-friends"></i></div>
+            </div>
+            <div class="card px-5 py-4">
+                <h2 class="mb-0 d-flex align-items-center"><span>8.0/10</span><span class="dot bg-red d-inline-block ml-3"></span></h2><span class="text-muted">Your GPA</span>
+                <div class="chart-holder">
+                    <canvas id="lineChart3" style="max-height: 7rem !important;" class="w-100">      </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+                <div class="row">
+                    <div class="col-lg-3 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <strong class="h5 mb-0">Listening<sup class="smaller text-gray font-weight-normal">1st</sup></strong><img src="img/avatar-1.jpg" alt="..." style="max-width: 3rem" class="rounded-circle mx-3 my-2 my-lg-0">
+                        <h6 class="mb-0">Jason Maxwell</h6>
+                    </div>
+                    <div class="col-lg-9 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-dark exclode">User testing</div>
+                        <p class="mb-0 mt-3 mt-lg-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-12">
+            <a href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+                <div class="row">
+                    <div class="col-lg-3 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <strong class="h5 mb-0">Reading<sup class="smaller text-gray font-weight-normal">1st</sup></strong><img src="img/avatar-2.jpg" alt="..." style="max-width: 3rem" class="rounded-circle mx-3 my-2 my-lg-0">
+                        <h6 class="mb-0">Sam Andy</h6>
+                    </div>
+                    <div class="col-lg-9 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-dark exclode">Web Developer</div>
+                        <p class="mb-0 mt-3 mt-lg-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-12">
+            <a href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+                <div class="row">
+                    <div class="col-lg-3 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <strong class="h5 mb-0">Speaking<sup class="smaller text-gray font-weight-normal">1st</sup></strong><img src="img/avatar-3.jpg" alt="..." style="max-width: 3rem" class="rounded-circle mx-3 my-2 my-lg-0">
+                        <h6 class="mb-0">Margret Peter</h6>
+                    </div>
+                    <div class="col-lg-9 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-dark exclode">Analysis Agent</div>
+                        <p class="mb-0 mt-3 mt-lg-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-12">
+            <a href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+                <div class="row">
+                    <div class="col-lg-3 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <strong class="h5 mb-0">Writing<sup class="smaller text-gray font-weight-normal">1st</sup></strong><img src="img/avatar-4.jpg" alt="..." style="max-width: 3rem" class="rounded-circle mx-3 my-2 my-lg-0">
+                        <h6 class="mb-0">Jason Doe</h6>
+                    </div>
+                    <div class="col-lg-9 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                        <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-dark exclode">User testing</div>
+                        <p class="mb-0 mt-3 mt-lg-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>

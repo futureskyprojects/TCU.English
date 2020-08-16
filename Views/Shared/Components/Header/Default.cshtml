@@ -1,16 +1,16 @@
 ﻿@using TCU.English
 @using TCU.English.Utils
-@using System.Security.Claims
 @using TCU.English.Controllers
 @{
     string avatar = User.ExtractValue(CustomClaimTypes.Avatar);
-    string firstName = User.ExtractValue(ClaimTypes.GivenName);
-    string lastName = User.ExtractValue(ClaimTypes.Surname);
+    string firstName = User.ExtractValue(System.Security.Claims.ClaimTypes.GivenName);
+    string lastName = User.ExtractValue(System.Security.Claims.ClaimTypes.Surname);
+    string roleName = TCU.English.Models.UserType.Roles.First(it => it.UserTypeName == User.ExtractValue(System.Security.Claims.ClaimTypes.Role)).Description ?? "Unknow Error";
 }
 
 <header class="header">
     <nav class="navbar navbar-expand-lg px-4 py-2 bg-white shadow">
-        <a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a><a href="index.html" class="navbar-brand font-weight-bold text-uppercase text-base">@Html.Raw(Config.ProjectName)</a>
+        <a href="#" class="sidebar-toggler text-gray-500 mr-4 mr-lg-5 lead"><i class="fas fa-align-left"></i></a><a href="@Url.Action(nameof(TCU.English.Controllers.HomeController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.HomeController>())" class="navbar-brand font-weight-bold text-uppercase text-base">@Html.Raw(Config.ProjectName)</a>
         <ul class="ml-auto d-flex align-items-center list-unstyled mb-0">
             <li class="nav-item">
                 <form id="searchForm" class="ml-auto d-none d-lg-block">
@@ -21,7 +21,7 @@
                 </form>
             </li>
             <li class="nav-item dropdown mr-3">
-                <a id="notifications" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-gray-400 px-1"><i class="fa fa-bell"></i><span class="notification-icon"></span></a>
+                <a id="notifications" href="@Url.Action(nameof(TCU.English.Controllers.HomeController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.HomeController>())" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle text-gray-400 px-1"><i class="fa fa-bell"></i><span class="notification-icon"></span></a>
                 <div aria-labelledby="notifications" class="dropdown-menu">
                     <a href="#" class="dropdown-item">
                         <div class="d-flex align-items-center">
@@ -56,9 +56,9 @@
                 </div>
             </li>
             <li class="nav-item dropdown ml-auto">
-                <a id="userInfo" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><img src="@Html.Raw(avatar)" alt="Jason Doe" class="img-fluid rounded-circle shadow top-avatar"></a>
+                <a id="userInfo" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><img src="@Html.Raw(avatar)" alt="@Html.Raw($"{firstName} {lastName}")" class="img-fluid rounded-circle shadow top-avatar"></a>
                 <div aria-labelledby="userInfo" class="dropdown-menu">
-                    <a href="#" class="dropdown-item"><strong class="d-block text-uppercase headings-font-family">@Html.Raw($"{firstName} {lastName}")</strong><small>Web Developer</small></a>
+                    <a href="#" class="dropdown-item"><strong class="d-block text-uppercase headings-font-family">@Html.Raw($"{firstName} {lastName}")</strong><small>@Html.Raw(roleName)</small></a>
                     <div class="dropdown-divider"></div><a href="#" class="dropdown-item">Settings</a><a href="#" class="dropdown-item">Activity log       </a>
                     <div class="dropdown-divider"></div><a href="@Url.ActionLink(nameof(AuthenticationController.LogOut), NameUtils.ControllerName<AuthenticationController>())" class="dropdown-item">Logout</a>
                 </div>

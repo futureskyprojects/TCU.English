@@ -27,8 +27,15 @@ namespace TCU.English
             // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?tabs=aspnetcore2x&view=aspnetcore-3.1#iis-configuration
             services.Configure<IISServerOptions>(options =>
             {
-                //options.AutomaticAuthentication = false;
+                options.AutomaticAuthentication = false;
             });
+
+            // Out-of-process hosting model
+            services.Configure<IISOptions>(options =>
+            {
+                options.ForwardClientCertificate = false;
+            });
+
             // Thiết lập thêm CROS (https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1)
             services.AddCors();
 
@@ -70,11 +77,13 @@ namespace TCU.English
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            //app.UseSession();
             app.UseCookiePolicy();
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+
 
             app.UseRouting();
 
@@ -93,8 +102,8 @@ namespace TCU.English
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller:slugify}/{action:slugify}/{id:slugify?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                    pattern: "{controller:slugify=Home}/{action:slugify=Index}/{id:slugify?}"
+                    );
             });
         }
     }
