@@ -41,7 +41,9 @@ namespace TCU.English
 
             // Thiết lập ngữ cảnh đến CSDL
             services.AddDbContext<SystemDatabaseContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                options
+                .UseLazyLoadingProxies() // https://stackoverflow.com/questions/52024996/net-core-model-virtual-property-not-loaded
+                .UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             // Thêm các scope CSDL
             services.AddDataRepositoryScope();

@@ -20,7 +20,58 @@ namespace TCU.English.Models.DataManager
 
         public long Count()
         {
-            return instantce.User.Count();
+            try
+            {
+                return instantce.User.Distinct().Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+        public long Count(string roleCode)
+        {
+            if (roleCode == null)
+            {
+                var CountUserHaveRole = 0;
+                try
+                {
+                    CountUserHaveRole = instantce.UserTypeUser.Select(utu => utu.UserId).Distinct().Count();
+                }
+                catch (Exception)
+                {
+                    CountUserHaveRole = 0;
+                }
+                var CountUserAll = Count();
+                return CountUserAll - CountUserHaveRole;
+            }
+            else
+            {
+                try
+                {
+                    var s = instantce.UserType
+                        .Join(
+                            instantce.UserTypeUser,
+                            userType => userType.Id,
+                            userTypeUser => userTypeUser.UserTypeId,
+                            (userType, userTypeUser) => new { userType, userTypeUser }
+                        )
+                        .Join(
+                            instantce.User,
+                            combinedEntry => combinedEntry.userTypeUser.UserId,
+                            user => user.Id,
+                            (combinedEntry, user) => new { combinedEntry, user }
+                        )
+                        .Where(fullEntry => fullEntry.combinedEntry.userType.UserTypeName == roleCode)
+                        .Select(fullEntry => fullEntry.combinedEntry.userType)
+                        .ToList();
+                    return s.Count;
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+            }
         }
 
         public void Delete(User entity)

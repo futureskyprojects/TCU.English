@@ -5,7 +5,7 @@
     string avatar = User.ExtractValue(CustomClaimTypes.Avatar);
     string firstName = User.ExtractValue(System.Security.Claims.ClaimTypes.GivenName);
     string lastName = User.ExtractValue(System.Security.Claims.ClaimTypes.Surname);
-    string roleName = TCU.English.Models.UserType.Roles.First(it => it.UserTypeName == User.ExtractValue(System.Security.Claims.ClaimTypes.Role)).Description ?? "Unknow Error";
+    string roleName = new TCU.English.Models.UserType { UserTypeName = User.ExtractValue(System.Security.Claims.ClaimTypes.Role) }.Display();
 }
 
 <header class="header">

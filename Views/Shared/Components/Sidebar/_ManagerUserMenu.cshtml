@@ -3,7 +3,7 @@
 @if (User.IsInRole(UserType.ROLE_ALL) || User.IsInRole(UserType.ROLE_MANAGER_USER)) {
 <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">USER</div>
 <ul class="sidebar-menu list-unstyled">
-    <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="o-database-1 mr-3 text-gray"></i><span>All Users</span></a></li>
-    <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.CreateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="o-imac-screen-1 mr-3 text-gray"></i><span>Create User</span></a></li>
+    <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>All Users</span></a></li>
+    <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.CreateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-user-plus mr-3 text-gray"></i><span>Create User</span></a></li>
 </ul>
 }
