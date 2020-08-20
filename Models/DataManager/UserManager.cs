@@ -80,6 +80,15 @@ namespace TCU.English.Models.DataManager
             instantce.SaveChanges();
         }
 
+        public bool IsUsernameAlreadyInUse(string username)
+        {
+            return instantce.User.Any(user => user.Username.ToLower() == username.ToLower());
+        }
+        public bool IsEmailAlreadyInUse(string email)
+        {
+            return instantce.User.Any(user => user.Email.ToLower() == email.ToLower());
+        }
+
         public User Get(long id)
         {
             try

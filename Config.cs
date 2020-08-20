@@ -10,5 +10,7 @@ namespace TCU.English
         public static string ToYear = DateTime.Now.Year.ToString();
         public static string ProjectAuthor = "services@vistark@gmail.com";
         public static string ProjectPortfolioAddress = "https://fb.com/tx.trongnghia98";
+
+        public static long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
     }
 }

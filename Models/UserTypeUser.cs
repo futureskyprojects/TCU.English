@@ -11,5 +11,6 @@ namespace TCU.English.Models
         public int UserTypeId { get; set; }
         public virtual User User { get; set; }
         public virtual UserType UserType { get; set; }
+
     }
 }

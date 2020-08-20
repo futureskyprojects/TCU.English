@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace TCU.English.Models
 {
@@ -9,15 +11,28 @@ namespace TCU.English.Models
         {
             UserTypeUser = new HashSet<UserTypeUser>();
         }
+        [Required, MinLength(5), MaxLength(30)]
         public string Username { get; set; }
+        [Required, MinLength(4), MaxLength(125), EmailAddress]
         public string Email { get; set; }
+        [Required, PasswordPropertyText, MinLength(8), MaxLength(128)]
         public string HashPassword { get; set; }
+        [Required, MinLength(1), MaxLength(15)]
         public string FirstName { get; set; }
+        [Required, MinLength(1), MaxLength(30)]
         public string LastName { get; set; }
         public string Avatar { get; set; }
+        [Required]
         public int Gender { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime BirthDay { get; set; }
         public virtual ICollection<UserTypeUser> UserTypeUser { get; set; }
 
+        public static (int, string)[] Genders = new (int, string)[]
+        {
+            (1, "Male"),
+            (2, "Female"),
+            (-1, "Ignore")
+        };
     }
 }

@@ -54,6 +54,17 @@ namespace TCU.English.Models.DataManager
                 return new List<UserTypeUser>();
             }
         }
+        public IEnumerable<UserTypeUser> GetAll(int userId)
+        {
+            try
+            {
+                return instantce.UserTypeUser.Where(utu => utu.UserId == userId).ToList();
+            }
+            catch (Exception)
+            {
+                return new List<UserTypeUser>();
+            }
+        }
 
         public IEnumerable<UserTypeUser> GetByPagination(int start, int limit)
         {

@@ -1,4 +1,5 @@
 ﻿@using TCU.English.Controllers
+@using TCU.English.Utils
 @model IEnumerable<TCU.English.Models.User>
 @{
     ViewData["Title"] = "All Users";
@@ -94,17 +95,17 @@
                 <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
                     <div class="row">
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <img src="@Html.Raw(user.Avatar)" alt="@Html.Raw($"{user.FirstName} {user.LastName}")" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar">
+                            <img src="@Html.Raw(user.Avatar)" alt="@Html.Raw($"{user.FirstName} {user.LastName}")" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
                             <h6 class="mb-0" style="font-family: Tahoma">@Html.Raw($"{user.FirstName} {user.LastName}")</h6>
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
                             <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-dark exclode float-lg-left">
-                                @user.UserTypeUser.First().UserType.Display()
+                                @user.DisplayFirstUserType()
                             </div>
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <button type="button" class="btn btn-warning float-right ml-auto">Edit</button>
-                            <button type="button" class="btn btn-red float-right ml-2">Delete</button>
+                            <button type="button" class="btn btn-warning float-lg-right ml-lg-auto">Edit</button>
+                            <button type="button" class="btn btn-red float-lg-right ml-2">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -140,7 +141,7 @@
                         for (i = from; i <= to; i++)
                         {
                             var parms = new Dictionary<string, string>
-                                                                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                                                                            {
                                 { "page",i.ToString()},
                                 { "type", type }
                             };

@@ -1,6 +1,4 @@
-﻿@using TCU.English
-@using TCU.English.Utils
-@using TCU.English.Controllers
+﻿@model TCU.English.Models.User
 @{
     ViewData["Title"] = "Create User";
 }
@@ -11,7 +9,8 @@
             <h3 class="h6 text-uppercase mb-0">Create new user</h3>
         </div>
         <div class="card-body">
-            <form class="form-horizontal">
+            @using (Html.BeginForm(nameof(TCU.English.Controllers.UserManagementController.CreateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>(), FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
                 @* Avatar picker for Uploader *@
                 <div class="form-group row pb-3">
                     <label class="col-md-3 form-control-label">Update user avatar</label>
@@ -26,77 +25,107 @@
                                         <input type="file" name="userAvatar" id="user-avatar-picker" onchange="userAvatarPicked(this)" hidden />
                                         <button type="button" class="btn btn-info" onclick="$('#user-avatar-picker').click();">Select Avatar</button>
                                     </div>
+                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Avatar)</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 @* End Avatar uploader *@
+
+                @* Display name *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Display name</label>
                     <div class="col-md-9">
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="text" placeholder="First name" class="form-control">
+                                @Html.TextBoxFor(x => x.FirstName, new { @placeholder = "First name", @class = "form-control" })
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.FirstName)</small>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" placeholder="Last name" class="form-control">
+                                @Html.TextBoxFor(x => x.LastName, new { @placeholder = "Last Name", @class = "form-control" })
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.LastName)</small>
                             </div>
                         </div>
                     </div>
                 </div>
+                @* End displayname *@
+
+                @* Gender *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Gender</label>
                     <div class="col-md-9">
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="customRadioInline1" type="radio" name="customRadioInline1" class="custom-control-input" checked>
-                            <label for="customRadioInline1" class="custom-control-label">Male</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="customRadioInline2" type="radio" name="customRadioInline1" class="custom-control-input">
-                            <label for="customRadioInline2" class="custom-control-label">Female</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input id="customRadioInline3" type="radio" name="customRadioInline1" class="custom-control-input">
-                            <label for="customRadioInline3" class="custom-control-label">Ignore</label>
-                        </div>
+                        @foreach ((int, string) gender in TCU.English.Models.User.Genders)
+                        {
+                            <div class="custom-control custom-radio custom-control-inline">
+                                @if (gender.Item1 == TCU.English.Models.User.Genders.First().Item1)
+                                {
+                                    <input asp-for="Gender" id="gender-code-@gender.Item1" type="radio" class="custom-control-input" value="@gender.Item1" checked>
+                                }
+                                else
+                                {
+                                    <input asp-for="Gender" id="gender-code-@gender.Item1" type="radio" class="custom-control-input" value="@gender.Item1">
+                                }
+                                <label for="gender-code-@gender.Item1" class="custom-control-label">@Html.Raw(gender.Item2)</label>
+                            </div>
+                        }
                     </div>
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Gender)</small>
                 </div>
+                @* End gender *@
+
+                @* Birthday *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Birth day</label>
                     <div class="col-md-9">
-                        <input id="datepicker" class="form-control" />
+                        <input type="text" id="datepicker" asp-for="BirthDay" class="form-control" />
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.BirthDay)</small>
                     </div>
                 </div>
+                @* End birth day *@
+
+                @* Username *@
                 <div class="line"></div>
                 <div class="form-group row">
-                    <label class="col-md-3 form-control-label">Account name</label>
+                    <label class="col-md-3 form-control-label">Username</label>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" placeholder="your_account_name_123">
+                        @Html.TextBoxFor(x => x.Username, new { @placeholder = "username", @class = "form-control" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Username)</small>
                     </div>
                 </div>
+                @* End username *@
+
+                @* Email *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Email</label>
                     <div class="col-md-9">
-                        <input type="email" class="form-control" placeholder="your.email@@company.domain" autocomplete="off">
+                        @Html.TextBoxFor(x => x.Email, new { @placeholder = "email@comanpy.domain", @class = "form-control", @type = "email" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Email)</small>
                     </div>
                 </div>
+                @* Email *@
+
+                @* Password *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Password</label>
                     <div class="col-md-9">
-                        <input type="password" name="password" class="form-control" autocomplete="off">
+                        @Html.PasswordFor(x => x.HashPassword, new { @placeholder = "Password", @class = "form-control" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.HashPassword)</small>
                     </div>
                 </div>
+                @* End Password *@
+
+                @* User permission *@
                 <div class="line"></div>
                 <div class="form-group row">
                     <label class="col-md-3 form-control-label">Select user's permission</label>
                     <div class="col-md-9 ml-auto select">
-                        <select multiple="" class="form-control rounded">
+                        <select class="form-control rounded" name="userTypes">
                             @foreach (TCU.English.Models.UserType item in TCU.English.Models.UserType.Roles)
                             {
                                 if (item.UserTypeName == TCU.English.Models.UserType.ROLE_NORMAL_USER)
@@ -111,14 +140,14 @@
                         </select>
                     </div>
                 </div>
+                @* End User permission *@
                 <div class="line"></div>
-
                 <div class="form-group">
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
-            </form>
+            }
         </div>
     </div>
 </div>
@@ -141,10 +170,10 @@
             uiLibrary: 'bootstrap4',
             modal: true,
             header: true,
-            format: 'dd-mm-yyyy',
+            format: 'yyyy/mm/dd',
             showOnFocus: true,
             showRightIcon: false,
-            value: moment().format('DD-MM-YYYY')
+            value: moment().format('YYYY/MM/DD')
         });
 
         function userAvatarPicked(input) {
