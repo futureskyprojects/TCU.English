@@ -18,5 +18,6 @@ namespace TCU.English.Models
         public int Gender { get; set; }
         public DateTime BirthDay { get; set; }
         public virtual ICollection<UserTypeUser> UserTypeUser { get; set; }
+
     }
 }

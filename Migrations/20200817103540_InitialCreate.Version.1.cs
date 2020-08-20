@@ -18,6 +18,7 @@ namespace TCU.English.Migrations
                     UpdatedTime = table.Column<DateTime>(nullable: true),
                     CreatedTime = table.Column<DateTime>(nullable: true),
                     UserTypeName = table.Column<string>(nullable: true),
+                    Priority = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

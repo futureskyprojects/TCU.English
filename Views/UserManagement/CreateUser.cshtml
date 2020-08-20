@@ -1,3 +1,169 @@
-﻿@{
+﻿@using TCU.English
+@using TCU.English.Utils
+@using TCU.English.Controllers
+@{
     ViewData["Title"] = "Create User";
+}
+
+<div class="py-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h6 text-uppercase mb-0">Create new user</h3>
+        </div>
+        <div class="card-body">
+            <form class="form-horizontal">
+                @* Avatar picker for Uploader *@
+                <div class="form-group row pb-3">
+                    <label class="col-md-3 form-control-label">Update user avatar</label>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="rounded-border">
+                                    <div class="text-center mb-3">
+                                        <img id="user-avatar-preview" src="/img/no_avatar.png" alt="User avatar" class="img-fluid rounded-circle shadow" style="width:150px; height: 150px;">
+                                    </div>
+                                    <div class="text-center">
+                                        <input type="file" name="userAvatar" id="user-avatar-picker" onchange="userAvatarPicked(this)" hidden />
+                                        <button type="button" class="btn btn-info" onclick="$('#user-avatar-picker').click();">Select Avatar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* End Avatar uploader *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Display name</label>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" placeholder="First name" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" placeholder="Last name" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Gender</label>
+                    <div class="col-md-9">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="customRadioInline1" type="radio" name="customRadioInline1" class="custom-control-input" checked>
+                            <label for="customRadioInline1" class="custom-control-label">Male</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="customRadioInline2" type="radio" name="customRadioInline1" class="custom-control-input">
+                            <label for="customRadioInline2" class="custom-control-label">Female</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input id="customRadioInline3" type="radio" name="customRadioInline1" class="custom-control-input">
+                            <label for="customRadioInline3" class="custom-control-label">Ignore</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Birth day</label>
+                    <div class="col-md-9">
+                        <input id="datepicker" class="form-control" />
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Account name</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="your_account_name_123">
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Email</label>
+                    <div class="col-md-9">
+                        <input type="email" class="form-control" placeholder="your.email@@company.domain" autocomplete="off">
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Password</label>
+                    <div class="col-md-9">
+                        <input type="password" name="password" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Select user's permission</label>
+                    <div class="col-md-9 ml-auto select">
+                        <select multiple="" class="form-control rounded">
+                            @foreach (TCU.English.Models.UserType item in TCU.English.Models.UserType.Roles)
+                            {
+                                if (item.UserTypeName == TCU.English.Models.UserType.ROLE_NORMAL_USER)
+                                {
+                                    <option value="@item.UserTypeName" selected>@Html.Raw(item.Description)</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.UserTypeName">@Html.Raw(item.Description)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="line"></div>
+
+                <div class="form-group">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-border {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 2rem;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $('#datepicker').datepicker({
+            uiLibrary: 'bootstrap4',
+            modal: true,
+            header: true,
+            format: 'dd-mm-yyyy',
+            showOnFocus: true,
+            showRightIcon: false,
+            value: moment().format('DD-MM-YYYY')
+        });
+
+        function userAvatarPicked(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileType = file['type'];
+                const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+                if (!validImageTypes.includes(fileType)) {
+                    // invalid file type code goes here.
+                    toastr["error"]("Please only select image type for avatar!")
+                } else {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#user-avatar-preview').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        }
+    </script>
 }

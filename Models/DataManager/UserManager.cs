@@ -118,6 +118,69 @@ namespace TCU.English.Models.DataManager
             }
         }
 
+        public IEnumerable<User> GetByPagination(int start, int limit)
+        {
+            return instantce.User.OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
+        public IEnumerable<User> GetByPagination(string searchKey, int start, int limit)
+        {
+            if (searchKey == null || searchKey.Length <= 0)
+                return GetByPagination(start, limit);
+            else
+            {
+                return (from u in instantce.User
+                        where (
+                            ((u.Username.ToUpper().Contains(searchKey.ToUpper()) ||
+                            u.FirstName.ToUpper().Contains(searchKey.ToUpper()) ||
+                            u.LastName.ToUpper().Contains(searchKey.ToUpper())) &&
+                            !searchKey.Contains("@")) ||
+                            (u.Email.ToUpper().Contains(searchKey.ToUpper()) && searchKey.Contains("@"))
+                        )
+                        select u)
+                       .OrderByDescending(x => x.Id)
+                       .Skip(start)
+                       .Take(limit)
+                       .ToList();
+            }
+        }
+        public IEnumerable<User> GetByPagination(int start, int limit, string roleName = UserType.ROLE_ALL)
+        {
+            if (roleName == null)
+            {
+                return (from u in instantce.User
+                        where !instantce.UserTypeUser.Any(utu => utu.UserId == u.Id)
+                        select u)
+                        .OrderByDescending(x => x.Id)
+                        .Skip(start)
+                        .Take(limit)
+                        .ToList();
+            }
+            else if (roleName == "")
+            {
+                return GetByPagination(start, limit);
+            }
+            else
+            {
+                return instantce.User
+                        .Join(
+                        instantce.UserTypeUser,
+                        user => user.Id,
+                        userTypeUser => userTypeUser.UserId,
+                        (u, utu) => new { u, utu })
+                        .Join(
+                        instantce.UserType,
+                        prv => prv.utu.UserTypeId,
+                        ut => ut.Id,
+                        (prv, ut) => new { prv, ut })
+                        .Where(full => full.ut.UserTypeName.ToUpper().Equals(roleName.ToUpper()))
+                        .Select(full => full.prv.u)
+                        .OrderByDescending(x => x.Id)
+                        .Skip(start)
+                        .Take(limit)
+                        .ToList();
+            }
+        }
+
         public void Update(User entity)
         {
             instantce.User.Update(entity);

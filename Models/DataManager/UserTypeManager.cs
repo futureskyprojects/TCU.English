@@ -94,6 +94,11 @@ namespace TCU.English.Models.DataManager
             }
         }
 
+        public IEnumerable<UserType> GetByPagination(int start, int limit)
+        {
+            return instantce.UserType.OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
+
         public void Update(UserType entity)
         {
             instantce.UserType.Update(entity);

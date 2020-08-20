@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TCU.English.Models
 {
@@ -14,6 +16,7 @@ namespace TCU.English.Models
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserTypeUser> UserTypeUser { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
+
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
 

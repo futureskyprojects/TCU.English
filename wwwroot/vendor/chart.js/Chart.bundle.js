@@ -8471,7 +8471,7 @@ module.exports = function(Chart) {
 				// the chart initialization but after setting basic chart / controller properties that
 				// can help to figure out that the chart is not valid (e.g chart.canvas !== null);
 				// https://github.com/chartjs/Chart.js/issues/2807
-				console.error("Failed to create chart: can't acquire context from the given item");
+				//console.error("Failed to create chart: can't acquire context from the given item");
 				return;
 			}
 

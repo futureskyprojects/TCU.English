@@ -9,7 +9,7 @@ using TCU.English.Models;
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    [Migration("20200816052956_InitialCreate.Version.1")]
+    [Migration("20200817103540_InitialCreate.Version.1")]
     partial class InitialCreateVersion1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,9 @@ namespace TCU.English.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedTime")
                         .ValueGeneratedOnAddOrUpdate()

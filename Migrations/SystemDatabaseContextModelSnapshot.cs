@@ -79,6 +79,9 @@ namespace TCU.English.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedTime")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime(6)");

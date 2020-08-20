@@ -62,7 +62,7 @@ namespace TCU.English.Data
                 HashPassword = PasswordHasher.HashPassword(Base64Utils.Base64Decode("MTIzNDU2")),
                 FirstName = "System",
                 LastName = "Admin",
-                Avatar = "http://www.tcu.edu.vn/sites/www/dataupload/files/cms/trung%20tam%201.png",
+                Avatar = "/img/no_avatar.png",
                 BirthDay = DateTime.Now,
                 Active = true
             };

@@ -66,8 +66,8 @@ namespace TCU.English.Models
         {
             NormalUser,
             ManagerUser,
-            All,
-            ManagerLibrary
-        };
+            ManagerLibrary,
+            All
+        }.OrderBy(it => it.Priority).ToArray();
     }
 }
