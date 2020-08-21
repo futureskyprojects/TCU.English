@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
@@ -23,6 +25,7 @@ namespace TCU.English.Controllers
             this._UserManager = (UserManager)_UserManager;
             this._UserTypeManager = (UserTypeManager)_UserTypeManager;
         }
+
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -40,7 +43,7 @@ namespace TCU.English.Controllers
         }
 
         // https://viblo.asia/p/su-dung-cookie-authentication-trong-aspnet-core-djeZ1VG8lWz
-        public async Task<IActionResult> LogIn(Models.UserLogin userLogin)
+        public async Task<IActionResult> LogIn(UserLogin userLogin)
         {
             if (ModelState.IsValid)
             {
@@ -54,15 +57,15 @@ namespace TCU.English.Controllers
                         // create claims
                         List<Claim> claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.NameIdentifier, user.Username),
-                            new Claim(ClaimTypes.Email, user.Email),
-                            new Claim(ClaimTypes.DateOfBirth, user.BirthDay.ToString()),
-                            new Claim(ClaimTypes.Name, $"{user.LastName} {user.FirstName}"),
-                            new Claim(ClaimTypes.GivenName, user.FirstName),
-                            new Claim(ClaimTypes.Surname, user.LastName),
-                            new Claim(ClaimTypes.Gender, user.Gender.ToString()),
-                            new Claim(CustomClaimTypes.Avatar, user.Avatar),
-                            new Claim(ClaimTypes.Role, string.Join(",",_UserTypeManager.GetAll(user.Id).Select(role => role.UserTypeName)))
+                            new Claim(ClaimTypes.NameIdentifier, user.Username??""),
+                            new Claim(ClaimTypes.Email, user.Email??""),
+                            new Claim(ClaimTypes.DateOfBirth, user.BirthDay.ToString()??""),
+                            new Claim(ClaimTypes.Name, $"{user.LastName} {user.FirstName}"??""),
+                            new Claim(ClaimTypes.GivenName, user.FirstName??""),
+                            new Claim(ClaimTypes.Surname, user.LastName??""),
+                            new Claim(ClaimTypes.Gender, user.Gender.ToString()??""),
+                            new Claim(CustomClaimTypes.Avatar, user.Avatar??""),
+                            new Claim(ClaimTypes.Role, string.Join(",",_UserTypeManager.GetAll(user.Id).Select(role => role.UserTypeName))??"")
                         };
 
                         // create identity
@@ -85,9 +88,20 @@ namespace TCU.English.Controllers
                         else
                             return Redirect(RequestPath);
                     }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Account or password is incorrect");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Account or password is incorrect");
                 }
             }
-            return RedirectToAction(nameof(Index));
+            else
+            {
+            }
+            return View(nameof(Index), userLogin);
         }
     }
 }

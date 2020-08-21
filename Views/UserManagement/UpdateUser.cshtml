@@ -1,3 +1,252 @@
-﻿@{
+﻿@model TCU.English.Models.User
+@{
     ViewData["Title"] = "Update User";
+    List<string> userRole = new List<string>();
+    if (Model.UserTypeUser != null && Model.UserTypeUser.Count > 0)
+    {
+        foreach (var item in Model.UserTypeUser)
+        {
+            userRole.Add(item.UserType.UserTypeName);
+        }
+    }
+}
+
+<div class="py-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="h6 text-uppercase mb-0">Create new user</h3>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm(nameof(TCU.English.Controllers.UserManagementController.UpdateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>(), FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.Active)
+                @Html.HiddenFor(x => x.CreatedTime)
+                @Html.HiddenFor(x => x.UpdatedTime)
+                @Html.HiddenFor(x => x.Username)
+                @Html.HiddenFor(x => x.HashPassword)
+                @* Avatar picker for Uploader *@
+                <div class="form-group row pb-3">
+                    <label class="col-md-3 form-control-label">Update user avatar</label>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="rounded-border">
+                                    <div class="text-center mb-3">
+                                        <img id="user-avatar-default" src="@(Model.Avatar??"")" alt="User avatar" class="img-fluid rounded-circle shadow" style="width:150px; height: 150px;" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                                        <img id="user-avatar-preview" src="/img/no_avatar.png" alt="User avatar" class="img-fluid rounded-circle shadow" style="width:150px; height: 150px;">
+                                    </div>
+                                    <div class="text-center">
+                                        <input type="file" name="userAvatar" id="user-avatar-picker" onchange="userAvatarPicked(this)" hidden />
+                                        <button type="button" class="btn btn-info" onclick="$('#user-avatar-picker').click();">Select Avatar</button>
+                                        <button type="button" class="btn btn-danger" id="user-avatar-remove-picker-btn">Remove Picked</button>
+                                    </div>
+                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Avatar)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* End Avatar uploader *@
+
+                @* Display name *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Display name</label>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(x => x.FirstName, new { @placeholder = "First name", @class = "form-control" })
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.FirstName)</small>
+                            </div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(x => x.LastName, new { @placeholder = "Last Name", @class = "form-control" })
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.LastName)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* End displayname *@
+
+                @* Gender *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Gender</label>
+                    <div class="col-md-9">
+                        @foreach ((int, string) gender in TCU.English.Models.User.Genders)
+                        {
+                            <div class="custom-control custom-radio custom-control-inline">
+                                @if (gender.Item1 == Model.Gender)
+                                {
+                                    <input asp-for="Gender" id="gender-code-@gender.Item1" type="radio" class="custom-control-input" value="@gender.Item1" checked>
+                                }
+                                else
+                                {
+                                    <input asp-for="Gender" id="gender-code-@gender.Item1" type="radio" class="custom-control-input" value="@gender.Item1">
+                                }
+                                <label for="gender-code-@gender.Item1" class="custom-control-label">@Html.Raw(gender.Item2)</label>
+                            </div>
+                        }
+                    </div>
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Gender)</small>
+                </div>
+                @* End gender *@
+
+                @* Birthday *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Birth day</label>
+                    <div class="col-md-9">
+                        <input type="text" id="datepicker" asp-for="BirthDay" class="form-control" />
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.BirthDay)</small>
+                    </div>
+                </div>
+                @* End birth day *@
+
+                @* Username *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Username</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.Username, new { @placeholder = "username", @class = "form-control", @disabled = "disabled" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Username)</small>
+                    </div>
+                </div>
+                @* End username *@
+
+                @* Email *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <label class="col-md-3 form-control-label">Email</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.Email, new { @placeholder = "email@comanpy.domain", @class = "form-control", @type = "email" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Email)</small>
+                    </div>
+                </div>
+                @* Email *@
+
+                @* Password *@
+                <div class="line"></div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <label class="form-control-label">Password</label>
+                        <br />
+                        <small class="text-info">Leave it blank if not changed</small>
+                    </div>
+                    <div class="col-md-9">
+                        @Html.PasswordFor(x => x.HashPassword, new { @placeholder = "Password", @class = "form-control" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.HashPassword)</small>
+                    </div>
+                </div>
+                @* End Password *@
+
+                @* User permission *@
+                @if (
+           ((
+               User.IsInRole(TCU.English.Models.UserType.ROLE_ALL) ||
+               User.IsInRole(TCU.English.Models.UserType.ROLE_MANAGER_USER)
+           ) && !userRole.Contains(TCU.English.Models.UserType.ROLE_ALL)) ||
+           (
+               User.IsInRole(TCU.English.Models.UserType.ROLE_MANAGER_USER) &&
+               userRole.Contains(TCU.English.Models.UserType.ROLE_ALL))
+           )
+                {
+                    <div class="line"></div>
+                    <div class="form-group row">
+                        <label class="col-md-3 form-control-label">Select user's permission</label>
+                        <div class="col-md-9 ml-auto select">
+                            <select class="form-control rounded" name="userTypes">
+                                @foreach (TCU.English.Models.UserType item in TCU.English.Models.UserType.Roles)
+                                {
+                                    if (userRole.Contains(item.UserTypeName))
+                                    {
+                                        <option value="@item.UserTypeName" selected> @Html.Raw(item.Description) </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.UserTypeName"> @Html.Raw(item.Description) </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    @* End User permission *@
+                }
+                <div class="line"></div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-border {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 2rem;
+    }
+</style>
+
+
+@section Scripts {
+    <script>
+        let userBirthDay = '@Html.Raw(Model.BirthDay.ToString("yyyy/MM/dd"))';
+        if (userBirthDay == null || userBirthDay == undefined || userBirthDay.length <= 0) {
+            userBirthDay = moment().format('YYYY/MM/DD');
+        }
+        $('#datepicker').datepicker({
+            uiLibrary: 'bootstrap4',
+            modal: true,
+            header: true,
+            format: 'yyyy/mm/dd',
+            showOnFocus: true,
+            showRightIcon: false,
+            value: userBirthDay
+        });
+
+        $('#user-avatar-preview').hide();
+        $('#user-avatar-remove-picker-btn').hide();
+
+        $('#user-avatar-remove-picker-btn').click(function () {
+            $('#user-avatar-picker').val(null);
+            $(this).hide();
+            $('#user-avatar-default').show();
+            $('#user-avatar-preview').hide();
+        });
+
+        function userAvatarPicked(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileType = file['type'];
+                const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+                if (!validImageTypes.includes(fileType)) {
+                    // invalid file type code goes here.
+                    toastr["error"]("Please only select image type for avatar!")
+                } else {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#user-avatar-preview').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    // Show
+                    $('#user-avatar-default').hide();
+                    $('#user-avatar-preview').show();
+                    $('#user-avatar-remove-picker-btn').show();
+                }
+            } else {
+                // Hide
+                $('#user-avatar-default').show();
+                $('#user-avatar-preview').hide();
+                $('#user-avatar-remove-picker-btn').hide();
+            }
+        }
+    </script>
 }

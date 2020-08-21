@@ -9,7 +9,9 @@ namespace TCU.English.Models
     {
         public int UserId { get; set; }
         public int UserTypeId { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(UserId))]
         public virtual User User { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.ForeignKey(nameof(UserTypeId))]
         public virtual UserType UserType { get; set; }
 
     }

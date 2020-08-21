@@ -104,8 +104,8 @@
                             </div>
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <button type="button" class="btn btn-warning float-lg-right ml-lg-auto">Edit</button>
-                            <button type="button" class="btn btn-red float-lg-right ml-2">Delete</button>
+                            <a href="@Url.Action(nameof(UserManagementController.UpdateUser), NameUtils.ControllerName<UserManagementController>(), new { id = user.Id })" class="btn btn-warning float-lg-right ml-lg-auto text-white">Edit</a>
+                            <button type="button" class="btn btn-red float-lg-right ml-2" onclick="deleteConfirm(@user.Id, '@Html.Raw($"{user.FirstName} {user.LastName}")')">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                         for (i = from; i <= to; i++)
                         {
                             var parms = new Dictionary<string, string>
-                                                                                                                                                                                                                                                                                                                            {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
                                 { "page",i.ToString()},
                                 { "type", type }
                             };
@@ -185,3 +185,49 @@
             text-decoration: none;
         }
 </style>
+
+@section Scripts {
+    <script>
+        function deleteConfirm(userId, userFullname) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, you will not be able to recover account of "${userFullname}"`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(UserManagementController.Delete), NameUtils.ControllerName<UserManagementController>())/${userId}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! '${userFullname}' account has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! '${userFullname}' account has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! '${userFullname}' account has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`${userFullname}'s`, "Account is safe!");
+                    }
+                });
+        }
+    </script>
+}

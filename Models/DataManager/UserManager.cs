@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TCU.English.Models.Repository;
+using TCU.English.Utils.PasswordUtils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -14,6 +15,12 @@ namespace TCU.English.Models.DataManager
         }
         public void Add(User entity)
         {
+            if (entity.HashPassword != null && entity.HashPassword.Length > 0)
+            {
+                entity.HashPassword = PasswordHasher.HashPassword(entity.HashPassword);
+            }
+            entity.CreatedTime = DateTime.Now;
+            entity.UpdatedTime = DateTime.Now;
             instantce.User.Add(entity);
             instantce.SaveChanges();
         }
@@ -88,6 +95,10 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.User.Any(user => user.Email.ToLower() == email.ToLower());
         }
+        public bool IsEmailAlreadyInUse(string username, string email)
+        {
+            return instantce.User.Any(user => user.Email.ToLower() == email.ToLower() && user.Username.ToLower() != username.ToLower());
+        }
 
         public User Get(long id)
         {
@@ -104,7 +115,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                if (identity.Contains("@"))
+                if (identity != null && identity.Length > 0 && identity.Contains("@"))
                     return instantce.User.Where(user => user.Email == identity).First();
                 else
                     return instantce.User.Where(user => user.Username == identity).First();
@@ -192,6 +203,34 @@ namespace TCU.English.Models.DataManager
 
         public void Update(User entity)
         {
+            var oldUser = Get(entity.Id);
+            if (entity.FirstName != null && entity.FirstName.Length > 0 && entity.FirstName != oldUser.FirstName)
+                oldUser.FirstName = entity.FirstName;
+
+            if (entity.LastName != null && entity.LastName.Length > 0 && entity.LastName != oldUser.LastName)
+                oldUser.LastName = entity.LastName;
+
+            if (entity.Active != oldUser.Active)
+                oldUser.Active = entity.Active;
+
+            if (entity.Avatar != null && entity.Avatar.Length > 0 && entity.Avatar != oldUser.Avatar)
+                oldUser.Avatar = entity.Avatar;
+
+            if (entity.BirthDay != null && entity.BirthDay != oldUser.BirthDay)
+                oldUser.BirthDay = entity.BirthDay;
+
+            if (entity.Email != null && entity.Email.Length > 0 && entity.Email != oldUser.Email)
+                oldUser.Email = entity.Email;
+
+            if (entity.Gender != oldUser.Gender)
+                oldUser.Gender = entity.Gender;
+
+            oldUser.UpdatedTime = DateTime.Now;
+            if (entity.HashPassword != null && entity.HashPassword.Length > 0 && entity.HashPassword != oldUser.HashPassword)
+            {
+                oldUser.HashPassword = PasswordHasher.HashPassword(entity.HashPassword);
+            }
+            entity = oldUser;
             instantce.User.Update(entity);
             instantce.SaveChanges();
         }

@@ -12,6 +12,27 @@ namespace TCU.English.Models
         public const string ROLE_MANAGER_LIBRARY = nameof(ROLE_MANAGER_LIBRARY);
         #endregion
 
+        public static UserType GetMaxUserType(string[] roleKeys)
+        {
+            return Parse(roleKeys).OrderBy(it => it.Priority).First();
+        }
+
+        public static List<UserType> Parse(string[] roleKeys)
+        {
+            List<UserType> uts = new List<UserType>();
+            if (roleKeys != null)
+            {
+                foreach (string key in roleKeys)
+                {
+                    var temp = Roles.First(it => it.UserTypeName.ToLower() == key.ToLower());
+                    if (temp != null)
+                    {
+                        uts.Add(temp);
+                    }
+                }
+            }
+            return uts;
+        }
         public static int CompareRole(string currentUserRole, string destiantionUser)
         {
             var CurrentUser = Roles.First(it => it.UserTypeName == currentUserRole);

@@ -9,19 +9,29 @@
 
 <div class="row align-items-center py-5">
     <div class="col-5 col-lg-7 mx-auto mb-5 mb-lg-0">
-        <div class="pr-lg-5"><img src="img/learn-panel.png" alt="" class="img-fluid"></div>
+        <div class="pr-lg-5"><img src="img/learn-panel.jpg" alt="" class="img-fluid"></div>
     </div>
     <div class="col-lg-5 px-lg-4">
         <h1 class="text-base text-primary text-uppercase mb-4">@Config.ProjectName</h1>
         <h2 class="mb-4">Welcome to CMS!</h2>
-        <p class="text-muted">Please authentication before you can continue.</p>
+        @if (ViewContext.ViewData.ModelState.Where(x => x.Key == "").Any())
+        {
+            @Html.ValidationSummary(false, "", new { @class = "alert alert-danger", @id = "validate-summary" })
+            <style>
+                #validate-summary > ul {
+                    margin-bottom: 0px !important;
+                }
+            </style>
+        }
         @using (@Html.BeginForm(nameof(AuthenticationController.LogIn), NameUtils.ControllerName<AuthenticationController>(), FormMethod.Post, new { @id = "loginForm", @class = "mt-4" }))
         {
             <div class="form-group mb-4">
                 @Html.TextBoxFor(x => x.Identity, new { @type = "text", @placeholder = "Username", @class = "form-control border-0 shadow form-control-lg" })
+                <small class="form-text text-danger ml-3 mt-2">@Html.ValidationMessageFor(x => x.Identity)</small>
             </div>
             <div class="form-group mb-4">
                 @Html.PasswordFor(x => x.Password, new { placeholder = "Password", @class = "form-control border-0 shadow form-control-lg text-violet" })
+                <small class="form-text text-danger ml-3 mt-2">@Html.ValidationMessageFor(x => x.Password)</small>
             </div>
             <div class="form-group mb-4">
                 <div class="custom-control custom-checkbox">

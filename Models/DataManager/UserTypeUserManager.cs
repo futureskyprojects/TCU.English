@@ -25,6 +25,15 @@ namespace TCU.English.Models.DataManager
             return instantce.UserTypeUser.Count();
         }
 
+        public void Delete(long userId)
+        {
+            foreach (var item in instantce.UserTypeUser.Where(it => it.UserId == userId).ToList())
+            {
+                instantce.UserTypeUser.Remove(item);
+            }
+            instantce.SaveChanges();
+        }
+
         public void Delete(UserTypeUser entity)
         {
             instantce.UserTypeUser.Remove(entity);

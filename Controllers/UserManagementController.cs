@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
@@ -19,14 +22,17 @@ namespace TCU.English.Controllers
         private readonly UserManager _UserManager;
         private readonly UserTypeManager _UserTypeManager;
         private readonly UserTypeUserManager _UserTypeUserManager;
+
+        private readonly string PATH_ROOT;
         public UserManagementController(IHostEnvironment _host, IDataRepository<User> _UserManager, IDataRepository<UserType> _UserTypeManager, IDataRepository<UserTypeUser> _UserTypeUserManager)
         {
             this.host = _host;
             this._UserManager = (UserManager)_UserManager;
             this._UserTypeManager = (UserTypeManager)_UserTypeManager;
             this._UserTypeUserManager = (UserTypeUserManager)_UserTypeUserManager;
+            this.PATH_ROOT = Path.GetDirectoryName(host.ContentRootPath);
         }
-        public ActionResult Index(string type = "all", int page = 1, string searchKey = "")
+        public IActionResult Index(string type = "all", int page = 1, string searchKey = "")
         {
             int limit = 20;
             int start = (page - 1) * limit;
@@ -102,23 +108,24 @@ namespace TCU.English.Controllers
         }
 
         [HttpGet]
-        public ActionResult CreateUser()
+        public IActionResult CreateUser()
         {
             return View();
         }
         [HttpPost]
-        [ActionName(nameof(CreateUser))]
-        public ActionResult CreateUser(User user, string[] userTypes, IFormFile userAvatar)
+        public async Task<IActionResult> CreateUser(User user, string[] userTypes, IFormFile userAvatar)
         {
             if (ModelState.IsValid)
             {
                 if (_UserManager.IsEmailAlreadyInUse(user.Email))
                 {
-                    ModelState.AddModelError(nameof(Models.User.Username), "That email is already in use");
+                    ModelState.AddModelError(nameof(Models.User.Email), "That email is already in use");
+                    return View(user);
                 }
                 else if (_UserManager.IsUsernameAlreadyInUse(user.Username))
                 {
                     ModelState.AddModelError(nameof(Models.User.Username), "That username is already in use");
+                    return View(user);
                 }
                 else
                 {
@@ -130,34 +137,35 @@ namespace TCU.English.Controllers
                             try
                             {
                                 var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
-                                var uploads = Path.Combine(host.ContentRootPath, "uploads", user.Username.ToLower());
+                                var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
                                 // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
                                 if (!Directory.Exists(uploads))
                                     Directory.CreateDirectory(uploads);
                                 var filePath = Path.Combine(uploads, uniqueFileName);
-                                // Nếu file đã tồn tại thì xóa
-                                if (new FileInfo(filePath).Exists)
+
+                                using (var stream = System.IO.File.Create(filePath))
                                 {
-                                    new FileInfo(filePath).Delete();
+                                    await userAvatar.CopyToAsync(stream);
                                 }
-                                userAvatar.CopyTo(new FileStream(filePath, FileMode.Create));
-                                user.Avatar = filePath.Replace(host.ContentRootPath, "");
+                                user.Avatar = filePath.Replace(PATH_ROOT, "");
                             }
                             catch (Exception e)
                             {
                                 ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
+                                return View(user);
                             }
                         }
                         else
                         {
                             ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                            return View(user);
                         }
                     }
                 }
                 // Save user
                 _UserManager.Add(user);
 
-                if (user.Id > 0)
+                if (user.Id > 0 && userTypes != null && userTypes.Length > 0)
                 {
                     // Remove all role of added user if have
                     foreach (var role in _UserTypeUserManager.GetAll(user.Id))
@@ -180,15 +188,140 @@ namespace TCU.English.Controllers
                     }
                 }
             }
-            return View();
+            else
+            {
+                return View(user);
+            }
+            return RedirectToAction(nameof(UpdateUser), new { id = user.Id });
         }
-        public ActionResult UpdateUser()
+
+        [HttpGet]
+        public IActionResult UpdateUser(long id)
         {
-            return View();
+            if (id <= 0)
+                return BadRequest();
+            var user = _UserManager.Get(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return View(user);
+            }
         }
-        public ActionResult Delete()
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(User user, string[] userTypes, IFormFile userAvatar)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                if (_UserManager.IsEmailAlreadyInUse(user.Username, user.Email))
+                {
+                    ModelState.AddModelError(nameof(Models.User.Email), "That email is already in use");
+                }
+                else
+                {
+                    if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
+                    {
+                        if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
+                        {
+                            // Upload avatar
+                            try
+                            {
+                                var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
+                                var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
+                                // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
+                                if (!Directory.Exists(uploads))
+                                    Directory.CreateDirectory(uploads);
+                                var filePath = Path.Combine(uploads, uniqueFileName);
+
+                                using (var stream = System.IO.File.Create(filePath))
+                                {
+                                    await userAvatar.CopyToAsync(stream);
+                                }
+
+                                // Xóa tệp ảnh cũ nếu có
+                                if (user.Avatar != null && user.Avatar.Length > 0)
+                                {
+                                    var oldFile = Path.Combine(PATH_ROOT, user.Avatar);
+                                    if (System.IO.File.Exists(oldFile))
+                                    {
+                                        System.IO.File.Delete(oldFile);
+                                    }
+                                }
+
+                                user.Avatar = filePath.Replace(PATH_ROOT, "");
+                            }
+                            catch (Exception e)
+                            {
+                                ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
+                                return View(user);
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                            return View(user);
+                        }
+                    }
+                    // Save user
+                    _UserManager.Update(user);
+
+                    if (user.Id > 0 && userTypes != null && userTypes.Length > 0)
+                    {
+                        _UserTypeUserManager.Delete(user.Id);
+                        // Get selected new roles of user
+                        foreach (string typeCode in userTypes)
+                        {
+                            var userType = _UserTypeManager.Get(typeCode);
+                            if (userType != null)
+                            {
+                                _UserTypeUserManager.Add(new UserTypeUser
+                                {
+                                    // Update role of added user
+                                    UserId = user.Id,
+                                    UserTypeId = userType.Id
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            return RedirectToAction(nameof(UpdateUser), new { id = user.Id });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(long id)
+        {
+            var user = _UserManager.Get(id);
+            var userRole = user.UserTypeUser.OrderBy(it => it.UserType.Priority).Last();
+            UserType maxCurrentUserType = UserType.GetMaxUserType((User.FindFirstValue(ClaimTypes.Role) ?? "").Split(","));
+            if (user != null)
+            {
+                if (user.Username == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                {
+                    return Json(new { success = false, responseText = "You cannot remove yourself!" });
+                }
+                else if (userRole != null && maxCurrentUserType != null && UserType.CompareRole(maxCurrentUserType.UserTypeName, userRole.UserType.UserTypeName) < 0)
+                {
+                    return Json(new { success = false, responseText = "You do not have sufficient authority to delete this account!" });
+                }
+                else
+                {
+                    _UserManager.Delete(user);
+                    user.HashPassword = "";
+                    var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
+                    // Xóa thư mục tệp tin của người dùng này nếu có tồn tại
+                    if (Directory.Exists(uploads))
+                        Directory.Delete(uploads, true);
+                    return Json(new { success = true, user = JsonConvert.SerializeObject(user), responseText = "Deleted" });
+                }
+            }
+            else
+            {
+                return Json(new { success = false, responseText = "Can not find this user!" });
+            }
         }
     }
 }
