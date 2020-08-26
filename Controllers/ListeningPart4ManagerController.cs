@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TCU.English.Controllers
 {
-    public class SpeakingManagerController : Controller
+    public class ListeningPart4ManagerController : Controller
     {
         public IActionResult Index()
         {

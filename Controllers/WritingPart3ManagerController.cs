@@ -2,7 +2,7 @@
 
 namespace TCU.English.Controllers
 {
-    public class WritingManagerController : Controller
+    public class WritingPart3ManagerController : Controller
     {
         public IActionResult Index()
         {

@@ -21,6 +21,7 @@ namespace TCU.English.Models.DataManager
             }
             entity.CreatedTime = DateTime.Now;
             entity.UpdatedTime = DateTime.Now;
+            entity.Active = true;
             instantce.User.Add(entity);
             instantce.SaveChanges();
         }

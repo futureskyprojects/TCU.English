@@ -229,7 +229,7 @@
                 const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
-                    toastr["error"]("Please only select image type for avatar!")
+                    toastr["error"]("Please only select image type for avatar!");
                 } else {
                     var reader = new FileReader();
                     reader.onload = function (e) {

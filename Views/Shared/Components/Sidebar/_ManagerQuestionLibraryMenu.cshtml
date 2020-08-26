@@ -1,12 +1,99 @@
 ﻿@using TCU.English.Models
+@{
+    // LISTENING
+    (string, string)[] listeningItems = new (string, string)[]{
+        ("Part 1",@Url.Action(nameof(TCU.English.Controllers.ListeningPart1ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningPart1ManagerController>())),
+        ("Part 2",@Url.Action(nameof(TCU.English.Controllers.ListeningPart2ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningPart2ManagerController>())),
+        ("Part 3",@Url.Action(nameof(TCU.English.Controllers.ListeningPart3ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningPart3ManagerController>())),
+        ("Part 4",@Url.Action(nameof(TCU.English.Controllers.ListeningPart4ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningPart4ManagerController>())),
+        };
+
+    // SPEAKING
+    (string, string)[] speakingItems = new (string, string)[]{
+        ("Part 1",@Url.Action(nameof(TCU.English.Controllers.SpeakingPart1ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingPart1ManagerController>())),
+        ("Part 2",@Url.Action(nameof(TCU.English.Controllers.SpeakingPart2ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingPart2ManagerController>())),
+        ("Part 3",@Url.Action(nameof(TCU.English.Controllers.SpeakingPart3ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingPart3ManagerController>())),
+        ("Part 4",@Url.Action(nameof(TCU.English.Controllers.SpeakingPart4ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingPart4ManagerController>())),
+        };
+
+    // WRITING
+    (string, string)[] writingItems = new (string, string)[]{
+        ("Part 1",@Url.Action(nameof(TCU.English.Controllers.WritingPart1ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingPart1ManagerController>())),
+        ("Part 2",@Url.Action(nameof(TCU.English.Controllers.WritingPart2ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingPart2ManagerController>())),
+        ("Part 3",@Url.Action(nameof(TCU.English.Controllers.WritingPart3ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingPart3ManagerController>())),
+        ("Part 4",@Url.Action(nameof(TCU.English.Controllers.WritingPart4ManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingPart4ManagerController>())),
+        };
+}
 @* Menu dành cho quản trị người dùng *@
 @if (User.IsInRole(UserType.ROLE_ALL) || User.IsInRole(UserType.ROLE_MANAGER_LIBRARY))
 {
     <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">QUESTION LIBRARY</div>
-    <ul class="sidebar-menu list-unstyled">
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.ListeningManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>())" class="sidebar-link text-muted"><i class="fas fa-headphones-alt mr-3 text-gray"></i><span>Listening</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())" class="sidebar-link text-muted"><i class="fas fa-book-reader mr-3 text-gray"></i><span>Reading</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.SpeakingManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingManagerController>())" class="sidebar-link text-muted"><i class="fas fa-headset mr-3 text-gray"></i><span>Speaking</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted"><i class="fas fa-feather-alt mr-3 text-gray"></i><span>Writing</span></a></li>
-    </ul>
+    // LISTENING
+    <div class="card" style="border-radius: 0px;">
+        <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
+            <h3 class="h6 text-uppercase mb-0">
+                <a class="text-muted"><i class="fas fa-headphones-alt mr-3 text-gray"></i><span>Listening</span></a>
+            </h3>
+        </div>
+        <div class="card-body" style="padding: 0px;">
+            <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
+                @foreach ((string, string) listeningItem in listeningItems)
+                {
+                    <li class="sidebar-list-item"><a href="@listeningItem.Item2" class="sidebar-link text-muted pl-lg-5">@Html.Raw(listeningItem.Item1)</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    // END LISTENING
+
+    // READING
+    <div class="card" style="border-radius: 0px;">
+        <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
+            <h3 class="h6 text-uppercase mb-0">
+                <a class="text-muted"><i class="fas fa-book-reader mr-3 text-gray"></i><span>Reading</span></a>
+            </h3>
+        </div>
+        <div class="card-body" style="padding: 0px;">
+            <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
+                <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 1</a></li>
+            </ul>
+        </div>
+    </div>
+    // END READING
+
+    // SPEAKING
+    <div class="card" style="border-radius: 0px;">
+        <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
+            <h3 class="h6 text-uppercase mb-0">
+                <a class="text-muted"><i class="fas fa-headset mr-3 text-gray"></i><span>Speaking</span></a>
+            </h3>
+        </div>
+        <div class="card-body" style="padding: 0px;">
+            <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
+                @foreach ((string, string) speakingItem in speakingItems)
+                {
+                    <li class="sidebar-list-item"><a href="@speakingItem.Item2" class="sidebar-link text-muted pl-lg-5">@Html.Raw(speakingItem.Item1)</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    // END SPEAKING
+
+    // WRITING
+    <div class="card" style="border-radius: 0px;">
+        <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
+            <h3 class="h6 text-uppercase mb-0">
+                <a class="text-muted"><i class="fas fa-feather-alt mr-3 text-gray"></i><span>Writing</span></a>
+            </h3>
+        </div>
+        <div class="card-body" style="padding: 0px;">
+            <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
+                @foreach ((string, string) writingItem in writingItems)
+                {
+                    <li class="sidebar-list-item"><a href="@writingItem.Item2" class="sidebar-link text-muted pl-lg-5">@Html.Raw(writingItem.Item1)</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+    // END WRITING
 }

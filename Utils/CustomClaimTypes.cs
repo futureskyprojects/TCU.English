@@ -8,5 +8,6 @@ namespace TCU.English.Utils
     public static class CustomClaimTypes
     {
         public const string Avatar = "Avatar";
+        public const string Id = "Id";
     }
 }

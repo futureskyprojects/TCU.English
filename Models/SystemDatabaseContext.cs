@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TCU.English.Models
 {
@@ -16,11 +14,13 @@ namespace TCU.English.Models
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserTypeUser> UserTypeUser { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
+        public virtual DbSet<TestCategory> TestCategories { get; set; }
+        public virtual DbSet<ReadingPartOne> ReadingPartOnes { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
-
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -39,6 +39,16 @@ namespace TCU.English.Models
             modelBuilder.Entity<UserTypeUser>(entity =>
             {
                 entity.ToTable("user_type_users");
+            });
+
+            modelBuilder.Entity<TestCategory>(entity =>
+            {
+                entity.ToTable("test_categories");
+            });
+
+            modelBuilder.Entity<ReadingPartOne>(entity =>
+            {
+                entity.ToTable("reading_part_1");
             });
             #endregion
         }

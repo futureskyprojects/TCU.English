@@ -1,0 +1,244 @@
+﻿@{
+    ViewData["Title"] = "Reading Manager";
+    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TCU.English.Models.ReadingPartOne> readingPartOnes = ViewBag.ReadingPartOneQuestions;
+}
+<div class="pt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Categories</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.TestCategory)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    @if (testCategories != null && testCategories.Count() > 0)
+                    {
+                        for (int i = 0; i < testCategories.Count(); i++)
+                        {
+                            <div class="card mb-2">
+                                <div class="card-body p-3">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-10">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(testCategories.ElementAt(i).Name) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(testCategories.ElementAt(i).ReadingPartOnes.Count))</sup></span></p>
+                                            <small class="text-muted">@Html.Raw(testCategories.ElementAt(i).Description)</small>
+                                        </div>
+                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id, '@Html.Raw(testCategories.ElementAt(i).Name)')">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <partial name="__EmptyAnimation" />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Questions: All</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.ReadingPartOne)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (testCategories != null && readingPartOnes.Count() > 0)
+                    {
+                        @for (int i = 0; i < readingPartOnes.Count(); i++)
+                        {
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-11">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i + 1)<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(readingPartOnes.ElementAt(i).QuestionText)</span></p>
+                                        </div>
+                                        <div class="col-1" onclick="readingPartOnePopupOptions(@readingPartOnes.ElementAt(i).Id, '@Html.Raw(readingPartOnes.ElementAt(i).QuestionText)')">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <partial name="__EmptyAnimation" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* TEST CATEGORY DIALOG *@
+<div id="modal-create-test-category"></div>
+<div id="modal-update-test-category"></div>
+@* END TEST CATEGORY DIALOG *@
+
+@* READING PART 1 DIALOG *@
+<div id="modal-create-reading-part-1-question"></div>
+<div id="modal-update-reading-part-1-question"></div>
+@* END READING PART 1 DIALOG *@
+
+@section Scripts {
+    <script>
+        window.onload = function () {
+            $("#modal-create-test-category").load("@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())", {
+                "testCategory": @Html.Raw((Newtonsoft.Json.JsonConvert.SerializeObject(TCU.English.Models.TestCategory.ReadingCategory(1))))
+            });
+            $("#modal-create-reading-part-1-question").load("@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())");
+        };
+        function testCategoryPopupOptions(id, name) {
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with the category "${name}"?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-test-category").load(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            testCategoryDeleteConfirm(id,name);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function testCategoryDeleteConfirm(id, name) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Delete), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! '${name}' has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! '${name}' has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! '${name}' has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`${name}'s`, " is safe!");
+                    }
+                });
+        }
+        //==============================================================//
+        function readingPartOnePopupOptions(id, questionText) {
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with the question "${questionText}"?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-reading-part-1-question").load(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            readingPartOneDeleteConfirm(id,questionText);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function readingPartOneDeleteConfirm(id, questionText) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Delete), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Question '${questionText}' has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`${questionText}`, "safe!");
+                    }
+                });
+        }
+    </script>
+}

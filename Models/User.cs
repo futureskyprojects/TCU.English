@@ -27,6 +27,8 @@ namespace TCU.English.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime BirthDay { get; set; }
         public virtual ICollection<UserTypeUser> UserTypeUser { get; set; }
+        public virtual ICollection<TestCategory> TestCategories { get; set; }
+        public virtual ICollection<ReadingPartOne> ReadingPartOnes { get; set; }
 
         public static (int, string)[] Genders = new (int, string)[]
         {

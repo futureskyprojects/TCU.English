@@ -57,6 +57,7 @@ namespace TCU.English.Controllers
                         // create claims
                         List<Claim> claims = new List<Claim>
                         {
+                            new Claim(CustomClaimTypes.Id, user.Id.ToString()??"0"),
                             new Claim(ClaimTypes.NameIdentifier, user.Username??""),
                             new Claim(ClaimTypes.Email, user.Email??""),
                             new Claim(ClaimTypes.DateOfBirth, user.BirthDay.ToString()??""),

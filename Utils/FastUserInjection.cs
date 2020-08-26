@@ -6,6 +6,11 @@ namespace TCU.English.Utils
 {
     public static class FastUserInjection
     {
+        public static int Id(this ClaimsPrincipal claims)
+        {
+            return ExtractValue(claims, CustomClaimTypes.Id).ToInt();
+        }
+
         public static string ExtractValue(this ClaimsPrincipal claims, string claimTypes)
         {
             try

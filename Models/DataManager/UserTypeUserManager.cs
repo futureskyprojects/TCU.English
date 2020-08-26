@@ -16,6 +16,9 @@ namespace TCU.English.Models.DataManager
 
         public void Add(UserTypeUser entity)
         {
+            entity.CreatedTime = DateTime.Now;
+            entity.UpdatedTime = DateTime.Now;
+            entity.Active = true;
             instantce.UserTypeUser.Add(entity);
             instantce.SaveChanges();
         }
@@ -82,6 +85,7 @@ namespace TCU.English.Models.DataManager
 
         public void Update(UserTypeUser entity)
         {
+            entity.UpdatedTime = DateTime.Now;
             instantce.UserTypeUser.Update(entity);
             instantce.SaveChanges();
         }
