@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TCU.English.Models;
 
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    partial class SystemDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200827082923_200827.1")]
+    partial class _2008271
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,55 +63,6 @@ namespace TCU.English.Migrations
                     b.HasIndex("TestCategoryId");
 
                     b.ToTable("reading_part_1");
-                });
-
-            modelBuilder.Entity("TCU.English.Models.ReadingPartTwo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Answers")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ExplainLink")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Hint")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("QuestionImage")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("QuestionText")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("TestCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedTime")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("TestCategoryId");
-
-                    b.ToTable("reading_part_2");
                 });
 
             modelBuilder.Entity("TCU.English.Models.TestCategory", b =>
@@ -285,21 +238,6 @@ namespace TCU.English.Migrations
 
                     b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
                         .WithMany("ReadingPartOnes")
-                        .HasForeignKey("TestCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TCU.English.Models.ReadingPartTwo", b =>
-                {
-                    b.HasOne("TCU.English.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
-                        .WithMany()
                         .HasForeignKey("TestCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

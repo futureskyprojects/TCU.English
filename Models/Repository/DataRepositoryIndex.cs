@@ -13,6 +13,7 @@ namespace TCU.English.Models.Repository
             services.AddScoped<IDataRepository<UserTypeUser>, UserTypeUserManager>();
             services.AddScoped<IDataRepository<TestCategory>, TestCategoryManager>();
             services.AddScoped<IDataRepository<ReadingPartOne>, ReadingPartOneManager>();
+            services.AddScoped<IDataRepository<ReadingPartTwo>, ReadingPartTwoManager>();
         }
     }
 }

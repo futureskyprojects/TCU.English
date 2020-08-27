@@ -110,68 +110,7 @@
                     </div>
                 </div>
             }
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @{
-                        int numberPage = ViewBag.totalPageNumber;
-                        int pageCurrent = ViewBag.currentPageIndex;
-
-                        int offset = ViewBag.offset;
-
-                        if (pageCurrent > 1)
-                        {
-                            var PrevLink = new Dictionary<string, string> { { "page", $"{pageCurrent - 1}" }, { "type", type } };
-                            <li class="page-item"><a class="page-link" href="@Url.Action(nameof(UserManagementController.Index),controllerName, PrevLink)">&laquo;</a></li>
-                        }
-                        int from = pageCurrent - offset;
-                        int to = pageCurrent + offset;
-                        if (from <= 0)
-                        {
-                            from = 1;
-                            to = offset * 2;
-                        }
-
-
-                        if (to > numberPage)
-                        {
-                            to = numberPage;
-                        }
-
-                        int i;
-                        for (i = from; i <= to; i++)
-                        {
-                            var parms = new Dictionary<string, string>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {
-                                { "page",i.ToString()},
-                                { "type", type }
-                            };
-                            if (pageCurrent == i)
-                            {
-                                <li class="page-item active"><a class="page-link" href="@Url.Action(nameof(UserManagementController.Index),controllerName, parms)">@i</a></li>
-                            }
-                            else
-                            {
-                                <li class="page-item"><a class="page-link" href="@Url.Action(nameof(UserManagementController.Index),controllerName, parms)">@i</a></li>
-                            }
-
-                        }
-
-                        if (pageCurrent < numberPage - (to / 2))
-                        {
-                            <li class="page-item"><a class="page-link">...</a></li>
-                            var LastLink = new Dictionary<string, string> { { "page", numberPage.ToString() }, { "type", type } };
-                            <li class="page-item"><a class="page-link" href="@Url.Action(nameof(UserManagementController.Index),controllerName, LastLink)">Last Link</a></li>
-                        }
-
-                        if (pageCurrent < numberPage)
-                        {
-                            int nextPage = pageCurrent + 1;
-                            var NextLink = new Dictionary<string, string> { { "page", nextPage.ToString() }, { "type", type } };
-                            <li class="page-item"><a class="page-link" href="@Url.Action(nameof(UserManagementController.Index),controllerName, NextLink)">&raquo;</a></li>
-                        }
-                    }
-                </ul>
-            </nav>
+            @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.Pagination);
         }
     </div>
 </div>

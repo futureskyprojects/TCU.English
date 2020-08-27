@@ -23,14 +23,12 @@ namespace TCU.English.Controllers
         private readonly UserTypeManager _UserTypeManager;
         private readonly UserTypeUserManager _UserTypeUserManager;
 
-        private readonly string PATH_ROOT;
         public UserManagementController(IHostEnvironment _host, IDataRepository<User> _UserManager, IDataRepository<UserType> _UserTypeManager, IDataRepository<UserTypeUser> _UserTypeUserManager)
         {
             this.host = _host;
             this._UserManager = (UserManager)_UserManager;
             this._UserTypeManager = (UserTypeManager)_UserTypeManager;
             this._UserTypeUserManager = (UserTypeUserManager)_UserTypeUserManager;
-            this.PATH_ROOT = Path.GetDirectoryName(host.ContentRootPath);
         }
         public IActionResult Index(string type = "all", int page = 1, string searchKey = "")
         {
@@ -46,9 +44,6 @@ namespace TCU.English.Controllers
             {
                 type = "all"; // Nếu có tìm, thì sẽ là tìm tất cả
             }
-
-            ViewBag.currentPageIndex = page;
-            ViewBag.Type = type;
 
             ViewBag.AllUserCount = allUserCount;
             ViewBag.AllLearnersCount = allLearnersCount;
@@ -101,8 +96,15 @@ namespace TCU.English.Controllers
                     ViewBag.TableDescription = "List all user using your system";
                 }
             }
-            ViewBag.totalPageNumber = PaginationUtils.TotalPageCount(total.ToInt(), limit);
-            ViewBag.offset = limit;
+
+            // Tạo đối tượng phân trang
+            ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<UserManagementController>())
+            {
+                PageCurrent = page,
+                Type = type,
+                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), limit),
+                Offset = limit
+            };
             // Get data
             return View(users);
         }
@@ -129,38 +131,48 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
+                    string uploadResult = await host.UploadForUserMedia(userAvatar, user);
+                    if (uploadResult != null && uploadResult.Length > 0)
                     {
-                        if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
-                        {
-                            // Upload avatar
-                            try
-                            {
-                                var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
-                                var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
-                                // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
-                                if (!Directory.Exists(uploads))
-                                    Directory.CreateDirectory(uploads);
-                                var filePath = Path.Combine(uploads, uniqueFileName);
-
-                                using (var stream = System.IO.File.Create(filePath))
-                                {
-                                    await userAvatar.CopyToAsync(stream);
-                                }
-                                user.Avatar = filePath.Replace(PATH_ROOT, "");
-                            }
-                            catch (Exception e)
-                            {
-                                ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
-                                return View(user);
-                            }
-                        }
-                        else
-                        {
-                            ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                            return View(user);
-                        }
+                        user.Avatar = uploadResult;
                     }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                        return View(user);
+                    }
+                    //if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
+                    //{
+                    //    if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
+                    //    {
+                    //        // Upload avatar
+                    //        try
+                    //        {
+                    //            var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
+                    //            var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
+                    //            // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
+                    //            if (!Directory.Exists(uploads))
+                    //                Directory.CreateDirectory(uploads);
+                    //            var filePath = Path.Combine(uploads, uniqueFileName);
+
+                    //            using (var stream = System.IO.File.Create(filePath))
+                    //            {
+                    //                await userAvatar.CopyToAsync(stream);
+                    //            }
+                    //            user.Avatar = filePath.Replace(PATH_ROOT, "");
+                    //        }
+                    //        catch (Exception e)
+                    //        {
+                    //            ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
+                    //            return View(user);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                    //        return View(user);
+                    //    }
+                    //}
                 }
                 // Save user
                 _UserManager.Add(user);
@@ -222,49 +234,59 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
+                    string uploadResult = await host.UploadForUserMedia(userAvatar, user);
+                    if (uploadResult != null && uploadResult.Length > 0)
                     {
-                        if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
-                        {
-                            // Upload avatar
-                            try
-                            {
-                                var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
-                                var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
-                                // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
-                                if (!Directory.Exists(uploads))
-                                    Directory.CreateDirectory(uploads);
-                                var filePath = Path.Combine(uploads, uniqueFileName);
-
-                                using (var stream = System.IO.File.Create(filePath))
-                                {
-                                    await userAvatar.CopyToAsync(stream);
-                                }
-
-                                // Xóa tệp ảnh cũ nếu có
-                                if (user.Avatar != null && user.Avatar.Length > 0)
-                                {
-                                    var oldFile = Path.Combine(PATH_ROOT, user.Avatar);
-                                    if (System.IO.File.Exists(oldFile))
-                                    {
-                                        System.IO.File.Delete(oldFile);
-                                    }
-                                }
-
-                                user.Avatar = filePath.Replace(PATH_ROOT, "");
-                            }
-                            catch (Exception e)
-                            {
-                                ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
-                                return View(user);
-                            }
-                        }
-                        else
-                        {
-                            ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                            return View(user);
-                        }
+                        user.Avatar = uploadResult;
                     }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                        return View(user);
+                    }
+                    //if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
+                    //{
+                    //    if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
+                    //    {
+                    //        // Upload avatar
+                    //        try
+                    //        {
+                    //            var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
+                    //            var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
+                    //            // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
+                    //            if (!Directory.Exists(uploads))
+                    //                Directory.CreateDirectory(uploads);
+                    //            var filePath = Path.Combine(uploads, uniqueFileName);
+
+                    //            using (var stream = System.IO.File.Create(filePath))
+                    //            {
+                    //                await userAvatar.CopyToAsync(stream);
+                    //            }
+
+                    //            // Xóa tệp ảnh cũ nếu có
+                    //            if (user.Avatar != null && user.Avatar.Length > 0)
+                    //            {
+                    //                var oldFile = Path.Combine(PATH_ROOT, user.Avatar);
+                    //                if (System.IO.File.Exists(oldFile))
+                    //                {
+                    //                    System.IO.File.Delete(oldFile);
+                    //                }
+                    //            }
+
+                    //            user.Avatar = filePath.Replace(PATH_ROOT, "");
+                    //        }
+                    //        catch (Exception e)
+                    //        {
+                    //            ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
+                    //            return View(user);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                    //        return View(user);
+                    //    }
+                    //}
                     // Save user
                     _UserManager.Update(user);
 
@@ -311,7 +333,7 @@ namespace TCU.English.Controllers
                 {
                     _UserManager.Delete(user);
                     user.HashPassword = "";
-                    var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
+                    var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
                     // Xóa thư mục tệp tin của người dùng này nếu có tồn tại
                     if (Directory.Exists(uploads))
                         Directory.Delete(uploads, true);

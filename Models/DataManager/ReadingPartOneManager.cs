@@ -42,6 +42,10 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.ReadingPartOnes.ToList();
         }
+        public IEnumerable<ReadingPartOne> GetByPagination(long categoryId, int start, int limit)
+        {
+            return instantce.ReadingPartOnes.Where(x => x.TestCategoryId == categoryId).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
 
         public IEnumerable<ReadingPartOne> GetByPagination(int start, int limit)
         {

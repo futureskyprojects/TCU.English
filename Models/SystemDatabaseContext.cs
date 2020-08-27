@@ -16,6 +16,7 @@ namespace TCU.English.Models
         public virtual DbSet<UserType> UserType { get; set; }
         public virtual DbSet<TestCategory> TestCategories { get; set; }
         public virtual DbSet<ReadingPartOne> ReadingPartOnes { get; set; }
+        public virtual DbSet<ReadingPartTwo> ReadingPartTwos { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
@@ -49,6 +50,11 @@ namespace TCU.English.Models
             modelBuilder.Entity<ReadingPartOne>(entity =>
             {
                 entity.ToTable("reading_part_1");
+            });
+            
+            modelBuilder.Entity<ReadingPartTwo>(entity =>
+            {
+                entity.ToTable("reading_part_2");
             });
             #endregion
         }

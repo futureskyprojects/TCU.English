@@ -53,6 +53,11 @@ namespace TCU.English.Models.DataManager
             return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).ToList();
         }
 
+        public IEnumerable<TestCategory> GetByPagination(string type, int partId, int start, int limit)
+        {
+            return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
+
         public IEnumerable<TestCategory> GetByPagination(int start, int limit)
         {
             return instantce.TestCategories.OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();

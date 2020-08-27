@@ -20,10 +20,12 @@ namespace TCU.English.Models
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        public string WYSIWYGContent { get; set; }
         public int CreatorId { get; set; }
         [ForeignKey(nameof(CreatorId))]
         public virtual User User { get; set; }
         public virtual ICollection<ReadingPartOne> ReadingPartOnes { get; set; }
+        public virtual ICollection<ReadingPartTwo> ReadingPartTwos { get; set; }
         // ======================================================== //
         public TestCategory()
         {

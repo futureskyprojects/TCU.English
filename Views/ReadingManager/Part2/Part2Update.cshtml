@@ -1,0 +1,165 @@
+﻿@model TCU.English.Models.ReadingPartTwo
+@{
+    string modalId = nameof(TCU.English.Models.ReadingPartTwo) + "_Update";
+    string modalTitle = "Update question of \"Reading Part 2\"";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>();
+    string actionName = nameof(TCU.English.Controllers.ReadingManagerController.Part2UpdateAjax);
+    string errorMsg = "An error occurred during operation, please try again.";
+
+    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
+
+    bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
+}
+
+<div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="@(modalId)_label" class="modal-title">@Html.Raw(modalTitle)</h4>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+            </div>
+            @*=======================================================*@
+            <form asp-controller="@controller" asp-action="@actionName"
+                  id="@(modalId)_form"
+                  data-ajax="true"
+                  data-ajax-method="POST"
+                  data-ajax-complete="onComplete"
+                  data-ajax-success="onSuccess"
+                  data-ajax-begin="onBegin"
+                  data-ajax-failure="onFailed">
+
+                @*//========= MODAL BODY =============//*@
+                <div class="modal-body">
+                    <div id="@(modalId)_body">
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.CreatedTime)
+                        @Html.HiddenFor(x => x.UpdatedTime)
+                        @Html.HiddenFor(x => x.CreatorId)
+                        @Html.HiddenFor(x => x.Active)
+                        @Html.HiddenFor(x => x.Answers)
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.QuestionText)
+                            @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.Hint)
+                            @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ExplainLink)
+                            @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Select question category</label>
+                            <div class="select">
+                                @Html.DropDownListFor(x => x.TestCategoryId,
+                               new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
+                               new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="line"></div>
+
+                        @* REGION FOR CREATE ANSWERS *@
+                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
+                        @for (int i = 0; i < testAnswers.Count(); i++)
+                        {
+                            TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
+                            string answerAlphapet = ((char)((int)'A' + i)).ToString();
+                            <div class="form-group">
+                                <label>@Html.Raw($"Answer {answerAlphapet}")</label>
+                                <div class="row">
+                                    <div class="col-11">
+                                        <input type="text" placeholder="Enter your answer to the question here" class="form-control" id="@Html.Raw($"ans-content-{answerAlphapet}")" value="@Html.Raw(baseAnswer.AnswerContent)" onchange="updateValue()">
+                                    </div>
+                                    <div class="col-1 d-flex align-items-center">
+                                        <input type="radio" value="@i" name="ans-state" id="@Html.Raw($"ans-state-{answerAlphapet}")" onchange="updateValue()" @Html.Raw(baseAnswer.IsCorrect ? " checked" : "")>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @* END REGION FOR CREATE ANSWERS *@
+
+                    </div>
+                    <div id="@(modalId)_loading">
+                        <partial name="__Loading" />
+                    </div>
+                </div>
+                @*//========= END MODAL BODY =============//*@
+
+                @*//========= MODAL FOOTER =============//*@
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                @*//========= END MODAL FOOTER =============//*@
+            </form>
+            @*@using (Html.BeginForm(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>(), FormMethod.Post))
+                {
+                }*@
+            @*=======================================================*@
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var isShowImmediately = @(isShowImmediately.ToString().ToLower());
+    var testAnswersJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(testAnswers));
+    function updateValue() {
+        for (var i = 0; i < testAnswersJson.length; i++) {
+            let charTemp = String.fromCharCode("A".charCodeAt(0) + i);
+            testAnswersJson[i].AnswerContent = $(`#ans-content-${charTemp}`).val();
+            testAnswersJson[i].IsCorrect = false;
+        }
+
+        let value = $('input[name=ans-state]:checked', '#@(modalId)_form').val();
+        if (value != null && value != undefined) {
+            console.log(value);
+            testAnswersJson[value].IsCorrect = true;
+        }
+
+        $("#Answers").val(JSON.stringify(testAnswersJson));
+        console.log($("#Answers").val());
+    }
+
+    $("#@(modalId)_loading").hide();
+
+    $("#@(modalId)_body").show();
+
+    $("#@(modalId)_loading").hide();
+
+
+    var onComplete = function () {
+        $("#@(modalId)_loading").hide();
+        $("#@(modalId)_body").show();
+    };
+    var onBegin  = function () {
+        $("#@(modalId)_loading").show();
+        $("#@(modalId)_body").hide();
+    };
+    var onSuccess = function (data, status, xhr) {
+        if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
+
+            if (data.status) {
+                toastr["success"](data.message);
+                $("#@modalId").hide();
+                setTimeout(function () { location.reload(); }, 1000);
+            } else {
+                toastr["error"](data.message);
+            }
+            return;
+        }
+        toastr["error"]("@modalId");
+    }
+    var onFailed = function (xhr, status, error) {
+        toastr["error"]("@errorMsg");
+    };
+
+    if (isShowImmediately) {
+        $("#@modalId").modal('show');
+    }
+</script>

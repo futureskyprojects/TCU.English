@@ -1,15 +1,252 @@
-﻿
-@{
-    ViewData["Title"] = "Reading Manager";
+﻿@{
+    ViewData["Title"] = "Reading Part 2 Manager";
+    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TCU.English.Models.ReadingPartTwo> readingPartTwos = ViewBag.ReadingPartTwos;
+
+    string questionType = ViewBag.QuestionType ?? "";
 }
 
 <div class="pt-5">
-    <div class="card">
-        <div class="card-header">
-            <h2 class="h6 text-uppercase mb-0">Please wait</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Categories</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.TestCategory)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    @if (testCategories != null && testCategories.Count() > 0)
+                    {
+                        for (int i = 0; i < testCategories.Count(); i++)
+                        {
+                            <div class="card mb-2 bg-hover-gradient-blue no-anchor-style">
+                                <div class="card-body p-3">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-10" onclick="window.location.href='@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part2), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>(), new { category = testCategories.ElementAt(i).Id })'">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(testCategories.ElementAt(i).Name) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(testCategories.ElementAt(i).ReadingPartTwos.Count))</sup></span></p>
+                                            <small class="text-muted">@Html.Raw(testCategories.ElementAt(i).Description)</small>
+                                        </div>
+                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id, '@Html.Raw(testCategories.ElementAt(i).Name)')">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.CategoryPagination);
+                    }
+                    else
+                    {
+                        <partial name="__EmptyAnimation" />
+                    }
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            The functionality is currently in development, please wait until the next update.
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Questions: @Html.Raw(questionType)</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.ReadingPartTwo)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (testCategories != null && readingPartTwos.Count() > 0)
+                    {
+                        @for (int i = 0; i < readingPartTwos.Count(); i++)
+                        {
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-11">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i + 1)<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(readingPartTwos.ElementAt(i).QuestionText)</span></p>
+                                        </div>
+                                        <div class="col-1" onclick="readingPopupOptions(@readingPartTwos.ElementAt(i).Id, '@Html.Raw(readingPartTwos.ElementAt(i).QuestionText)')">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.ReadingPagination);
+                    }
+                    else
+                    {
+                        <partial name="__EmptyAnimation" />
+                    }
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@* TEST CATEGORY DIALOG *@
+<div id="modal-create-test-category"></div>
+<div id="modal-update-test-category"></div>
+@* END TEST CATEGORY DIALOG *@
+
+@* READING PART 1 DIALOG *@
+<div id="modal-create-reading-part-2-question"></div>
+<div id="modal-update-reading-part-2-question"></div>
+@* END READING PART 1 DIALOG *@
+
+@section Scripts {
+    <script>
+        window.onload = function () {
+            $("#modal-create-test-category").load("@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())", {
+                "testCategory": @Html.Raw((Newtonsoft.Json.JsonConvert.SerializeObject(TCU.English.Models.TestCategory.ReadingCategory(2))))
+            });
+            $("#modal-create-reading-part-2-question").load("@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part2Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())");
+        };
+
+        function testCategoryPopupOptions(id, name) {
+
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with the category "${name}"?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-test-category").load(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            testCategoryDeleteConfirm(id,name);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function testCategoryDeleteConfirm(id, name) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Delete), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! '${name}' has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! '${name}' has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! '${name}' has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`${name}'s`, " is safe!");
+                    }
+                });
+        }
+        //==============================================================//
+        function readingPopupOptions(id, questionText) {
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with the question "${questionText}"?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-reading-part-2-question").load(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part2Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            readingDeleteConfirm(id,questionText);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function readingDeleteConfirm(id, questionText) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part2DeleteAjax), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Question '${questionText}' has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`${questionText}`, "safe!");
+                    }
+                });
+        }
+    </script>
+}

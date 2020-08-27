@@ -1,0 +1,62 @@
+﻿@using TCU.English
+@using TCU.English.Utils
+@using TCU.English.Controllers
+
+@model TCU.English.Models.Pagination
+
+@{
+
+    int from = Model.PageCurrent - Model.Offset;
+    int to = Model.PageCurrent + Model.Offset;
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        @{
+            if (Model.PageCurrent > 1)
+            {
+                var PrevLink = Model.BuildParams($"{Model.PageCurrent - 1}");
+                <li class="page-item"><a class="page-link" href="@Url.Action(Model.ActionName,Model.ControllerName, PrevLink)">&laquo;</a></li>
+            }
+            if (from <= 0)
+            {
+                from = 1;
+                to = Model.Offset * 2;
+            }
+
+
+            if (to > Model.NumberPage)
+            {
+                to = Model.NumberPage;
+            }
+
+            for (int i = from; i <= to; i++)
+            {
+                var parms = Model.BuildParams(i.ToString());
+                if (Model.PageCurrent == i)
+                {
+                    <li class="page-item active"><a class="page-link" href="@Url.Action(Model.ActionName,Model.ControllerName, parms)">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action(Model.ActionName,Model.ControllerName, parms)">@i</a></li>
+                }
+
+            }
+
+            if (Model.PageCurrent < Model.NumberPage - (to / 2))
+            {
+                <li class="page-item"><a class="page-link">...</a></li>
+                var LastLink = Model.BuildParams(Model.NumberPage.ToString());
+                <li class="page-item"><a class="page-link" href="@Url.Action(Model.ActionName,Model.ControllerName, LastLink)">Last Link</a></li>
+            }
+
+            if (Model.PageCurrent < Model.NumberPage)
+            {
+                int nextPage = Model.PageCurrent + 1;
+                var NextLink = Model.BuildParams(nextPage.ToString());
+                <li class="page-item"><a class="page-link" href="@Url.Action(Model.ActionName,Model.ControllerName, NextLink)">&raquo;</a></li>
+            }
+        }
+    </ul>
+</nav>
