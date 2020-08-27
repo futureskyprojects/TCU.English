@@ -8,15 +8,14 @@ namespace TCU.English.Models
     public class ReadingPartTwo : BaseEntity
     {
         [DisplayName("Question Text")]
-        [Required]
-        public string QuestionText { get; set; }
+        public string QuestionText { get; set; } = "";
         [DisplayName("Question Image")]
-        public string QuestionImage { get; set; }
-        public string Hint { get; set; }
+        public string QuestionImage { get; set; } = "";
+        public string Hint { get; set; } = "";
         [Required]
-        public string Answers { get; set; }
+        public string Answers { get; set; } = "";
         [DisplayName("Explain Link")]
-        public string ExplainLink { get; set; }
+        public string ExplainLink { get; set; } = "";
         public int CreatorId { get; set; }
         [ForeignKey(nameof(CreatorId))]
         public virtual User User { get; set; }

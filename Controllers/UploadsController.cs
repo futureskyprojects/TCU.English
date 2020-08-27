@@ -11,11 +11,9 @@ namespace TCU.English.Controllers
     public class UploadsController : Controller
     {
         private readonly IHostEnvironment host;
-        private readonly string PATH_ROOT;
         public UploadsController(IHostEnvironment _host)
         {
             host = _host;
-            this.PATH_ROOT = Path.GetDirectoryName(host.ContentRootPath);
         }
 
         [HttpGet("[controller]/{username}/{filename}")]
@@ -23,7 +21,28 @@ namespace TCU.English.Controllers
         {
             try
             {
-                var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), username, filename);
+                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), username, filename);
+
+                if (System.IO.File.Exists(uploads))
+                {
+                    return File(System.IO.File.ReadAllBytes(uploads), "application/octet-stream");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+        [HttpGet("[controller]/{testType}/{part}/{filename}")]
+        public IActionResult Index(string testType, string part, string filename)
+        {
+            try
+            {
+                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), testType, part, filename);
 
                 if (System.IO.File.Exists(uploads))
                 {

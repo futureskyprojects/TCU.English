@@ -141,38 +141,6 @@ namespace TCU.English.Controllers
                         ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
                         return View(user);
                     }
-                    //if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
-                    //{
-                    //    if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
-                    //    {
-                    //        // Upload avatar
-                    //        try
-                    //        {
-                    //            var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
-                    //            var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
-                    //            // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
-                    //            if (!Directory.Exists(uploads))
-                    //                Directory.CreateDirectory(uploads);
-                    //            var filePath = Path.Combine(uploads, uniqueFileName);
-
-                    //            using (var stream = System.IO.File.Create(filePath))
-                    //            {
-                    //                await userAvatar.CopyToAsync(stream);
-                    //            }
-                    //            user.Avatar = filePath.Replace(PATH_ROOT, "");
-                    //        }
-                    //        catch (Exception e)
-                    //        {
-                    //            ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
-                    //            return View(user);
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                    //        return View(user);
-                    //    }
-                    //}
                 }
                 // Save user
                 _UserManager.Add(user);
@@ -244,49 +212,6 @@ namespace TCU.English.Controllers
                         ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
                         return View(user);
                     }
-                    //if (userAvatar != null && userAvatar.Length > 0 && userAvatar.Length <= Config.MAX_IMAGE_SIZE)
-                    //{
-                    //    if (MimeTypeUtils.Image.CheckContentType(userAvatar.ContentType) && MimeTypeUtils.Image.CheckFileExtension(userAvatar.FileName))
-                    //    {
-                    //        // Upload avatar
-                    //        try
-                    //        {
-                    //            var uniqueFileName = NameUtils.GetUniqueFileName(userAvatar.FileName);
-                    //            var uploads = Path.Combine(PATH_ROOT, NameUtils.ControllerName<UploadsController>().ToLower(), user.Username.ToLower());
-                    //            // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
-                    //            if (!Directory.Exists(uploads))
-                    //                Directory.CreateDirectory(uploads);
-                    //            var filePath = Path.Combine(uploads, uniqueFileName);
-
-                    //            using (var stream = System.IO.File.Create(filePath))
-                    //            {
-                    //                await userAvatar.CopyToAsync(stream);
-                    //            }
-
-                    //            // Xóa tệp ảnh cũ nếu có
-                    //            if (user.Avatar != null && user.Avatar.Length > 0)
-                    //            {
-                    //                var oldFile = Path.Combine(PATH_ROOT, user.Avatar);
-                    //                if (System.IO.File.Exists(oldFile))
-                    //                {
-                    //                    System.IO.File.Delete(oldFile);
-                    //                }
-                    //            }
-
-                    //            user.Avatar = filePath.Replace(PATH_ROOT, "");
-                    //        }
-                    //        catch (Exception e)
-                    //        {
-                    //            ModelState.AddModelError(nameof(Models.User.Avatar), e.Message);
-                    //            return View(user);
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                    //        return View(user);
-                    //    }
-                    //}
                     // Save user
                     _UserManager.Update(user);
 

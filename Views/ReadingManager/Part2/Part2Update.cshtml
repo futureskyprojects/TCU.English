@@ -1,4 +1,5 @@
-﻿@model TCU.English.Models.ReadingPartTwo
+﻿@using TCU.English.Utils
+@model TCU.English.Models.ReadingPartTwo
 @{
     string modalId = nameof(TCU.English.Models.ReadingPartTwo) + "_Update";
     string modalTitle = "Update question of \"Reading Part 2\"";
@@ -21,6 +22,7 @@
             </div>
             @*=======================================================*@
             <form asp-controller="@controller" asp-action="@actionName"
+                  enctype="multipart/form-data"
                   id="@(modalId)_form"
                   data-ajax="true"
                   data-ajax-method="POST"
@@ -38,6 +40,21 @@
                         @Html.HiddenFor(x => x.CreatorId)
                         @Html.HiddenFor(x => x.Active)
                         @Html.HiddenFor(x => x.Answers)
+                        @Html.HiddenFor(x => x.QuestionImage)
+                        @* Question Image for Uploader *@
+                        <div class="form-group">
+                            <div class="text-center mb-3">
+                                <img id="update-img-default" src="@(Model.QuestionImage??"")" alt="Question Image" class="img-fluid shadow" style="width:320px;" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
+                                <img id="update-img-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
+                            </div>
+                            <div class="text-center">
+                                <input type="file" name="@(nameof(TCU.English.Models.ReadingPartTwo.QuestionImage).ToCamelCase())" id="update-img-picker" onchange="updateImgPicked(this)" hidden />
+                                <button type="button" class="btn btn-info" onclick="$('#update-img-picker').click();">Select Image</button>
+                                <button type="button" class="btn btn-danger" id="update-img-remove-picker-btn">Remove Picked</button>
+                            </div>
+                            <small class="form-text text-danger mr-3 text-center">@Html.ValidationMessageFor(x => x.QuestionImage)</small>
+                        </div>
+                        @* Question Image uploader *@
                         <div class="form-group">
                             @Html.LabelFor(x => x.QuestionText)
                             @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
@@ -161,5 +178,42 @@
 
     if (isShowImmediately) {
         $("#@modalId").modal('show');
+    }
+
+    //============================================//
+    $('#update-img-preview').hide();
+    $('#update-img-remove-picker-btn').hide();
+
+    $('#update-img-remove-picker-btn').click(function () {
+        $('#update-img-picker').val(null);
+        $(this).hide();
+        $('#update-img-default').show();
+        $('#update-img-preview').hide();
+    });
+    function updateImgPicked(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileType = file['type'];
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+            if (!validImageTypes.includes(fileType)) {
+                // invalid file type code goes here.
+                toastr["error"]("Please only select image type for avatar!");
+            } else {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#update-img-preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+                // Show
+                $('#update-img-default').hide();
+                $('#update-img-preview').show();
+                $('#update-img-remove-picker-btn').show();
+            }
+        } else {
+            // Hide
+            $('#update-img-default').show();
+            $('#update-img-preview').hide();
+            $('#update-img-remove-picker-btn').hide();
+        }
     }
 </script>

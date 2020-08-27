@@ -20,6 +20,7 @@
             </div>
             @*=======================================================*@
             <form asp-controller="@controller" asp-action="@actionName"
+                  enctype="multipart/form-data"
                   id="@(modalId)_form"
                   data-ajax="true"
                   data-ajax-method="POST"
@@ -36,6 +37,7 @@
                         @Html.HiddenFor(x => x.UpdatedTime)
                         @Html.HiddenFor(x => x.Active)
                         @Html.HiddenFor(x => x.Answers)
+                        @Html.HiddenFor(x => x.QuestionImage)
                         @* Question Image for Uploader *@
                         <div class="form-group">
                             <div class="text-center mb-3">

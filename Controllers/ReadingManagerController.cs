@@ -454,7 +454,7 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult Part2UpdateAjax(ReadingPartTwo readingPartTwo)
+        public async Task<IActionResult> Part2UpdateAjax(ReadingPartTwo readingPartTwo, IFormFile questionImage)
         {
             if (ModelState.IsValid)
             {
@@ -489,6 +489,11 @@ namespace TCU.English.Controllers
 
                         if (isFullAnswer && isHaveCorrectAnswer)
                         {
+                            string uploadResult = await host.UploadForTestMedia(questionImage, TestCategory.READING, 2);
+                            if (uploadResult != null || uploadResult.Length > 0)
+                            {
+                                readingPartTwo.QuestionImage = uploadResult;
+                            }
                             _ReadingPartTwoManager.Update(readingPartTwo);
                             return Json(new { status = true, message = "Successfully updated, the list will refresh again in 1 second." });
                         }
