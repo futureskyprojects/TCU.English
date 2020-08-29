@@ -7,12 +7,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TCU.English.Models
 {
-    public class ReadingPartTwo : BaseEntity
+    public class ListeningBaseQuestion : BaseEntity
     {
         [DisplayName("Question Text")]
         public string QuestionText { get; set; } = "";
-        [DisplayName("Question Image")]
-        public string QuestionImage { get; set; } = "";
         public string Hint { get; set; } = "";
         [Required]
         public string Answers { get; set; } = "";
@@ -27,19 +25,19 @@ namespace TCU.English.Models
         [NotMapped]
         public List<BaseAnswer> AnswerList { get; set; }
 
-        public static List<ReadingPartTwo> Generate(int size, int answerSize = 4)
+        public static List<ListeningBaseQuestion> Generate(int size, int answerSize = 3)
         {
-            List<ReadingPartTwo> readingPartTwos = new List<ReadingPartTwo>();
+            List<ListeningBaseQuestion> listeningBaseQuestions = new List<ListeningBaseQuestion>();
             for (int i = 0; i < size; i++)
             {
-                var temp = new ReadingPartTwo
+                var temp = new ListeningBaseQuestion
                 {
                     Answers = JsonConvert.SerializeObject(BaseAnswer.Generate(answerSize)),
                     AnswerList = BaseAnswer.Generate(answerSize)
                 };
-                readingPartTwos.Add(temp);
+                listeningBaseQuestions.Add(temp);
             }
-            return readingPartTwos;
+            return listeningBaseQuestions;
         }
     }
 }

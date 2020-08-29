@@ -8,6 +8,6 @@ namespace TCU.English.Models
     public class ReadingCombined
     {
         public TestCategory TestCategory { get; set; }
-        public ReadingPartTwo ReadingPartTwo { get; set; }
+        public List<ReadingPartTwo> ReadingPartTwos { get; set; }
     }
 }

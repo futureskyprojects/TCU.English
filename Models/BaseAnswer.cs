@@ -8,7 +8,7 @@ namespace TCU.English.Models
 {
     public class BaseAnswer
     {
-        public string AnswerContent { get; set; }
+        public string AnswerContent { get; set; } = "";
         public bool IsCorrect { get; set; } = false;
 
         public static List<BaseAnswer> Generate(int size)

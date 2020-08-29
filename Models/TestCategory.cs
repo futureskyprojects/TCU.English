@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,12 +21,15 @@ namespace TCU.English.Models
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
+        [DisplayName("WYSIWYG Content")]
         public string WYSIWYGContent { get; set; }
         public int CreatorId { get; set; }
         [ForeignKey(nameof(CreatorId))]
         public virtual User User { get; set; }
         public virtual ICollection<ReadingPartOne> ReadingPartOnes { get; set; }
         public virtual ICollection<ReadingPartTwo> ReadingPartTwos { get; set; }
+        public virtual ICollection<ListeningBaseQuestion> ListeningBaseQuestions { get; set; }
+        public virtual ICollection<ListeningMedia> ListeningMedias { get; set; }
         // ======================================================== //
         public TestCategory()
         {

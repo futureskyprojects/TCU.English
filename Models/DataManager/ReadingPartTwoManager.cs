@@ -42,9 +42,37 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.ReadingPartTwos.ToList();
         }
-        public IEnumerable<ReadingPartTwo> GetByPagination(long categoryId, int start, int limit)
+        public IEnumerable<ReadingPartTwo> GetAll(long categoryId)
         {
-            return instantce.ReadingPartTwos.Where(x => x.TestCategoryId == categoryId).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+            return instantce.ReadingPartTwos.Where(x => x.TestCategoryId == categoryId).ToList();
+        }
+        public IEnumerable<ReadingPartTwo> GetByPagination(string testTypeCode, long partId, int start, int limit)
+        {
+            return instantce.ReadingPartTwos
+                .Join(instantce.TestCategories,
+                reading => reading.TestCategoryId,
+                category => category.Id,
+                (reading, category) => new { reading, category })
+                .Where(full => full.category.TypeCode.ToLower() == testTypeCode.ToLower() && full.category.PartId == partId)
+                .Select(full => full.reading)
+                .OrderByDescending(x => x.Id)
+                .Skip(start)
+                .Take(limit)
+                .ToList();
+        }
+        public IEnumerable<ReadingPartTwo> GetByPagination(long categoryId, string testTypeCode, long partId, int start, int limit)
+        {
+            return instantce.ReadingPartTwos
+                .Join(instantce.TestCategories,
+                reading => reading.TestCategoryId,
+                category => category.Id,
+                (reading, category) => new { reading, category })
+                .Where(full => full.category.Id == categoryId && full.category.TypeCode.ToLower() == testTypeCode.ToLower() && full.category.PartId == partId)
+                .Select(full => full.reading)
+                .OrderByDescending(x => x.Id)
+                .Skip(start)
+                .Take(limit)
+                .ToList();
         }
 
         public IEnumerable<ReadingPartTwo> GetByPagination(int start, int limit)

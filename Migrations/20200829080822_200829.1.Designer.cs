@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TCU.English.Models;
 
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    partial class SystemDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200829080822_200829.1")]
+    partial class _2008291
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,7 +364,7 @@ namespace TCU.English.Migrations
                         .IsRequired();
 
                     b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
-                        .WithMany("ListeningBaseQuestions")
+                        .WithMany()
                         .HasForeignKey("TestCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -371,7 +373,7 @@ namespace TCU.English.Migrations
             modelBuilder.Entity("TCU.English.Models.ListeningMedia", b =>
                 {
                     b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
-                        .WithMany("ListeningMedias")
+                        .WithMany()
                         .HasForeignKey("TestCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
