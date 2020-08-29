@@ -87,6 +87,10 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> Part1Create(ListeningBaseCombined listeningBaseCombined, IFormFile audio, params IFormFile[] images)
         {
             ModelState.Remove(nameof(ListeningBaseQuestion.Answers));
+            if (audio == null || audio.Length <= 0)
+            {
+                ModelState.AddModelError(string.Empty, $"{nameof(ListeningMedia.Audio)} is required.");
+            }
             if (listeningBaseCombined != null && listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory.Name != null && listeningBaseCombined.TestCategory.Name.Length > 0 &&
@@ -111,7 +115,7 @@ namespace TCU.English.Controllers
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.QuestionText)} of question {i + 1} is required.");
                         return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
                     }
-                    if (listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count <= 0 || listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Any(x => string.IsNullOrEmpty(x.AnswerContent)))
+                    if (listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count <= 0)
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} is required.");
                         return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
@@ -141,7 +145,7 @@ namespace TCU.English.Controllers
                     if (listeningBaseCombined.TestCategory.Id > 0)
                     {
                         // Tiến hành tải audio lên
-                        string audioUploadPath = await host.UploadForTestMedia(audio, TestCategory.LISTENING, 1);
+                        string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 1);
                         if (audioUploadPath == null || audioUploadPath.Length <= 0)
                         {
                             // Nếu gặp sự cố thì tiến hành xóa bỏ mục câu hỏi và trở lại trang thêm để thông báo
@@ -163,7 +167,7 @@ namespace TCU.English.Controllers
                         List<string> uploadImgePaths = new List<string>();
                         for (int i = 0; i < images.Length; i++)
                         {
-                            string uploadResult = await host.UploadForTestMedia(images[i], TestCategory.LISTENING, 1);
+                            string uploadResult = await host.UploadForTestImage(images[i], TestCategory.LISTENING, 1);
                             if (uploadResult == null || uploadResult.Length <= 0)
                             {
                                 uploadResult = "";

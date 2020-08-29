@@ -7,7 +7,6 @@ namespace TCU.English.Models
 {
     public class ListeningMedia : BaseEntity
     {
-        [Required]
         public string Audio { get; set; }
         public string Transcript { get; set; }
         public int TestCategoryId { get; set; }

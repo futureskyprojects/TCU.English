@@ -394,7 +394,7 @@ namespace TCU.English.Controllers
 
                         if (isFullAnswer && isHaveCorrectAnswer)
                         {
-                            string uploadResult = await host.UploadForTestMedia(questionImage, TestCategory.READING, 2);
+                            string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
                             if (uploadResult == null || uploadResult.Length <= 0)
                             {
                                 return Json(new { status = false, message = "Please check the picture of the question again" });
@@ -489,7 +489,7 @@ namespace TCU.English.Controllers
 
                         if (isFullAnswer && isHaveCorrectAnswer)
                         {
-                            string uploadResult = await host.UploadForTestMedia(questionImage, TestCategory.READING, 2);
+                            string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
                             if (uploadResult != null || uploadResult.Length > 0)
                             {
                                 readingPartTwo.QuestionImage = uploadResult;

@@ -131,7 +131,7 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    string uploadResult = await host.UploadForUserMedia(userAvatar, user);
+                    string uploadResult = await host.UploadForUserImage(userAvatar, user);
                     if (uploadResult != null && uploadResult.Length > 0)
                     {
                         user.Avatar = uploadResult;
@@ -202,7 +202,7 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    string uploadResult = await host.UploadForUserMedia(userAvatar, user);
+                    string uploadResult = await host.UploadForUserImage(userAvatar, user);
                     if (uploadResult != null && uploadResult.Length > 0)
                     {
                         user.Avatar = uploadResult;

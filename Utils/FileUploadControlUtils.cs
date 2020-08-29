@@ -16,9 +16,10 @@ namespace TCU.English.Utils
         {
             return Path.GetDirectoryName(_host.ContentRootPath);
         }
-        public static async Task<string> UploadForUserMedia(this IHostEnvironment _host, IFormFile file, User user)
+        #region IMAGES
+        public static async Task<string> UploadForUserImage(this IHostEnvironment _host, IFormFile file, User user)
         {
-            string res = await Upload(_host, file, user.Username.ToLower());
+            string res = await UploadImage(_host, file, user.Username.ToLower());
             if (res != null && res.Length > 0)
             {
                 // Xóa tệp ảnh cũ nếu có
@@ -37,11 +38,11 @@ namespace TCU.English.Utils
                 return "";
             }
         }
-        public static async Task<string> UploadForTestMedia(this IHostEnvironment _host, IFormFile file, string testType, int partId)
+        public static async Task<string> UploadForTestImage(this IHostEnvironment _host, IFormFile file, string testType, int partId)
         {
-            return await Upload(_host, file, testType.ToLower(), $"PART_{partId}".ToLower());
+            return await UploadImage(_host, file, testType.ToLower(), $"PART_{partId}".ToLower());
         }
-        public static async Task<string> Upload(this IHostEnvironment _host, IFormFile file, params string[] subFolders)
+        public static async Task<string> UploadImage(this IHostEnvironment _host, IFormFile file, params string[] subFolders)
         {
             if (file != null && file.Length > 0 && file.Length <= Config.MAX_IMAGE_SIZE)
             {
@@ -56,6 +57,7 @@ namespace TCU.English.Utils
                         {
                             uploads = Path.Combine(uploads, subFolder);
                         }
+                        uploads = Path.Combine(uploads, "images");
                         // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
                         if (!Directory.Exists(uploads))
                             Directory.CreateDirectory(uploads);
@@ -74,5 +76,70 @@ namespace TCU.English.Utils
             }
             return "";
         }
+        #endregion
+
+        #region AUDIO
+        public static async Task<string> UploadAudio(this IHostEnvironment _host, IFormFile file, params string[] subFolders)
+        {
+            if (file != null && file.Length > 0 && file.Length <= Config.MAX_IMAGE_SIZE)
+            {
+                if (MimeTypeUtils.Audio.CheckContentType(file.ContentType) && MimeTypeUtils.Audio.CheckFileExtension(file.FileName))
+                {
+                    // Upload avatar
+                    try
+                    {
+                        var uniqueFileName = NameUtils.GetUniqueFileName(file.FileName);
+                        var uploads = Path.Combine(_host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower());
+                        foreach (string subFolder in subFolders)
+                        {
+                            uploads = Path.Combine(uploads, subFolder);
+                        }
+                        uploads = Path.Combine(uploads, "audio");
+                        // Kiểm tra xem folder có tồn tại không? Nếu không thì tạo mới
+                        if (!Directory.Exists(uploads))
+                            Directory.CreateDirectory(uploads);
+                        var filePath = Path.Combine(uploads, uniqueFileName);
+
+                        using (var stream = File.Create(filePath))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                        return filePath.Replace(_host.GetContentPathRootForUploadUtils(), "");
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            return "";
+        }
+
+        public static async Task<string> UploadForUserAudio(this IHostEnvironment _host, IFormFile file, User user)
+        {
+            string res = await UploadAudio(_host, file, user.Username.ToLower());
+            if (res != null && res.Length > 0)
+            {
+                // Xóa tệp ảnh cũ nếu có
+                if (user.Avatar != null && user.Avatar.Length > 0)
+                {
+                    var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), user.Avatar);
+                    if (File.Exists(oldFile))
+                    {
+                        File.Delete(oldFile);
+                    }
+                }
+                return res;
+            }
+            else
+            {
+                return "";
+            }
+        }
+        public static async Task<string> UploadForTestAudio(this IHostEnvironment _host, IFormFile file, string testType, int partId)
+        {
+            return await UploadAudio(_host, file, testType.ToLower(), $"PART_{partId}".ToLower());
+        }
+
+        #endregion
     }
 }
