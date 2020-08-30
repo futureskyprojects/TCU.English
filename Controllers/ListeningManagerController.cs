@@ -252,10 +252,6 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> Part1Update(ListeningBaseCombined listeningBaseCombined, IFormFile audio, params IFormFile[] images)
         {
             ModelState.Remove(nameof(ListeningBaseQuestion.Answers));
-            if (audio == null || audio.Length <= 0)
-            {
-                ModelState.AddModelError(string.Empty, $"{nameof(ListeningMedia.Audio)} is required.");
-            }
             if (listeningBaseCombined != null && listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory.Name != null && listeningBaseCombined.TestCategory.Name.Length > 0 &&
@@ -263,8 +259,7 @@ namespace TCU.English.Controllers
                 listeningBaseCombined.TestCategory.PartId > 0 &&
                 listeningBaseCombined.ListeningMedia != null &&
                 listeningBaseCombined.ListeningBaseQuestions != null &&
-                listeningBaseCombined.ListeningBaseQuestions.Count > 0 &&
-                audio != null && audio.Length > 0)
+                listeningBaseCombined.ListeningBaseQuestions.Count > 0)
             {
                 // Tổng số câu trả lời
                 int sumOfAnswer = 0;
@@ -279,17 +274,17 @@ namespace TCU.English.Controllers
                     if (listeningBaseCombined.ListeningBaseQuestions[i].QuestionText == null || listeningBaseCombined.ListeningBaseQuestions[i].QuestionText.Length <= 0)
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.QuestionText)} of question {i + 1} is required.");
-                        return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part1)}/{nameof(Part1Update)}", listeningBaseCombined);
                     }
                     if (listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count <= 0)
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part1)}/{nameof(Part1Update)}", listeningBaseCombined);
                     }
                     if (!listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Any(it => it.IsCorrect))
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part1)}/{nameof(Part1Update)}", listeningBaseCombined);
                     }
                     if (listeningBaseCombined.ListeningBaseQuestions[i].CreatorId < 0)
                         listeningBaseCombined.ListeningBaseQuestions[i].CreatorId = userId;
@@ -298,7 +293,7 @@ namespace TCU.English.Controllers
                 // Nếu số ảnh bé hơn số câu trả lời, 
                 // tức là GV chưa cung cấp đủ hình ảnh cho các câu trả lời, 
                 // cho nên cần phải yêu cầu họ cung cấp lại cho đủ.
-                if (sumOfAnswer > images.Length)
+                if (sumOfAnswer > images.Length && images.Length > 0)
                 {
                     ModelState.AddModelError(string.Empty, "Please provide full photos for the answers.");
                 }
@@ -311,49 +306,57 @@ namespace TCU.English.Controllers
                     //
                     if (listeningBaseCombined.TestCategory.Id > 0)
                     {
-                        // Tiến hành tải audio lên
-                        string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 1);
-                        if (audioUploadPath == null || audioUploadPath.Length <= 0)
+                        if (audio != null && audio.Length > 0)
                         {
-                            // Nếu gặp sự cố thì tiến hành xóa bỏ mục câu hỏi và trở lại trang thêm để thông báo
-                            _TestCategoryManager.Delete(listeningBaseCombined.TestCategory);
-                            ModelState.AddModelError(string.Empty, "Cannot upload audio file.");
-                            return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
-                        }
-                        else
-                        {
-                            // Xóa audio cũ
-                            // Xóa tệp ảnh cũ nếu có
-                            host.RemoveUploadMeida(listeningBaseCombined.ListeningMedia.Audio);
-                            // Cập nhật đường dẫn vào
-                            listeningBaseCombined.ListeningMedia.Audio = audioUploadPath;
-                            // Cập nhật mục nó thuộc về
-                            listeningBaseCombined.ListeningMedia.TestCategoryId = listeningBaseCombined.TestCategory.Id;
-                            listeningBaseCombined.ListeningMedia.Active = true;
-                            // Cập nhật vào CSDl
-                            _ListeningMediaManager.Add(listeningBaseCombined.ListeningMedia);
+                            // Tiến hành tải audio lên
+                            string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 1);
+                            if (audioUploadPath == null || audioUploadPath.Length <= 0)
+                            {
+                                // Nếu gặp sự cố thì tiến hành xóa bỏ mục câu hỏi và trở lại trang thêm để thông báo
+                                //_TestCategoryManager.Delete(listeningBaseCombined.TestCategory);
+                                ModelState.AddModelError(string.Empty, "Cannot upload audio file.");
+                                return View($"{nameof(Part1)}/{nameof(Part1Update)}", listeningBaseCombined);
+                            }
+                            else
+                            {
+                                // Cập nhật đường dẫn vào
+                                listeningBaseCombined.ListeningMedia.Audio = audioUploadPath;
+                                // Cập nhật mục nó thuộc về
+                                listeningBaseCombined.ListeningMedia.TestCategoryId = listeningBaseCombined.TestCategory.Id;
+                                listeningBaseCombined.ListeningMedia.Active = true;
+                                // Cập nhật vào CSDl
+                                _ListeningMediaManager.Add(listeningBaseCombined.ListeningMedia);
+                                // Xóa audio cũ
+                                host.RemoveUploadMeida(listeningBaseCombined.ListeningMedia.Audio);
+                            }
                         }
                         // Tiến hành tải các ảnh lên
                         List<string> uploadImgePaths = new List<string>();
-                        for (int i = 0; i < images.Length; i++)
+                        if (images.Length > 0)
                         {
-                            string uploadResult = await host.UploadForTestImage(images[i], TestCategory.LISTENING, 1);
-                            if (uploadResult == null || uploadResult.Length <= 0)
+                            for (int i = 0; i < images.Length; i++)
                             {
-                                uploadResult = "";
+                                string uploadResult = await host.UploadForTestImage(images[i], TestCategory.LISTENING, 1);
+                                if (uploadResult == null || uploadResult.Length <= 0)
+                                {
+                                    uploadResult = "";
+                                }
+                                uploadImgePaths.Add(uploadResult);
                             }
-                            uploadImgePaths.Add(uploadResult);
                         }
                         // Cập nhật các đường dẫn được tải lên vào các câu trả lời
                         for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
                         {
-                            for (int j = 0; j < listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count; j++)
+                            if (images.Length > 0 && uploadImgePaths.Count > 0)
                             {
-                                string gottedPath = uploadImgePaths[i * listeningBaseCombined.ListeningBaseQuestions.Count + j];
-                                if (gottedPath != "" || listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent == null)
+                                for (int j = 0; j < listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count; j++)
                                 {
-                                    host.RemoveUploadMeida(gottedPath);
-                                    listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent = gottedPath;
+                                    string gottedPath = uploadImgePaths[i * listeningBaseCombined.ListeningBaseQuestions.Count + j];
+                                    if (gottedPath != "" || listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent == null)
+                                    {
+                                        host.RemoveUploadMeida(gottedPath);
+                                        listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent = gottedPath;
+                                    }
                                 }
                             }
                             listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
@@ -374,7 +377,7 @@ namespace TCU.English.Controllers
                     }
                 }
             }
-            return View($"{nameof(Part1)}/{nameof(Part1Create)}", listeningBaseCombined);
+            return View($"{nameof(Part1)}/{nameof(Part1Update)}", listeningBaseCombined);
         }
 
 
@@ -576,10 +579,6 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> Part2Update(ListeningBaseCombined listeningBaseCombined, IFormFile audio)
         {
             ModelState.Remove(nameof(ListeningBaseQuestion.Answers));
-            if (audio == null || audio.Length <= 0)
-            {
-                ModelState.AddModelError(string.Empty, $"{nameof(ListeningMedia.Audio)} is required.");
-            }
             if (listeningBaseCombined != null && listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory != null &&
                 listeningBaseCombined.TestCategory.Name != null && listeningBaseCombined.TestCategory.Name.Length > 0 &&
@@ -587,8 +586,7 @@ namespace TCU.English.Controllers
                 listeningBaseCombined.TestCategory.PartId > 0 &&
                 listeningBaseCombined.ListeningMedia != null &&
                 listeningBaseCombined.ListeningBaseQuestions != null &&
-                listeningBaseCombined.ListeningBaseQuestions.Count > 0 &&
-                audio != null && audio.Length > 0)
+                listeningBaseCombined.ListeningBaseQuestions.Count > 0)
             {
                 // Tổng số câu trả lời
                 int sumOfAnswer = 0;
@@ -603,22 +601,22 @@ namespace TCU.English.Controllers
                     if (listeningBaseCombined.ListeningBaseQuestions[i].QuestionText == null || listeningBaseCombined.ListeningBaseQuestions[i].QuestionText.Length <= 0)
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.QuestionText)} of question {i + 1} is required.");
-                        return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
                     }
                     if (listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count <= 0)
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
                     }
                     if (listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Any(it => it.AnswerContent == null || it.AnswerContent.Length <= 0))
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} must have answer content.");
-                        return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
                     }
                     if (!listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Any(it => it.IsCorrect))
                     {
                         ModelState.AddModelError(string.Empty, $"{nameof(ListeningBaseQuestion.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+                        return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
                     }
                     if (listeningBaseCombined.ListeningBaseQuestions[i].CreatorId < 0)
                         listeningBaseCombined.ListeningBaseQuestions[i].CreatorId = userId;
@@ -630,28 +628,31 @@ namespace TCU.English.Controllers
                 //
                 if (listeningBaseCombined.TestCategory.Id > 0)
                 {
-                    // Tiến hành tải audio lên
-                    string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 1);
-                    if (audioUploadPath == null || audioUploadPath.Length <= 0)
+                    if (audio == null || audio.Length <= 0)
                     {
-                        // Nếu gặp sự cố thì tiến hành xóa bỏ mục câu hỏi và trở lại trang thêm để thông báo
-                        _TestCategoryManager.Delete(listeningBaseCombined.TestCategory);
-                        ModelState.AddModelError(string.Empty, "Cannot upload audio file.");
-                        return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+                        // Tiến hành tải audio lên
+                        string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 2);
+                        if (audioUploadPath == null || audioUploadPath.Length <= 0)
+                        {
+                            // Nếu gặp sự cố thì tiến hành xóa bỏ mục câu hỏi và trở lại trang thêm để thông báo
+                            //_TestCategoryManager.Delete(listeningBaseCombined.TestCategory);
+                            ModelState.AddModelError(string.Empty, "Cannot upload audio file.");
+                            return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
+                        }
+                        else
+                        {
+                            // Cập nhật đường dẫn vào
+                            listeningBaseCombined.ListeningMedia.Audio = audioUploadPath;
+                            // Cập nhật mục nó thuộc về
+                            listeningBaseCombined.ListeningMedia.TestCategoryId = listeningBaseCombined.TestCategory.Id;
+                            listeningBaseCombined.ListeningMedia.Active = true;
+                            // Cập nhật vào CSDl
+                            _ListeningMediaManager.Add(listeningBaseCombined.ListeningMedia);
+                            // Xóa audio cũ
+                            host.RemoveUploadMeida(listeningBaseCombined.ListeningMedia.Audio);
+                        }
                     }
-                    else
-                    {
-                        // Xóa audio cũ
-                        // Xóa tệp ảnh cũ nếu có
-                        host.RemoveUploadMeida(listeningBaseCombined.ListeningMedia.Audio);
-                        // Cập nhật đường dẫn vào
-                        listeningBaseCombined.ListeningMedia.Audio = audioUploadPath;
-                        // Cập nhật mục nó thuộc về
-                        listeningBaseCombined.ListeningMedia.TestCategoryId = listeningBaseCombined.TestCategory.Id;
-                        listeningBaseCombined.ListeningMedia.Active = true;
-                        // Cập nhật vào CSDl
-                        _ListeningMediaManager.Add(listeningBaseCombined.ListeningMedia);
-                    }
+
                     // Cập Id mục, đồng thời cập nhật vào CSDL
                     for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
                     {
@@ -667,7 +668,7 @@ namespace TCU.English.Controllers
                     ModelState.AddModelError(string.Empty, "An error occurred during execution.");
                 }
             }
-            return View($"{nameof(Part2)}/{nameof(Part2Create)}", listeningBaseCombined);
+            return View($"{nameof(Part2)}/{nameof(Part2Update)}", listeningBaseCombined);
         }
 
 

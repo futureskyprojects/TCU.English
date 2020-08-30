@@ -26,6 +26,7 @@
                         @Html.HiddenFor(x => x.TestCategory.Active)
                         @Html.HiddenFor(x => x.TestCategory.CreatedTime)
                         @Html.HiddenFor(x => x.TestCategory.UpdatedTime)
+                        @Html.HiddenFor(x => x.ListeningMedia.Audio)
 
                         @Html.HiddenFor(x => x.TestCategory.TypeCode)
                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.TypeCode)</small>
@@ -59,7 +60,7 @@
                             <div class="text-center">
                                 <input id="audio-upload" name="audio" type="file" onchange="changeHandler(this)" hidden />
                                 <button type="button" class="btn btn-info" onclick="$('#audio-upload').click();">Select Audio</button>
-                                <button type="button" class="btn btn-danger" onclick="loadAudio()">Default</button>
+                                <button id="set-default-audio" type="button" class="btn btn-danger" onclick="loadAudio()" style="display: none;">Default</button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -175,8 +176,19 @@
                 audio.controls = "true";
 
                 // Set the src and start loading the audio from the file
-                audio.src = urlObj;
+                audio.src = path;
+
+                if (path === defaultAudioPath) {
+                    // Ẩn nút reset
+                    $("#set-default-audio").hide();
+                } else {
+                    // Hiển thị nút reset
+                    $("#set-default-audio").show();
+                }
             } else {
+                // Ẩn nút reset
+                $("#set-default-audio").hide();
+
                 // Thay thế cho thông báo
                 $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>' +
                     '<small class="form-text text-info mr-3">Select and play audio test here.</small>');
@@ -244,7 +256,9 @@
                 const validImageTypes = ['audio/basic', 'audio/mid', 'audio/mpeg', 'audio/ogg'];
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
-                    toastr["error"]("Please only select audio type!")
+                    toastr["error"]("Please only select audio type!");
+                    $(input).val(null);
+                    $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>');
                 } else {
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -255,6 +269,8 @@
                     // Create an audio element
                     loadAudio(urlObj);
                 }
+            } else {
+                loadAudio();
             }
         }
     </script>

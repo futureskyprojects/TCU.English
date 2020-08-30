@@ -168,7 +168,9 @@
                 const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
-                    toastr["error"]("Please only select image type for avatar!")
+                    toastr["error"]("Please only select image type for avatar!");
+                    $(input).val(null);
+                    $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>');
                 } else {
                     var reader = new FileReader();
                     reader.onload = function (e) {
