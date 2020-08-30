@@ -183,6 +183,7 @@
                 const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
+                    $(input).val(null);
                     toastr["error"]("Please only select image type for avatar!")
                 } else {
                     var reader = new FileReader();
@@ -192,6 +193,8 @@
 
                     reader.readAsDataURL(input.files[0]);
                 }
+            } else {
+                $("#user-avatar-preview").attr('src', '/img/no_avatar.png');
             }
         }
     </script>

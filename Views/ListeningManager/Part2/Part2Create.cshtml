@@ -1,10 +1,11 @@
 ﻿@model TCU.English.Models.ListeningBaseCombined
 @{
-    ViewData["Title"] = $"Update '{Model.TestCategory.Name ?? "Listening Part 1 Question"}'";
+    ViewData["Title"] = "Create Listening Part 2 Question";
     string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>();
-    string actionName = nameof(TCU.English.Controllers.ListeningManagerController.Part1Update);
+    string actionName = nameof(TCU.English.Controllers.ListeningManagerController.Part2Create);
 
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    //IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
 }
 @* ============================ *@
 
@@ -17,16 +18,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
-                            <h2 class="h6 text-uppercase my-auto">Listen part 1 - Question</h2>
+                            <h2 class="h6 text-uppercase my-auto">Listen part 2 - Question</h2>
                         </div>
                     </div>
                     <div class="card-body p-3">
-                        @Html.HiddenFor(x => x.TestCategory.Id)
-                        @Html.HiddenFor(x => x.TestCategory.CreatorId)
-                        @Html.HiddenFor(x => x.TestCategory.Active)
-                        @Html.HiddenFor(x => x.TestCategory.CreatedTime)
-                        @Html.HiddenFor(x => x.TestCategory.UpdatedTime)
-
                         @Html.HiddenFor(x => x.TestCategory.TypeCode)
                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.TypeCode)</small>
                         @Html.HiddenFor(x => x.TestCategory.PartId)
@@ -44,22 +39,12 @@
                         <div class="form-group">
                             @Html.LabelFor(x => x.ListeningMedia.Audio)
                             <div id="selected-audio" class="text-center p-3">
-                                @if (Model.ListeningMedia != null && Model.ListeningMedia.Audio != null && Model.ListeningMedia.Audio.Length > 0)
-                                {
-                                    <audio controls>
-                                        <source src="@Html.Raw(Model.ListeningMedia.Audio)">
-                                    </audio>
-                                }
-                                else
-                                {
-                                    <small class="form-text text-danger mt-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Audio)</small>
-                                    <small class="form-text text-info mr-3">Select and play audio test here.</small>
-                                }
+                                <small class="form-text text-danger mt-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Audio)</small>
+                                <small class="form-text text-info mr-3">Select and play audio test here.</small>
                             </div>
                             <div class="text-center">
                                 <input id="audio-upload" name="audio" type="file" onchange="changeHandler(this)" hidden />
                                 <button type="button" class="btn btn-info" onclick="$('#audio-upload').click();">Select Audio</button>
-                                <button type="button" class="btn btn-danger" onclick="loadAudio()">Default</button>
                             </div>
                         </div>
                         <div class="form-group">
@@ -81,12 +66,6 @@
                 <div id="accordion">
                     @for (int i = 0; i < Model.ListeningBaseQuestions.Count; i++)
                     {
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Id)
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatorId)
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Active)
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Answers)
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatedTime)
-                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].UpdatedTime)
                         <div class="card mb-2">
                             <div class="card-header" id="headingOne_@i">
                                 <div class="row align-items-center">
@@ -121,20 +100,10 @@
                                             <label>@Html.Raw($"Answer {answerAlphapet}")</label>
                                             <div class="row">
                                                 <div class="col-11">
-                                                    @Html.HiddenFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent, new { id = $"img-q_{i}_ans_{j}" })
-                                                    @* Answer Image for Uploader *@
                                                     <div class="form-group">
-                                                        <div class="text-center mb-3">
-                                                            <img id="answer-image-@i-@j" src="@(Model.ListeningBaseQuestions[i].AnswerList[j].AnswerContent??"")" alt="Answer Image" class="img-fluid shadow" style="width:320px;" onclick="$('#answer-image-picker-@i-@j').click();" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
-                                                            <img id="answer-image-preview-@i-@j" src="/img/no-image-box.png" alt="Answer Image" class="img-fluid shadow" style="width:320px; display: none;" onclick="$('#answer-image-picker-@i-@j').click();">
-                                                            <button id="answer-default-btn-@i-@j" class="btn btn-danger mt-2" style="display:none;">Default</button>
-                                                            <small class="form-text text-info text-center pt-3">Click on the photo above to change it.</small>
-                                                        </div>
-                                                        <div class="text-center">
-                                                            <input type="file" name="images" id="answer-image-picker-@i-@j" onchange="ansImagePicked(this, @i, @j)" hidden />
-                                                        </div>
+                                                        @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
+                                                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
                                                     </div>
-                                                    @* End Answer Image uploader *@
                                                     <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
                                                 </div>
                                                 <div class="col-1 d-flex align-items-center">
@@ -158,31 +127,6 @@
 @section Scripts {
     <script src="https://cdn.ckeditor.com/4.14.1/full/ckeditor.js"></script>
     <script>
-        var defaultAudioPath = "@Html.Raw(Model.ListeningMedia.Audio.Replace("\\","/"))";
-        function loadAudio(path = defaultAudioPath) {
-            if (path != null && path != undefined && path.length > 0) {
-                const audio = document.createElement("audio");
-
-                // Clean up the URL Object after we are done with it
-                audio.addEventListener("load", () => {
-                    URL.revokeObjectURL(path);
-                });
-
-                // Thay thế cho thông báo
-                $('#selected-audio').html(audio);
-
-                // Allow us to control the audio
-                audio.controls = "true";
-
-                // Set the src and start loading the audio from the file
-                audio.src = urlObj;
-            } else {
-                // Thay thế cho thông báo
-                $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>' +
-                    '<small class="form-text text-info mr-3">Select and play audio test here.</small>');
-            }
-        }
-        //==========================================//
         CKEDITOR.replace('Transcript');
         //==========================================//
         $(document).ready(function () {
@@ -207,35 +151,6 @@
                 }
             });
         });
-        // Ẩn chế độ xem trước và nút xóa xem trước, hiển thị ảnh mặc định
-        //==========================================//
-        function ansImagePicked(input, i, j) {
-            // Ẩn chế độ xem trước và nút xóa xem trước, hiển thị ảnh mặc định
-            $(`#answer-image-preview-${i}-${j}`).hide();
-            $(`#answer-default-btn-${i}-${j}`).hide();
-            $(`#answer-image-${i}-${j}`).show();
-            // Kiểm tra xem file có khả dụng không
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const fileType = file['type'];
-                const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-                if (!validImageTypes.includes(fileType)) {
-                    // invalid file type code goes here.
-                    toastr["error"]("Please only select image type for avatar!")
-                    $(input).val(null);
-                } else {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $(`#answer-image-preview-${i}-${j}`).attr('src', e.target.result);
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                    // Hiển thị chế độ xem trước và nút xóa xem trước, ẩn thị ảnh mặc định
-                    $(`#answer-image-preview-${i}-${j}`).show();
-                    $(`#answer-default-btn-${i}-${j}`).show();
-                    $(`#answer-image-${i}-${j}`).hide();
-                }
-            }
-        }
         //==========================================//
         function changeHandler(input) {
             if (input.files && input.files[0]) {
@@ -253,7 +168,19 @@
                     // Create a blob that we can use as an src for our audio element
                     const urlObj = URL.createObjectURL(input.files[0]);
                     // Create an audio element
-                    loadAudio(urlObj);
+                    const audio = document.createElement("audio");
+
+                    // Clean up the URL Object after we are done with it
+                    audio.addEventListener("load", () => {
+                        URL.revokeObjectURL(urlObj);
+                    });
+                    // Thay thế cho thông báo
+                    $('#selected-audio').html(audio);
+                    // Allow us to control the audio
+                    audio.controls = "true";
+
+                    // Set the src and start loading the audio from the file
+                    audio.src = urlObj;
                 }
             }
         }

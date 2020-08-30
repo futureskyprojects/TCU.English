@@ -191,12 +191,18 @@
         $('#update-img-preview').hide();
     });
     function updateImgPicked(input) {
+        // Hide
+        $('#update-img-default').show();
+        $('#update-img-preview').hide();
+        $('#update-img-remove-picker-btn').hide();
+        // Cheking ...
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const fileType = file['type'];
             const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
             if (!validImageTypes.includes(fileType)) {
                 // invalid file type code goes here.
+                $(input).val(null);
                 toastr["error"]("Please only select image type for avatar!");
             } else {
                 var reader = new FileReader();
@@ -209,11 +215,6 @@
                 $('#update-img-preview').show();
                 $('#update-img-remove-picker-btn').show();
             }
-        } else {
-            // Hide
-            $('#update-img-default').show();
-            $('#update-img-preview').hide();
-            $('#update-img-remove-picker-btn').hide();
         }
     }
 </script>

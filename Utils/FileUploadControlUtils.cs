@@ -79,6 +79,17 @@ namespace TCU.English.Utils
         #endregion
 
         #region AUDIO
+        public static void RemoveUploadMeida(this IHostEnvironment _host, string mediaPath)
+        {
+            if (mediaPath != null && mediaPath.Length > 0)
+            {
+                var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), mediaPath);
+                if (File.Exists(oldFile))
+                {
+                    File.Delete(oldFile);
+                }
+            }
+        }
         public static async Task<string> UploadAudio(this IHostEnvironment _host, IFormFile file, params string[] subFolders)
         {
             if (file != null && file.Length > 0 && file.Length <= Config.MAX_IMAGE_SIZE)
@@ -117,23 +128,7 @@ namespace TCU.English.Utils
         public static async Task<string> UploadForUserAudio(this IHostEnvironment _host, IFormFile file, User user)
         {
             string res = await UploadAudio(_host, file, user.Username.ToLower());
-            if (res != null && res.Length > 0)
-            {
-                // Xóa tệp ảnh cũ nếu có
-                if (user.Avatar != null && user.Avatar.Length > 0)
-                {
-                    var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), user.Avatar);
-                    if (File.Exists(oldFile))
-                    {
-                        File.Delete(oldFile);
-                    }
-                }
-                return res;
-            }
-            else
-            {
-                return "";
-            }
+            return res;
         }
         public static async Task<string> UploadForTestAudio(this IHostEnvironment _host, IFormFile file, string testType, int partId)
         {

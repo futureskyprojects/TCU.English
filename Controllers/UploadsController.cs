@@ -37,12 +37,12 @@ namespace TCU.English.Controllers
                 return NotFound();
             }
         }
-        [HttpGet("[controller]/{testType}/{part}/{filename}")]
-        public IActionResult Index(string testType, string part, string filename)
+        [HttpGet("[controller]/{testType}/{part}/{type}/{filename}")]
+        public IActionResult Index(string testType, string part, string type, string filename)
         {
             try
             {
-                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), testType, part, filename);
+                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), testType, part, type, filename);
 
                 if (System.IO.File.Exists(uploads))
                 {

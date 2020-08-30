@@ -732,7 +732,7 @@ namespace TCU.English.Controllers
         public IActionResult Part3DeleteAjax(long id) // CategoryId
         {
             var category = _TestCategoryManager.Get(id);
-            if (category.TypeCode != TestCategory.READING && category.PartId != 3)
+            if (category.TypeCode != TestCategory.READING || category.PartId != 3)
             {
                 return Json(new { success = false, responseText = "You cannot perform deletion to item other than the current item." });
             }
@@ -939,7 +939,7 @@ namespace TCU.English.Controllers
         public IActionResult Part4DeleteAjax(long id) // CategoryId
         {
             var category = _TestCategoryManager.Get(id);
-            if (category.TypeCode != TestCategory.READING && category.PartId != 4)
+            if (category.TypeCode != TestCategory.READING || category.PartId != 4)
             {
                 return Json(new { success = false, responseText = "You cannot perform deletion to item other than the current item." });
             }
