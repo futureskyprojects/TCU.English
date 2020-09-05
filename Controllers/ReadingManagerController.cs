@@ -18,7 +18,6 @@ namespace TCU.English.Controllers
     public class ReadingManagerController : Controller
     {
         private readonly IHostEnvironment host;
-        private readonly string PATH_ROOT;
 
         private readonly UserManager _UserManager;
         private readonly UserTypeManager _UserTypeManager;
@@ -34,7 +33,6 @@ namespace TCU.English.Controllers
             IDataRepository<ReadingPartTwo> _ReadingPartTwoManager)
         {
             this.host = _host;
-            this.PATH_ROOT = Path.GetDirectoryName(host.ContentRootPath);
 
             this._UserManager = (UserManager)_UserManager;
             this._UserTypeManager = (UserTypeManager)_UserTypeManager;

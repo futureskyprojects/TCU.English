@@ -16,6 +16,7 @@ namespace TCU.English.Models.Repository
             services.AddScoped<IDataRepository<ReadingPartTwo>, ReadingPartTwoManager>();
             services.AddScoped<IDataRepository<ListeningMedia>, ListeningMediaManager>();
             services.AddScoped<IDataRepository<ListeningBaseQuestion>, ListeningBaseQuestionManager>();
+            services.AddScoped<IDataRepository<WritingPartOne>, WritingPartOneManager>();
         }
     }
 }

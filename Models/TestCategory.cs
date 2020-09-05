@@ -30,6 +30,7 @@ namespace TCU.English.Models
         public virtual ICollection<ReadingPartTwo> ReadingPartTwos { get; set; }
         public virtual ICollection<ListeningBaseQuestion> ListeningBaseQuestions { get; set; }
         public virtual ICollection<ListeningMedia> ListeningMedias { get; set; }
+        public virtual ICollection<WritingPartOne> WritingPartOnes { get; set; }
         // ======================================================== //
         public TestCategory()
         {

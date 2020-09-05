@@ -19,6 +19,7 @@ namespace TCU.English.Models
         public virtual DbSet<ReadingPartTwo> ReadingPartTwos { get; set; }
         public virtual DbSet<ListeningMedia> ListeningMedias { get; set; }
         public virtual DbSet<ListeningBaseQuestion> ListeningBaseQuestions { get; set; }
+        public virtual DbSet<WritingPartOne> WritingPartOnes { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
@@ -67,6 +68,11 @@ namespace TCU.English.Models
             modelBuilder.Entity<ListeningBaseQuestion>(entity =>
             {
                 entity.ToTable("listening_base_question");
+            });
+            
+            modelBuilder.Entity<WritingPartOne>(entity =>
+            {
+                entity.ToTable("writing_part_1");
             });
             #endregion
         }

@@ -29,6 +29,7 @@ namespace TCU.English.Models
         public virtual ICollection<UserTypeUser> UserTypeUser { get; set; }
         public virtual ICollection<TestCategory> TestCategories { get; set; }
         public virtual ICollection<ReadingPartOne> ReadingPartOnes { get; set; }
+        public virtual ICollection<WritingPartOne> WritingPartOnes { get; set; }
 
         public static (int, string)[] Genders = new (int, string)[]
         {
