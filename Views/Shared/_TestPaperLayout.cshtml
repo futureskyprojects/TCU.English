@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using TCU.English
+@using TCU.English.Utils
+@using TCU.English.Controllers
+@{
+    string firstName = User.ExtractValue(System.Security.Claims.ClaimTypes.GivenName);
+    string lastName = User.ExtractValue(System.Security.Claims.ClaimTypes.Surname);
+}
+<!DOCTYPE html>
 <html>
 <head>
     <base href="/" />
@@ -43,7 +50,7 @@
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <span class=" pl-3">
-                                    <span class="text-primary">Nghiêm Thành Ngọc</span>'s
+                                    <span class="text-primary">@Html.Raw($"{firstName} {lastName}")</span>'s
                                     <br />
                                     <span class="h6 text-uppercase my-auto">@ViewData["Title"]</span>
                                 </span>

@@ -25,6 +25,7 @@ else
     <div>
         @for (int i = 0; i < Model.ReadingPartOnes.Item2.Count(); i++)
         {
+            string uuid = Guid.NewGuid().ToString();
             <div class="pt-3">@(i+1). @Model.ReadingPartOnes.Item2[i].QuestionText</div>
             if (Model.ReadingPartOnes.Item2[i].AnswerList == null || Model.ReadingPartOnes.Item2[i].AnswerList.Count <= 0)
             {
@@ -41,7 +42,10 @@ else
                     {
                         string answerAlphapet = ((char)((int)'A' + j)).ToString();
                         <div class="col-md-3">
-                            <div>@answerAlphapet. @Model.ReadingPartOnes.Item2[i].AnswerList[j].AnswerContent</div>
+                            <div id="@($"answer_group_{uuid}")">
+                                <span>@answerAlphapet.</span> @Model.ReadingPartOnes.Item2[i].AnswerList[j].AnswerContent
+                                @Html.HiddenFor(x => x.ReadingPartOnes.Item2[i].AnswerList[j].IsCorrect)
+                            </div>
                         </div>
                     }
                 </div>
@@ -70,6 +74,7 @@ else
     <div>
         @for (int i = 0; i < Model.ReadingPartTwos.Item2.Count(); i++)
         {
+            string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-md-8">
                     <div>@(i+1). <span class="font-weight-bold">@Model.ReadingPartTwos.Item2[i].QuestionText</span></div>
@@ -86,7 +91,10 @@ else
                         @for (int j = 0; j < Model.ReadingPartTwos.Item2[i].AnswerList.Count; j++)
                         {
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                            <div class="pb-1">@answerAlphapet. @Model.ReadingPartTwos.Item2[i].AnswerList[j].AnswerContent</div>
+                            <div id="@($"answer_group_{uuid}")" class="pb-1">
+                                <span>@answerAlphapet.</span> @Model.ReadingPartTwos.Item2[i].AnswerList[j].AnswerContent
+                                @Html.HiddenFor(x => x.ReadingPartTwos.Item2[i].AnswerList[j].IsCorrect)
+                            </div>
                         }
                     }
                 </div>
@@ -139,6 +147,7 @@ else
     <div>
         @for (int i = 0; i < Model.ReadingPartThrees.Item2.Count(); i++)
         {
+            string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-12">
                     <div>@(i+1). <span class="font-weight-bold">@Model.ReadingPartThrees.Item2[i].QuestionText</span></div>
@@ -155,7 +164,10 @@ else
                         @for (int j = 0; j < Model.ReadingPartThrees.Item2[i].AnswerList.Count; j++)
                         {
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                            <div class="pb-1">@answerAlphapet. @Model.ReadingPartThrees.Item2[i].AnswerList[j].AnswerContent</div>
+                            <div id="@($"answer_group_{uuid}")" class="pb-1">
+                                <span>@answerAlphapet.</span> @Model.ReadingPartThrees.Item2[i].AnswerList[j].AnswerContent
+                                @Html.HiddenFor(x => x.ReadingPartThrees.Item2[i].AnswerList[j].IsCorrect)
+                            </div>
                         }
                     }
                 </div>
@@ -203,6 +215,7 @@ else
     <div>
         @for (int i = 0; i < Model.ReadingPartFours.Item2.Count(); i++)
         {
+            string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-12">
                     <span class="float-left">@(i+1). <span class="font-weight-bold">@Model.ReadingPartFours.Item2[i].QuestionText</span></span>
@@ -221,7 +234,10 @@ else
                             @for (int j = 0; j < Model.ReadingPartFours.Item2[i].AnswerList.Count; j++)
                             {
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                                <div class="col-3 pb-1">@answerAlphapet. @Model.ReadingPartFours.Item2[i].AnswerList[j].AnswerContent</div>
+                                <div id="@($"answer_group_{uuid}")" class="col-3 pb-1">
+                                    <span>@answerAlphapet.</span> @Model.ReadingPartFours.Item2[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartFours.Item2[i].AnswerList[j].IsCorrect)
+                                </div>
                             }
                         </div>
                     }
@@ -239,6 +255,7 @@ else
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
             $('.reading-part-2-image').each(function () {
                 if ($(this).height() > $(this).width()) {
                     //$(this).addClass('landscape');
@@ -246,6 +263,16 @@ else
                 }
             });
 
+            // Đoạn mã khoanh phương án đúng
+            $('div[id^="answer_group_"]').click(function () {
+                let ans_group_name = $(this).attr('id');
+                // Tạm xóa bỏ hết
+                $(`#${ans_group_name} span`).removeClass("border border-dark rounded-circle px-2");
+                $(`#${ans_group_name} input`).val(false);
+                // Thiết lập lại
+                $(this).children('span').addClass("border border-dark rounded-circle px-2");
+                $(this).children('input').val(true);
+            });
         });
     </script>
 }
