@@ -22,10 +22,10 @@ else
 {
     <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.Item1.Name</span></div>
     <div class="font-weight-bold mt-2">* Choose the best option: </div>
-    <div class="pl-3">
+    <div>
         @for (int i = 0; i < Model.ReadingPartOnes.Item2.Count(); i++)
         {
-            <div class="pt-2">@(i+1). @Model.ReadingPartOnes.Item2[i].QuestionText</div>
+            <div class="pt-3">@(i+1). @Model.ReadingPartOnes.Item2[i].QuestionText</div>
             if (Model.ReadingPartOnes.Item2[i].AnswerList == null || Model.ReadingPartOnes.Item2[i].AnswerList.Count <= 0)
             {
                 <div class="alert alert-danger mt-2" role="alert">
@@ -36,7 +36,7 @@ else
             }
             else
             {
-                <div class="row">
+                <div class="pt-1 row">
                     @for (int j = 0; j < Model.ReadingPartOnes.Item2[i].AnswerList.Count; j++)
                     {
                         string answerAlphapet = ((char)((int)'A' + j)).ToString();
@@ -51,6 +51,8 @@ else
 }
 @* END PART 1 *@
 
+<div class="my-3"></div>
+
 @* PART 2 *@
 @if (Model.ReadingPartTwos.Item1 == null || Model.ReadingPartTwos.Item2 == null || Model.ReadingPartTwos.Item2.Count <= 0)
 {
@@ -64,13 +66,13 @@ else
 else
 {
     <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartTwos.Item1.Name</span></div>
-    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartTwos.Item2.Count() + 1)</div>
-    <div class="pl-3">
+    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartTwos.Item2.Count())</div>
+    <div>
         @for (int i = 0; i < Model.ReadingPartTwos.Item2.Count(); i++)
         {
-            <div class="row">
+            <div class="row pb-3">
                 <div class="col-md-8">
-                    <div class="pt-2">@(i+1). @Model.ReadingPartTwos.Item2[i].QuestionText</div>
+                    <div>@(i+1). <span class="font-weight-bold">@Model.ReadingPartTwos.Item2[i].QuestionText</span></div>
                     @if (Model.ReadingPartTwos.Item2[i].AnswerList == null || Model.ReadingPartTwos.Item2[i].AnswerList.Count <= 0)
                     {
                         <div class="alert alert-danger mt-2" role="alert">
@@ -84,12 +86,14 @@ else
                         @for (int j = 0; j < Model.ReadingPartTwos.Item2[i].AnswerList.Count; j++)
                         {
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                            <div>@answerAlphapet. @Model.ReadingPartTwos.Item2[i].AnswerList[j].AnswerContent</div>
+                            <div class="pb-1">@answerAlphapet. @Model.ReadingPartTwos.Item2[i].AnswerList[j].AnswerContent</div>
                         }
                     }
                 </div>
                 <div class="col-md-4">
-                    <img src="@Model.ReadingPartTwos.Item2[i].QuestionImage" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
+                    <span>
+                        <img class="w-100 reading-part-2-image rounded" src="@Model.ReadingPartTwos.Item2[i].QuestionImage" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
+                    </span>
                 </div>
             </div>
         }
@@ -97,12 +101,158 @@ else
 }
 @* END PART 2 *@
 
+<div class="my-3"></div>
 
+@* PART 3 *@
+@if (Model.ReadingPartThrees.Item1 == null || Model.ReadingPartThrees.Item2 == null || Model.ReadingPartThrees.Item2.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartThrees.Item1.Name</span></div>
+    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartThrees.Item2.Count())</div>
+    <p class="pt-1">
+        Read the text and questions below.
+        <br />
+        For each question, mark the correct letter A, B, C or D on your answer sheet.
+    </p>
+    @if (Model.ReadingPartThrees.Item1.WYSIWYGContent != null && Model.ReadingPartThrees.Item1.WYSIWYGContent.Length > 0)
+    {
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.ReadingPartThrees.Item1.WYSIWYGContent)
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-2" role="alert">
+            <div class="text-center">
+                This section is missing text. Please contact the administrator to report this content error.
+            </div>
+        </div>
+    }
+    <div>
+        @for (int i = 0; i < Model.ReadingPartThrees.Item2.Count(); i++)
+        {
+            <div class="row pb-3">
+                <div class="col-12">
+                    <div>@(i+1). <span class="font-weight-bold">@Model.ReadingPartThrees.Item2[i].QuestionText</span></div>
+                    @if (Model.ReadingPartThrees.Item2[i].AnswerList == null || Model.ReadingPartThrees.Item2[i].AnswerList.Count <= 0)
+                    {
+                        <div class="alert alert-danger mt-2" role="alert">
+                            <div class="text-center">
+                                This question has not been answered. Please contact the administrator to report the error.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @for (int j = 0; j < Model.ReadingPartThrees.Item2[i].AnswerList.Count; j++)
+                        {
+                            string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                            <div class="pb-1">@answerAlphapet. @Model.ReadingPartThrees.Item2[i].AnswerList[j].AnswerContent</div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+@* END PART 3 *@
+
+<div class="my-3"></div>
+
+@* PART 4 *@
+@if (Model.ReadingPartFours.Item1 == null || Model.ReadingPartFours.Item2 == null || Model.ReadingPartFours.Item2.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartFours.Item1.Name</span></div>
+    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartFours.Item2.Count())</div>
+    <p class="pt-1">
+        Read the text below and choose the correct word for each space.
+        <br />
+        For each question, mark the correct letter A, B, C or D on your answer sheet.
+    </p>
+    @if (Model.ReadingPartFours.Item1.WYSIWYGContent != null && Model.ReadingPartFours.Item1.WYSIWYGContent.Length > 0)
+    {
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.ReadingPartFours.Item1.WYSIWYGContent)
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-2" role="alert">
+            <div class="text-center">
+                This section is missing text. Please contact the administrator to report this content error.
+            </div>
+        </div>
+    }
+    <div>
+        @for (int i = 0; i < Model.ReadingPartFours.Item2.Count(); i++)
+        {
+            <div class="row pb-3">
+                <div class="col-12">
+                    <span class="float-left">@(i+1). <span class="font-weight-bold">@Model.ReadingPartFours.Item2[i].QuestionText</span></span>
+                    @if (Model.ReadingPartFours.Item2[i].AnswerList == null || Model.ReadingPartFours.Item2[i].AnswerList.Count <= 0)
+                    {
+                        <br />
+                        <div class="alert alert-danger mt-2" role="alert">
+                            <div class="text-center">
+                                This question has not been answered. Please contact the administrator to report the error.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @for (int j = 0; j < Model.ReadingPartFours.Item2[i].AnswerList.Count; j++)
+                            {
+                                string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                                <div class="col-3 pb-1">@answerAlphapet. @Model.ReadingPartFours.Item2[i].AnswerList[j].AnswerContent</div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+@* END PART 4 *@
 
 @section FinishButton {
     <button type="button" class="btn btn-lg btn-danger">FINISH</button>
 }
 
 @section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.reading-part-2-image').each(function () {
+                if ($(this).height() > $(this).width()) {
+                    //$(this).addClass('landscape');
+                    $(this).height($(this).width());
+                }
+            });
 
+        });
+    </script>
 }
+
+<style>
+    .reading-part-2-image {
+        border: 1px solid #000;
+        max-width: 320px;
+    }
+</style>

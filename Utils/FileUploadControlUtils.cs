@@ -14,7 +14,7 @@ namespace TCU.English.Utils
     {
         public static string GetContentPathRootForUploadUtils(this IHostEnvironment _host)
         {
-            return Path.GetDirectoryName(_host.ContentRootPath);
+            return Path.GetDirectoryName(_host.ContentRootPath).ToString();
         }
         #region IMAGES
         public static async Task<string> UploadForUserImage(this IHostEnvironment _host, IFormFile file, User user)
@@ -25,7 +25,7 @@ namespace TCU.English.Utils
                 // Xóa tệp ảnh cũ nếu có
                 if (user.Avatar != null && user.Avatar.Length > 0)
                 {
-                    var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), user.Avatar);
+                    var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), user.Avatar.TrimStart(Path.DirectorySeparatorChar));
                     if (File.Exists(oldFile))
                     {
                         File.Delete(oldFile);
@@ -83,10 +83,10 @@ namespace TCU.English.Utils
         {
             if (mediaPath != null && mediaPath.Length > 0)
             {
-                var oldFile = Path.Combine(_host.GetContentPathRootForUploadUtils(), mediaPath);
-                if (File.Exists(oldFile))
+                var destination = Path.Combine(_host.GetContentPathRootForUploadUtils(), mediaPath.TrimStart(Path.DirectorySeparatorChar));
+                if (File.Exists(destination))
                 {
-                    File.Delete(oldFile);
+                    File.Delete(destination);
                 }
             }
         }

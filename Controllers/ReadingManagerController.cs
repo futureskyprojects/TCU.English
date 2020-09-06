@@ -490,6 +490,10 @@ namespace TCU.English.Controllers
                             string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
                             if (uploadResult != null && uploadResult.Length > 0)
                             {
+                                if (readingPartTwo.QuestionImage != null && readingPartTwo.QuestionImage.Length > 0)
+                                {
+                                    host.RemoveUploadMeida(readingPartTwo.QuestionImage);
+                                }
                                 readingPartTwo.QuestionImage = uploadResult;
                             }
                             _ReadingPartTwoManager.Update(readingPartTwo);
@@ -707,13 +711,14 @@ namespace TCU.English.Controllers
                         readingCombined.ReadingPartTwos[i].Answers = json;
                 }
                 // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Add(readingCombined.TestCategory);
+                _TestCategoryManager.Update(readingCombined.TestCategory);
                 if (readingCombined.TestCategory.Id > 0)
                 {
                     for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
                     {
-                        readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Add(readingCombined.ReadingPartTwos[i]);
+                        if (readingCombined.ReadingPartTwos[i].TestCategoryId < 0)
+                            readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
+                        _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
                     }
                     return RedirectToAction(nameof(Part3));
                 }
@@ -914,13 +919,14 @@ namespace TCU.English.Controllers
                         readingCombined.ReadingPartTwos[i].Answers = json;
                 }
                 // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Add(readingCombined.TestCategory);
+                _TestCategoryManager.Update(readingCombined.TestCategory);
                 if (readingCombined.TestCategory.Id > 0)
                 {
                     for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
                     {
-                        readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Add(readingCombined.ReadingPartTwos[i]);
+                        if (readingCombined.ReadingPartTwos[i].TestCategoryId < 0)
+                            readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
+                        _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
                     }
                     return RedirectToAction(nameof(Part4));
                 }
