@@ -19,8 +19,8 @@ namespace TCU.English.Models.DataManager
             {
                 entity.HashPassword = PasswordHasher.HashPassword(entity.HashPassword);
             }
-            entity.CreatedTime = DateTime.Now;
-            entity.UpdatedTime = DateTime.Now;
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
             entity.Active = true;
             instantce.User.Add(entity);
             instantce.SaveChanges();
@@ -226,7 +226,7 @@ namespace TCU.English.Models.DataManager
             if (entity.Gender != oldUser.Gender)
                 oldUser.Gender = entity.Gender;
 
-            oldUser.UpdatedTime = DateTime.Now;
+            oldUser.UpdatedTime = DateTime.UtcNow;
             if (entity.HashPassword != null && entity.HashPassword.Length > 0 && entity.HashPassword != oldUser.HashPassword)
             {
                 oldUser.HashPassword = PasswordHasher.HashPassword(entity.HashPassword);
