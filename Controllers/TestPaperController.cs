@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ using TCU.English.Utils;
 
 namespace TCU.English.Controllers
 {
+    [Authorize]
     public class TestPaperController : Controller
     {
         private readonly IHostEnvironment host;
@@ -50,21 +52,7 @@ namespace TCU.English.Controllers
         {
             ViewBag.Title = "READING TESTING";
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper();
-            // Khởi tạo đối tượng lưu trữ bài kiểm tra này và lưu paper mặc định có đáp án đúng vào
-            var piceOfTest = new PieceOfTest
-            {
-                UserId = User.Id(),
-                TypeCode = TestCategory.READING,
-                PartId = -1,
-                ResultOfTestJson = JsonConvert.SerializeObject(paper)
-            };
-            // Lưu trữ bài thi vào database trước khi bắt đầu
-            _PieceOfTestManager.Add(piceOfTest);
-            // Xóa đáp án đúng trong paper
-            paper.RemoveCorrectAnswers();
-            // Lưu ID của lưu trữ vào paper trước khi khởi đầu bài thi
-            paper.PiceOfTestId = piceOfTest.Id;
+            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager, User.Id());
 
             if (paper.PiceOfTestId > 0)
             {

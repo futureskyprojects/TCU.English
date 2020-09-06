@@ -12,10 +12,15 @@ namespace TCU.English.Models.PiceOfTest
 {
     public class ReadingTestPaper
     {
+        [JsonIgnore]
         const int MAX_QUESTION_READING_PART_1 = 10;
+        [JsonIgnore]
         const int MAX_QUESTION_READING_PART_2 = 5;
+        [JsonIgnore]
         const int MAX_QUESTION_READING_PART_3 = 5;
+        [JsonIgnore]
         const int MAX_QUESTION_READING_PART_4 = 10;
+        [JsonIgnore]
         public int PiceOfTestId { get; set; }
         public (TestCategory, List<ReadingPartOne>) ReadingPartOnes { get; set; }
         public (TestCategory, List<ReadingPartTwo>) ReadingPartTwos { get; set; }

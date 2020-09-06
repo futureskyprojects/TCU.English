@@ -17,12 +17,19 @@ namespace TCU.English.Models
         [DisplayName("Explain Link")]
         public string ExplainLink { get; set; } = "";
         public int CreatorId { get; set; }
+
         [ForeignKey(nameof(CreatorId))]
+        [JsonIgnore]
         public virtual User User { get; set; }
+
         public int TestCategoryId { get; set; }
+
         [ForeignKey(nameof(TestCategoryId))]
+        [JsonIgnore]
         public virtual TestCategory TestCategory { get; set; }
+
         [NotMapped]
+        [JsonIgnore]
         public List<BaseAnswer> AnswerList { get; set; }
 
         public static List<ListeningBaseQuestion> Generate(int size, int answerSize = 3)

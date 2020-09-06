@@ -16,8 +16,15 @@ namespace TCU.English.Controllers
             host = _host;
         }
 
+        [HttpGet("[controller]/{prefix}")]
+        public IActionResult Index()
+        {
+            var s = Request.Path;
+            return NotFound();
+        }
+
         [HttpGet("[controller]/{username}/{type}/{filename}")]
-        public IActionResult Index(string username, string type, string filename)
+        public IActionResult DownloadUserMedia(string username, string type, string filename)
         {
             try
             {
@@ -38,7 +45,7 @@ namespace TCU.English.Controllers
             }
         }
         [HttpGet("[controller]/{testType}/{part}/{type}/{filename}")]
-        public IActionResult Index(string testType, string part, string type, string filename)
+        public IActionResult DownloadTestMedia(string testType, string part, string type, string filename)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace TCU.English.Models
@@ -48,6 +49,8 @@ namespace TCU.English.Models
         public string UserTypeName { get; set; }
         public int Priority { get; set; }
         public string Description { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<UserTypeUser> UserTypeUser { get; set; }
 
         //
@@ -58,24 +61,31 @@ namespace TCU.English.Models
 
 
         //==================================================//
+        [JsonIgnore]
         public static UserType NormalUser = new UserType
         {
             UserTypeName = nameof(ROLE_NORMAL_USER),
             Description = "Learner",
             Priority = 0
         };
+
+        [JsonIgnore]
         public static UserType ManagerUser = new UserType
         {
             UserTypeName = nameof(ROLE_MANAGER_USER),
             Description = "User Manager",
             Priority = 999
         };
+
+        [JsonIgnore]
         public static UserType All = new UserType
         {
             UserTypeName = nameof(ROLE_ALL),
             Description = "System Manager",
             Priority = 99999
         };
+
+        [JsonIgnore]
         public static UserType ManagerLibrary = new UserType
         {
             UserTypeName = nameof(ROLE_MANAGER_LIBRARY),
@@ -84,6 +94,7 @@ namespace TCU.English.Models
         };
         //==================================================//
 
+        [JsonIgnore]
         public static UserType[] Roles = new UserType[]
         {
             NormalUser,

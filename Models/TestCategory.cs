@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,10 +9,15 @@ namespace TCU.English.Models
     public class TestCategory : BaseEntity
     {
         #region Test fixed Type
+        [JsonIgnore]
         public const string LISTENING = "LISTENING";
+        [JsonIgnore]
         public const string READING = "READING";
+        [JsonIgnore]
         public const string WRITING = "WRITING";
+        [JsonIgnore]
         public const string SPEAKING = "SPEAKING";
+        [JsonIgnore]
         public static string[] Types = new string[] { LISTENING, READING, SPEAKING, WRITING };
         #endregion
         [Required]
@@ -24,12 +30,24 @@ namespace TCU.English.Models
         [DisplayName("WYSIWYG Content")]
         public string WYSIWYGContent { get; set; }
         public int CreatorId { get; set; }
+
         [ForeignKey(nameof(CreatorId))]
+        [JsonIgnore]
         public virtual User User { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<ReadingPartOne> ReadingPartOnes { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<ReadingPartTwo> ReadingPartTwos { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<ListeningBaseQuestion> ListeningBaseQuestions { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<ListeningMedia> ListeningMedias { get; set; }
+        
+        [JsonIgnore]
         public virtual ICollection<WritingPartOne> WritingPartOnes { get; set; }
         // ======================================================== //
         public TestCategory()

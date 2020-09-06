@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace TCU.English.Utils
@@ -19,11 +21,13 @@ namespace TCU.English.Utils
 
         public static string GetUniqueFileName(string fileName)
         {
+            using var sha256 = new SHA256Managed();
             fileName = Path.GetFileName(fileName);
-            return Path.GetFileNameWithoutExtension(fileName)
-                      + "_"
-                      + Guid.NewGuid().ToString().Substring(0, 4)
-                      + Path.GetExtension(fileName);
+            string fileNameWithoutExtension = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFileNameWithoutExtension(fileName)))).Replace("-", "");
+            return fileNameWithoutExtension
+              + "_"
+              + Guid.NewGuid().ToString().Substring(0, 4)
+              + Path.GetExtension(fileName);
         }
     }
 }

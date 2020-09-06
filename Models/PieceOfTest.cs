@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,13 +15,15 @@ namespace TCU.English.Models
         [Required]
         public int PartId { get; set; }
         [Required]
-        public string ResultOfUserJson { get; set; }
+        public string ResultOfUserJson { get; set; } = "";
         [Required]
-        public string ResultOfTestJson { get; set; }
+        public string ResultOfTestJson { get; set; } = "";
         public float Scores { get; set; } = 0;
         public float TimeToFinished { get; set; } = -1;
         public int UserId { get; set; }
+
         [ForeignKey(nameof(UserId))]
+        [JsonIgnore] 
         public virtual User User { get; set; }
     }
 }

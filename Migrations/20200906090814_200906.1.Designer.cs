@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TCU.English.Models;
 
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    partial class SystemDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200906090814_200906.1")]
+    partial class _2009061
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

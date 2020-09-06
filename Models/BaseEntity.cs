@@ -10,9 +10,7 @@ namespace TCU.English.Models
         [Key, Column(Order = 0)]
         public int Id { get; set; }
         public bool Active { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? UpdatedTime { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedTime { get; set; }
     }
 }
