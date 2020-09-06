@@ -15,8 +15,8 @@ namespace TCU.English.Models.DataManager
 
         public void Add(WritingPartOne entity)
         {
-            entity.CreatedTime = DateTime.Now;
-            entity.UpdatedTime = DateTime.Now;
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
             entity.Active = true;
             instantce.WritingPartOnes.Add(entity);
             instantce.SaveChanges();
@@ -55,7 +55,7 @@ namespace TCU.English.Models.DataManager
 
         public void Update(WritingPartOne entity)
         {
-            entity.UpdatedTime = DateTime.Now;
+            entity.UpdatedTime = DateTime.UtcNow;
             instantce.WritingPartOnes.Update(entity);
             instantce.SaveChanges();
         }

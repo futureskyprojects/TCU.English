@@ -15,8 +15,8 @@ namespace TCU.English.Models.DataManager
 
         public void Add(ListeningBaseQuestion entity)
         {
-            entity.CreatedTime = DateTime.Now;
-            entity.UpdatedTime = DateTime.Now;
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
             entity.Active = true;
             instantce.ListeningBaseQuestions.Add(entity);
             instantce.SaveChanges();
@@ -82,7 +82,7 @@ namespace TCU.English.Models.DataManager
 
         public void Update(ListeningBaseQuestion entity)
         {
-            entity.UpdatedTime = DateTime.Now;
+            entity.UpdatedTime = DateTime.UtcNow;
             instantce.ListeningBaseQuestions.Update(entity);
             instantce.SaveChanges();
         }

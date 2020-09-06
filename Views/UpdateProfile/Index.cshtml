@@ -1,29 +1,21 @@
 ﻿@model TCU.English.Models.User
 @{
-    ViewData["Title"] = "Update User";
-    List<string> userRole = new List<string>();
-    if (Model.UserTypeUser != null && Model.UserTypeUser.Count > 0)
-    {
-        foreach (var item in Model.UserTypeUser)
-        {
-            userRole.Add(item.UserType.UserTypeName);
-        }
-    }
+    ViewData["Title"] = "Update Your User";
 }
 
 <div class="py-5">
     <div class="card">
         <div class="card-header">
-            <h3 class="h6 text-uppercase mb-0">Create new user</h3>
+            <h3 class="h6 text-uppercase mb-0">Update yor profile</h3>
         </div>
         <div class="card-body">
-            @using (Html.BeginForm(nameof(TCU.English.Controllers.UserManagementController.UpdateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>(), FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            @using (Html.BeginForm(nameof(TCU.English.Controllers.UpdateProfileController.UpdateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UpdateProfileController>(), FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
             {
                 @Html.HiddenFor(x => x.Id)
                 @Html.HiddenFor(x => x.Active)
                 @Html.HiddenFor(x => x.CreatedTime)
-                @Html.HiddenFor(x => x.UpdatedTime)
                 @Html.HiddenFor(x => x.Avatar)
+                @Html.HiddenFor(x => x.UpdatedTime)
                 @Html.HiddenFor(x => x.Username)
                 @Html.HiddenFor(x => x.HashPassword)
                 @* Avatar picker for Uploader *@
@@ -42,7 +34,10 @@
                                         <button type="button" class="btn btn-info" onclick="$('#user-avatar-picker').click();">Select Avatar</button>
                                         <button type="button" class="btn btn-danger" id="user-avatar-remove-picker-btn">Remove Picked</button>
                                     </div>
-                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Avatar)</small>
+                                    <div class="text-center mt-2">
+                                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Avatar)</small>
+                                        <small class="form-text text-info">Avatar and some basic information will be displayed in the next login session.</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -141,38 +136,6 @@
                 </div>
                 @* End Password *@
 
-                @* User permission *@
-                @if (
-           ((
-               User.IsInRole(TCU.English.Models.UserType.ROLE_ALL) ||
-               User.IsInRole(TCU.English.Models.UserType.ROLE_MANAGER_USER)
-           ) && !userRole.Contains(TCU.English.Models.UserType.ROLE_ALL)) ||
-           (
-               User.IsInRole(TCU.English.Models.UserType.ROLE_MANAGER_USER) &&
-               userRole.Contains(TCU.English.Models.UserType.ROLE_ALL))
-           )
-                {
-                    <div class="line"></div>
-                    <div class="form-group row">
-                        <label class="col-md-3 form-control-label">Select user's permission</label>
-                        <div class="col-md-9 ml-auto select">
-                            <select class="form-control rounded" name="userTypes">
-                                @foreach (TCU.English.Models.UserType item in TCU.English.Models.UserType.Roles)
-                                {
-                                    if (userRole.Contains(item.UserTypeName))
-                                    {
-                                        <option value="@item.UserTypeName" selected> @Html.Raw(item.Description) </option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.UserTypeName"> @Html.Raw(item.Description) </option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    @* End User permission *@
-                }
                 <div class="line"></div>
                 <div class="form-group">
                     <div class="text-center">

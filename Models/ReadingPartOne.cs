@@ -21,5 +21,8 @@ namespace TCU.English.Models
         public int TestCategoryId { get; set; }
         [ForeignKey(nameof(TestCategoryId))]
         public virtual TestCategory TestCategory { get; set; }
+
+        [NotMapped]
+        public List<BaseAnswer> AnswerList { get; set; }
     }
 }

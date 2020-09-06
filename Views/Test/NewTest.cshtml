@@ -1,3 +1,83 @@
 ﻿@{
     ViewData["Title"] = "NewTest";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>();
+    string listening = "";
+    string reading = nameof(TCU.English.Controllers.TestPaperController.Reading);
+    string speaking = "";
+    string writing = "";
+}
+
+<div class="container-fluid px-xl-5">
+    <section class="py-5">
+        <div class="row">
+            <div class="col-md-6 mb-4 mb-xl-0">
+                <div onclick="navigationHref('@Url.Action(listening, controller)',@ViewBag.ListeningQuestionCount)"
+                     class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-violet">
+                    <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="dot mr-3 bg-violet"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Listening</h6><span class="text-gray">@ViewBag.ListeningQuestionCount Questions</span>
+                        </div>
+                    </div>
+                    <div class="icon text-white bg-violet"><i class="fas fa-headphones-alt"></i></div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4 mb-xl-0">
+                <div onclick="navigationHref('@Url.Action(reading, controller)',@ViewBag.ReadingQuestionCount)"
+                     class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-success">
+                    <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="dot mr-3 bg-green"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Reading</h6><span class="text-gray">@ViewBag.ReadingQuestionCount Questions</span>
+                        </div>
+                    </div>
+                    <div class="icon text-white bg-green"><i class="fas fa-book-reader"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4 mb-xl-0">
+                <div onclick="navigationHref('@Url.Action(speaking, controller)',@ViewBag.SpeakingQuestionCount)"
+                     class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-blue">
+                    <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="dot mr-3 bg-blue"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Speaking</h6><span class="text-gray">@ViewBag.SpeakingQuestionCount Questions</span>
+                        </div>
+                    </div>
+                    <div class="icon text-white bg-blue"><i class="fas fa-headset"></i></div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4 mb-xl-0">
+                <div onclick="navigationHref('@Url.Action(writing, controller)',@ViewBag.WritingQuestionCount)"
+                     class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-red">
+                    <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="dot mr-3 bg-red"></div>
+                        <div class="text">
+                            <h6 class="mb-0">Writing</h6><span class="text-gray">@ViewBag.WritingQuestionCount Questions</span>
+                        </div>
+                    </div>
+                    <div class="icon text-white bg-red"><i class="fas fa-feather-alt"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="alert alert-primary" role="alert">
+        <div class="text-center">
+            Click on the section where you want to create the test to take the test.
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function navigationHref(address, count) {
+            if (count > 1) {
+                window.location.href = address;
+            } else {
+                toastr['warning']('Sorry, currently there is not enough data in this section.');
+            }
+        }
+    </script>
 }

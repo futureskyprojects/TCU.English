@@ -15,8 +15,8 @@ namespace TCU.English.Models.DataManager
 
         public void Add(ReadingPartTwo entity)
         {
-            entity.CreatedTime = DateTime.Now;
-            entity.UpdatedTime = DateTime.Now;
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
             entity.Active = true;
             instantce.ReadingPartTwos.Add(entity);
             instantce.SaveChanges();
@@ -82,7 +82,7 @@ namespace TCU.English.Models.DataManager
 
         public void Update(ReadingPartTwo entity)
         {
-            entity.UpdatedTime = DateTime.Now;
+            entity.UpdatedTime = DateTime.UtcNow;
             instantce.ReadingPartTwos.Update(entity);
             instantce.SaveChanges();
         }

@@ -61,7 +61,19 @@
                                 <div class="card-body">
                                     <div class="row align-items-center flex-row">
                                         <div class="col-11">
-                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i + 1)<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(readingPartTwos.ElementAt(i).QuestionText)</span></p>
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold">
+                                                <span>
+                                                    <strong class="h5 mb-0">@(i + 1)<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong>
+                                                    @if (readingPartTwos.ElementAt(i).QuestionText != null && readingPartTwos.ElementAt(i).QuestionText.Trim().Length > 0)
+                                                    {
+                                                        <span>@Html.Raw(readingPartTwos.ElementAt(i).QuestionText)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Html.Raw($"Question #{readingPartTwos.ElementAt(i).Id}")</span>
+                                                    }
+                                                </span>
+                                            </p>
                                         </div>
                                         <div class="col-1" onclick="readingPopupOptions(@readingPartTwos.ElementAt(i).Id, '@Html.Raw(readingPartTwos.ElementAt(i).QuestionText)')">
                                             <img src="~/img/3dot.webp" width="18" />

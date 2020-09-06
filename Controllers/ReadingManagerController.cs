@@ -488,7 +488,7 @@ namespace TCU.English.Controllers
                         if (isFullAnswer && isHaveCorrectAnswer)
                         {
                             string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
-                            if (uploadResult != null || uploadResult.Length > 0)
+                            if (uploadResult != null && uploadResult.Length > 0)
                             {
                                 readingPartTwo.QuestionImage = uploadResult;
                             }

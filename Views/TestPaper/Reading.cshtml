@@ -1,0 +1,62 @@
+﻿@using TCU.English.Controllers
+@using TCU.English.Models
+@using TCU.English.Utils
+@{
+    ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";
+    Layout = "~/Views/Shared/_TestPaperLayout.cshtml";
+
+    IEnumerable<TCU.English.Models.ReadingPartOne> readingPartOnes = ViewBag.Part1 ?? new List<TCU.English.Models.ReadingPartOne>();
+}
+
+@if (readingPartOnes == null || readingPartOnes.Count() <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 1: <span class="text-uppercase">@ViewBag.Part1CategoryName</span></div>
+    <div class="font-weight-bold mt-2">* Choose the best option: </div>
+    <div class="pl-3">
+        @for (int i = 0; i < readingPartOnes.Count(); i++)
+        {
+            var answers = Newtonsoft.Json.JsonConvert
+            .DeserializeObject<List<BaseAnswer>>(readingPartOnes.ElementAt(i).Answers);
+            <div class="pt-2">@(i+1). @readingPartOnes.ElementAt(i).QuestionText</div>
+            if (answers == null || answers.Count <= 0)
+            {
+                <div class="alert alert-danger mt-2" role="alert">
+                    <div class="text-center">
+                        This question has not been answered. Please contact the administrator to report the error.
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @for (int j = 0; j < answers.Count; j++)
+                    {
+                        string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                        <div class="col-md-3">
+                            <div>@answerAlphapet. @answers.ElementAt(j).AnswerContent</div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+
+
+
+@section FinishButton {
+    <button type="button" class="btn btn-lg btn-danger">FINISH</button>
+}
+
+@section Scripts {
+
+}

@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <base href="/" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData["Title"] | TCU.English</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Google fonts - Popppins for copy-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,800">
+    <!-- orion icons-->
+    <link rel="stylesheet" href="css/orionicons.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.png?3">
+    <!-- Tweaks for older IEs-->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/toastr.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <!-- navbar-->
+    @*@await Component.InvokeAsync(nameof(TCU.English.Components.Header))*@
+    <div class="d-flex align-items-stretch">
+        <!--<div id="sidebar" class="sidebar py-3">-->
+        @*            @await Component.InvokeAsync(nameof(TCU.English.Components.Sidebar))*@
+        <!--</div>-->
+        <div class="page-holder w-100 d-flex flex-wrap">
+            <div class="container-fluid px-xl-5">
+                <div class="py-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <span class=" pl-3">
+                                    <span class="text-primary">Nghiêm Thành Ngọc</span>'s
+                                    <br />
+                                    <span class="h6 text-uppercase my-auto">@ViewData["Title"]</span>
+                                </span>
+                                <span class="ml-auto">
+                                    <button class="btn btn-lg btn-outline-green px-3 mr-2" data-toggle="tooltip" data-placement="top" title="Your working timer"><span class="mr-1" id="time-counter-top">00:00:00</span></button>
+                                    @RenderSection("FinishButton", required: true)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+
+                <div id="float-br" class="float-br-hidden">
+                    <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1" id="time-counter">00:00:00</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
+                </div>
+            </div>
+            <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
+                @await Component.InvokeAsync(nameof(TCU.English.Components.Footer))
+            </footer>
+        </div>
+    </div>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="js/front.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    @* https://www.learnrazorpages.com/razor-pages/ajax/unobtrusive-ajax *@
+    <script src="~/lib/jquery.unobtrusive-ajax.js"></script>
+    <!-- Javascript for make menu item active -->
+    <script>
+        $('a.sidebar-link').each(function (i, obj) {
+            var url = $(location).attr('href').split('#')[0];
+            var a = url.indexOf("?");
+            if (a > 0) {
+                var b = url.substring(a);
+                var c = url.replace(b, "");
+                url = c;
+            }
+            if (obj.attributes['href'].value == url.replace(window.location.origin, '')) {
+                $(obj).addClass('active');
+            }
+        });
+    </script>
+    <!-- https://gijgo.com/datepicker/configuration -->
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="~/js/toastr.min.js" type="text/javascript"></script>
+
+    @* https://sweetalert.js.org/guides/ *@
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        var totalTestWorkingSeconds = 0;
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        //Get the button
+        var floatBottomRight = document.getElementById("float-br");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                floatBottomRight.style.display = "block";
+            } else {
+                floatBottomRight.style.display = "none";
+            }
+        }
+        function topFunction() {
+            $("html, body").animate({ scrollTop: 0 }, 300);
+        }
+        // time-counter
+        setInterval(function () {
+            totalTestWorkingSeconds++;
+            let displayTimer = new Date(totalTestWorkingSeconds * 1000).toISOString().substr(11, 8);
+            $("#time-counter-top").html(displayTimer);
+            $("#time-counter").html(displayTimer);
+        }, 1000);
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

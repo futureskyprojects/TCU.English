@@ -16,12 +16,12 @@ namespace TCU.English.Controllers
             host = _host;
         }
 
-        [HttpGet("[controller]/{username}/{filename}")]
-        public IActionResult Index(string username, string filename)
+        [HttpGet("[controller]/{username}/{type}/{filename}")]
+        public IActionResult Index(string username, string type, string filename)
         {
             try
             {
-                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), username, filename);
+                var uploads = Path.Combine(host.GetContentPathRootForUploadUtils(), NameUtils.ControllerName<UploadsController>().ToLower(), username, type, filename);
 
                 if (System.IO.File.Exists(uploads))
                 {

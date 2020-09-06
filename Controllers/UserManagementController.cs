@@ -131,15 +131,18 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    string uploadResult = await host.UploadForUserImage(userAvatar, user);
-                    if (uploadResult != null && uploadResult.Length > 0)
+                    if (userAvatar != null && userAvatar.Length > 0)
                     {
-                        user.Avatar = uploadResult;
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                        return View(user);
+                        string uploadResult = await host.UploadForUserImage(userAvatar, user);
+                        if (uploadResult != null && uploadResult.Length > 0)
+                        {
+                            user.Avatar = uploadResult;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                            return View(user);
+                        }
                     }
                 }
                 // Save user
@@ -202,15 +205,18 @@ namespace TCU.English.Controllers
                 }
                 else
                 {
-                    string uploadResult = await host.UploadForUserImage(userAvatar, user);
-                    if (uploadResult != null && uploadResult.Length > 0)
+                    if (userAvatar != null && userAvatar.Length > 0)
                     {
-                        user.Avatar = uploadResult;
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
-                        return View(user);
+                        string uploadResult = await host.UploadForUserImage(userAvatar, user);
+                        if (uploadResult != null && uploadResult.Length > 0)
+                        {
+                            user.Avatar = uploadResult;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(nameof(Models.User.Avatar), "Invalid avatar image");
+                            return View(user);
+                        }
                     }
                     // Save user
                     _UserManager.Update(user);

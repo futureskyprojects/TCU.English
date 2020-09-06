@@ -1,0 +1,15 @@
+﻿@using TCU.English.Controllers
+@using TCU.English.Utils
+@{
+    ViewData["Title"] = "READING TESTING";
+    Layout = "~/Views/Shared/_TestPaperLayout.cshtml";
+    string controllerName = TCU.English.Utils.NameUtils.ControllerName<UserManagementController>();
+}
+
+@section FinishButton {
+    <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.TestCategory)_Create" class="btn btn-lg btn-danger">FINISH</button>
+}
+
+@section Scripts {
+
+}

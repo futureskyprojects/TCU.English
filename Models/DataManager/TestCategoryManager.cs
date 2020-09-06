@@ -27,6 +27,31 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.TestCategories.Any(iterator => iterator.Name.ToLower() == entity.Name.ToLower() && iterator.TypeCode.ToLower() == entity.TypeCode.ToLower() && iterator.PartId == entity.PartId);
         }
+        public long ListeningQuestionCount()
+        {
+            var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.LISTENING);
+            return category.Sum(x => x.ListeningBaseQuestions.Count);
+        }
+
+        public long ReadingQuestionCount()
+        {
+            var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.READING);
+            long part1Count = category.Sum(x => x.ReadingPartOnes.Count);
+            long part2Count = category.Sum(x => x.ReadingPartTwos.Count);
+
+            return part1Count + part2Count;
+        }
+
+        public long SpeakingQuestionCount()
+        {
+            return 0;
+        }
+
+        public long WritingQuestionCount()
+        {
+            var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.WRITING);
+            return category.Sum(x => x.WritingPartOnes.Count);
+        }
 
         public long Count()
         {
