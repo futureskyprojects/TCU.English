@@ -23,6 +23,11 @@ namespace TCU.English.Models
             this.ControllerName = controllerName;
         }
 
+        public int CalIndex(int index)
+        {
+            return (PageCurrent - 1) * Offset + index;
+        }
+
         public Dictionary<string, string> BuildParams(string page)
         {
             if (Type == null)

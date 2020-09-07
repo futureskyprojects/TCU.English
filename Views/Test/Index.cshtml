@@ -1,4 +1,176 @@
-﻿@{
-    ViewData["Title"] = "Test History";
-}
+﻿@model IEnumerable<TCU.English.Models.PieceOfTest>
+@{
+    // Code dữ liệu để render phần thống kê
+    List<(string, string, string, string, string, long)> statisticals = new List<(string, string, string, string, string, long)>
+{
+        ("bg-hover-gradient-info","Total tests you have performed.","bg-info","fas fa-server","All",ViewBag.UserTestCountOfAll),
+        ("bg-hover-gradient-violet","Total listening tests that you have taken.","bg-violet","fas fa-headphones-alt","Listening",ViewBag.UserTestCountOfListening),
+        ("bg-hover-gradient-green","Total reading tests that you have taken.","bg-green","fas fa-book-reader","Reading",ViewBag.UserTestCountOfReading),
+        ("bg-hover-gradient-blue","Total speaking tests that you have taken.","bg-blue","fas fa-headset","Speaking",ViewBag.UserTestCountOfSpeaking),
+        ("bg-hover-gradient-red","Total writing tests that you have taken.","bg-red","fas fa-feather-alt","Writing",ViewBag.UserTestCountOfWriting),
+        ("bg-hover-gradient-warning","Total your broken or incomplete exams.","bg-warning","fa fa-exclamation-triangle","Crash",ViewBag.UserTestCountOfCrash),
+    };
 
+    // Biến lưu trữ thông số bảng
+    string TableName = ViewBag.TableName ?? "<span class=\"text-danger\">ERROR</span>";
+    string TableDescription = statisticals.First(x => x.Item5.ToUpper() == TableName).Item2 ?? "<span class=\"text-danger\">Cannot proceed to get description of current table.</span>";
+
+    string ActionName = nameof(TCU.English.Controllers.TestController.Index);
+    string ControllerName = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestController>();
+
+    // Tiêu đề
+    ViewData["Title"] = TableName;
+
+    string getTypeColor(string typeCode)
+    {
+        if (typeCode.ToUpper().Trim() == TCU.English.Models.TestCategory.LISTENING.Trim().ToUpper())
+            return "bg-violet";
+        else if (typeCode.ToUpper().Trim() == TCU.English.Models.TestCategory.READING.Trim().ToUpper())
+            return "bg-green";
+        else if (typeCode.ToUpper().Trim() == TCU.English.Models.TestCategory.SPEAKING.Trim().ToUpper())
+            return "bg-blue";
+        else if (typeCode.ToUpper().Trim() == TCU.English.Models.TestCategory.WRITING.Trim().ToUpper())
+            return "bg-red";
+        else
+            return "bg-gray-100";
+    }
+}
+@* RENDER PHẦN THỐNG KÊ SỐ LƯỢNG *@
+<section class="py-4">
+    <div class="row">
+        @foreach (var statistical in statisticals)
+        {
+            <div class="col-md-2 col-sm-4 mb-4 mb-xl-0 none-a">
+                <a href="@Url.Action(ActionName,ControllerName, new Dictionary<string, string> { { "type",statistical.Item5.ToUpper().Trim() } })" class="bg-white shadow roundy px-2 py-3 h-100 d-flex align-items-center justify-content-between @Html.Raw(statistical.Item1) @Html.Raw(TableName.ToUpper().Trim()==statistical.Item5.ToUpper().Trim()?" bg-gray-300":"")"
+                   data-toggle="tooltip" data-placement="bottom" title="@Html.Raw(statistical.Item2)">
+                    <div class="flex-grow-1 d-flex align-items-center">
+                        <div class="icon text-white mx-2 @Html.Raw(statistical.Item3)"><i class="@Html.Raw(statistical.Item4)"></i></div>
+                        <div class="text">
+                            <h6 class="mb-0">@Html.Raw(statistical.Item5)</h6><span class="text-gray"><small>@Html.Raw(statistical.Item6) Tests</small></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+@* KẾT THÚCRENDER PHẦN THỐNG KÊ SỐ LƯỢNG *@
+
+@* RENDER PHẦN BẢNG HIỂN THỊ CHI TIẾT *@
+<section class="">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase">
+                        @Html.Raw(TableName)
+                        @if (ViewBag.SearchKey != null && ((string)ViewBag.SearchKey).Length > 0)
+                        {
+                            <span>@Html.Raw($" of keyword \"{ViewBag.SearchKey}\"")</span>
+                        }
+                    </h6>
+                    <p class="text-gray mb-md-0">@Html.Raw(TableDescription)</p>
+                </div>
+                <div class="col-md-6">
+                    @using (Html.BeginForm(ActionName, ControllerName, FormMethod.Get, new { @class = "form-inline float-md-right" }))
+                    {
+                        <div class="form-group">
+                            <label for="inlineFormInputGroup" class="sr-only">Keywords</label>
+                            <input type="hidden" name="type" value="@TableName">
+                            <input id="inlineFormInputGroup" type="text" placeholder="Keywords" class="mr-3 form-control" name="searchKey" value="@(ViewBag.SearchKey ?? "")">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model == null || Model.Count() <= 0)
+            {
+                <partial name="__EmptyAnimation" />
+            }
+            else
+            {
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+                        <div class="row">
+                            <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                                <h6 class="mb-0" style="font-family: Tahoma">@(((TCU.English.Models.Pagination)ViewBag.Pagination).CalIndex(i + 1)). Test code @Model.ElementAt(i).Id at @Model.ElementAt(i).CreatedTime?.ToString("HH:mm dd/MM/yyyy")</h6>
+                            </div>
+                            <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                                <div class="roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-white exclode float-lg-left @getTypeColor(Model.ElementAt(i).TypeCode)">
+                                    @Html.Raw(Model.ElementAt(i).TypeCode)
+                                </div>
+                            </div>
+                            <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                                @*<a href="@Url.Action(nameof(UserManagementController.UpdateUser), NameUtils.ControllerName<UserManagementController>(), new { id = user.Id })" class="btn btn-warning float-lg-right ml-lg-auto text-white">Edit</a>*@
+                                <button type="button" class="btn btn-info float-lg-right ml-auto" onclick="review(@Model.ElementAt(i).Id)">Review</button>
+                                @if (Model.ElementAt(i).ResultOfUserJson == null || Model.ElementAt(i).ResultOfUserJson.Length <= 0)
+                                {
+                                    <button type="button" class="btn btn-red float-lg-right ml-2" onclick="deleteConfirm(@Model.ElementAt(i).Id)">Delete</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.Pagination);
+            }
+        </div>
+    </div>
+</section>
+@* KẾT THÚC RENDER PHẦN HIỂN THỊ CHI TIẾT *@
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        function review(pieceOfTestId) {
+            toastr['warning']("The review function will be available in the next update.");
+        }
+        function deleteConfirm(pieceOfTestId) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, you will not be able to recover!"`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(
+                            `@Url.Action(nameof(TCU.English.Controllers.PieceOfTestController.Delete),TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.PieceOfTestController>())/${pieceOfTestId}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Test has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 1000);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Test has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Test has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`Finshed`, "Test is safe!");
+                    }
+                });
+        }
+    </script>
+}

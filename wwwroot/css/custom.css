@@ -1,3 +1,11 @@
+.none-a > a {
+    color: unset;
+}
+
+    .none-a > a:hover, .none-a > a:active {
+        text-decoration: none;
+    }
+
 .float-br-hidden {
     display: none;
     position: fixed;

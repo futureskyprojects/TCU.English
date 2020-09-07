@@ -26,11 +26,13 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.PieceOfTests.Count();
         }
+
+        #region FOR HOME INDEX
         public long CompletedTestsCount(long userId)
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0).Count();
             }
             catch (Exception)
             {
@@ -41,7 +43,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.Scores >= Config.THRESHOLD_POINT).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= Config.THRESHOLD_POINT).Count();
             }
             catch (Exception)
             {
@@ -52,7 +54,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.Scores < Config.THRESHOLD_POINT).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores < Config.THRESHOLD_POINT).Count();
             }
             catch (Exception)
             {
@@ -67,7 +69,7 @@ namespace TCU.English.Models.DataManager
             if (typeCode.ToUpper() == "ALL")
             {
                 totalPiceOfTests = CompletedTestsCount(userId);
-                totalScores = instantce.PieceOfTests.Where(x => x.UserId == userId).Sum(x => x.Scores);
+                totalScores = instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0).Sum(x => x.Scores);
             }
             else
             {
@@ -79,6 +81,57 @@ namespace TCU.English.Models.DataManager
             else
                 return 0;
         }
+        #endregion
+
+        private IQueryable<PieceOfTest> QueryableOfUserTest(long userId, string typeCode)
+        {
+            IQueryable<PieceOfTest> query = null;
+            if (typeCode.ToUpper() == "ALL".ToUpper())
+            {
+                query = instantce.PieceOfTests.Where(x => x.UserId == userId);
+            }
+            else if (typeCode.ToUpper() == "CRASH".ToUpper())
+            {
+                query = instantce.PieceOfTests.Where(x =>
+                            x.UserId == userId &&
+                            (x.ResultOfUserJson == null ||
+                            x.ResultOfUserJson.Length <= 0));
+            }
+            else
+            {
+                instantce.PieceOfTests
+                    .Where(x =>
+                            x.UserId == userId &&
+                            x.ResultOfUserJson != null &&
+                            x.ResultOfUserJson.Length > 0 &&
+                            x.TypeCode.ToUpper().Trim() == typeCode.ToUpper().Trim());
+            }
+            return query;
+        }
+
+        #region FOR TEST HISTORY
+        public long UserTestCountOfType(long userId, string typeCode, string searchKey = "")
+        {
+            try
+            {
+                return QueryableOfUserTest(userId, typeCode)
+                    .Where(x => x.ResultOfTestJson.Contains(searchKey))
+                    .Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        public IEnumerable<PieceOfTest> GetByPagination(long userId, string typeCode, int start, int limit, string searchKey = "")
+        {
+            var query = QueryableOfUserTest(userId, typeCode);
+            if (query == null)
+                return new List<PieceOfTest>();
+            return query.Where(x => x.ResultOfTestJson.Contains(searchKey)).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
+        #endregion
 
         public void Delete(PieceOfTest entity)
         {
