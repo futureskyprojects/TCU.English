@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace TCU.English.Utils
 {
@@ -24,6 +25,17 @@ namespace TCU.English.Utils
             try
             {
                 return Convert.ToInt64(number);
+            }
+            catch (Exception)
+            {
+                return -1L;
+            }
+        }
+        public static float ToFloat(this object number)
+        {
+            try
+            {
+                return float.Parse(number.ToString(), CultureInfo.InvariantCulture.NumberFormat);
             }
             catch (Exception)
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using TCU.English.Models;
@@ -48,6 +49,14 @@ namespace TCU.English.Controllers
             return RedirectToAction(nameof(TestController.NewTest), NameUtils.ControllerName<TestController>());
         }
 
+        //[HttpPost]
+        public IActionResult Result(PieceOfTest piece)
+        {
+            //ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
+            ViewBag.Scores = 8.5;
+            return View(piece);
+        }
+
         public IActionResult Reading()
         {
             ViewBag.Title = "READING TESTING";
@@ -65,6 +74,39 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+        }
+
+        [HttpPost]
+        public IActionResult Reading(ReadingTestPaper paper)
+        {
+            if (paper == null)
+                return NotFound();
+            if (paper.PiceOfTestId <= 0)
+                return NotFound();
+            if (!paper.IsPaperFullSelection())
+            {
+                ModelState.AddModelError(string.Empty, "Please complete all questions.");
+                return View(paper);
+            }
+
+            // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
+            PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
+            int total = paper.TotalQuestions(); // Tổng số câu hỏi
+            if (total <= 0)
+            {
+                ModelState.AddModelError(string.Empty, "The test does not have any questions.");
+                return View(paper);
+            }
+            int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng
+            float scores = (float)correct / total;
+            float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
+            // Cập nhật dữ liệu
+            piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
+            piece.Scores = scores;
+            piece.TimeToFinished = timeToFinished;
+            _PieceOfTestManager.Update(piece);
+            // Chuyển đến trang kết quả
+            return RedirectToAction(nameof(Result), piece);
         }
     }
 }

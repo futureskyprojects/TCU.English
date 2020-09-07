@@ -112,6 +112,7 @@ namespace TCU.English.Models.PiceOfTest
             return this;
         }
 
+        #region GENRATE QUESTION
         public static (TestCategory, List<ReadingPartOne>) GeneratePart1(TestCategoryManager _TestCategoryManager)
         {
             // Lấy danh mục
@@ -210,6 +211,140 @@ namespace TCU.English.Models.PiceOfTest
             }
             return (category, questions);
         }
+        #endregion
 
+        #region CALCULATE TRUE
+        private int CalculateTrueOfPart1(ReadingTestPaper paper)
+        {
+            if (ReadingPartOnes.Item2 != null &&
+                ReadingPartOnes.Item2.Count > 0 &&
+                paper.ReadingPartOnes.Item2 != null &&
+                ReadingPartOnes.Item2.Count == paper.ReadingPartOnes.Item2.Count)
+            {
+                int count = 0;
+                for (int i = 0; i < ReadingPartOnes.Item2.Count; i++)
+                {
+                    try
+                    {
+                        string trueAnswerOfCurrent = ReadingPartOnes.Item2[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                        string trueAnswerOfDestination = paper.ReadingPartOnes.Item2[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                        if (trueAnswerOfCurrent.ToLower().Trim() == trueAnswerOfDestination.ToLower().Trim())
+                        {
+                            count++;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Bỏ qua
+                    }
+                }
+                return count;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        public int CalculateTrueOfPart(int partId, ReadingTestPaper paper)
+        {
+            if (partId == 1)
+            {
+                return CalculateTrueOfPart1(paper);
+            }
+            else if (partId > 1 && partId <= 4)
+            {
+                List<ReadingPartTwo> current = new[] { ReadingPartTwos, ReadingPartThrees, ReadingPartFours }[partId].Item2;
+                List<ReadingPartTwo> dest = new[] { paper.ReadingPartTwos, paper.ReadingPartThrees, paper.ReadingPartFours }[partId].Item2;
+                if (current != null &&
+                    current.Count > 0 &&
+                    dest != null &&
+                    current.Count == dest.Count)
+                {
+                    int count = 0;
+                    for (int i = 0; i < current.Count; i++)
+                    {
+                        try
+                        {
+                            string trueAnswerOfCurrent = current[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                            string trueAnswerOfDestination = dest[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                            if (trueAnswerOfCurrent.ToLower().Trim() == trueAnswerOfDestination.ToLower().Trim())
+                            {
+                                count++;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Bỏ qua
+                        }
+                    }
+                    return count;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            else
+            {
+                throw new Exception("Reading không có quá 4 PART!");
+            }
+        }
+        public int CalculateTrue(ReadingTestPaper paper)
+        {
+            int count = 0;
+            for (int i = 1; i <= 4; i++)
+            {
+                int res = CalculateTrueOfPart(i, paper);
+                if (res >= 0)
+                    count += res;
+            }
+            return count;
+        }
+
+        public int CalculateTrue(string readingTestPaperJson)
+        {
+            ReadingTestPaper paper = JsonConvert.DeserializeObject<ReadingTestPaper>(readingTestPaperJson);
+            return CalculateTrue(paper);
+        }
+        #endregion
+
+        public bool IsPaperFullSelection()
+        {
+            if (ReadingPartOnes.Item2 != null)
+                foreach (var answers in ReadingPartOnes.Item2)
+                {
+                    if (!answers.AnswerList.Any(x => x.IsCorrect))
+                    {
+                        return false;
+                    }
+                }
+
+            foreach (var item in new[] { ReadingPartTwos.Item2, ReadingPartThrees.Item2, ReadingPartFours.Item2 })
+            {
+                if (item != null)
+                    foreach (var answers in item)
+                    {
+                        if (!answers.AnswerList.Any(x => x.IsCorrect))
+                        {
+                            return false;
+                        }
+                    }
+            }
+            return true;
+        }
+
+        public int TotalQuestions()
+        {
+            int total = 0;
+            if (ReadingPartOnes.Item2 != null)
+                total += ReadingPartOnes.Item2.Count;
+            if (ReadingPartTwos.Item2 != null)
+                total += ReadingPartTwos.Item2.Count;
+            if (ReadingPartThrees.Item2 != null)
+                total += ReadingPartThrees.Item2.Count;
+            if (ReadingPartFours.Item2 != null)
+                total += ReadingPartFours.Item2.Count;
+            return total;
+        }
     }
 }

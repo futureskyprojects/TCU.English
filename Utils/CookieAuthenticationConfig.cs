@@ -24,26 +24,27 @@ namespace TCU.English.Utils
                     Name = ".TCU.English.Security.Cookie",
                     Path = "/",
                     SameSite = SameSiteMode.Lax,
-                    SecurePolicy = CookieSecurePolicy.SameAsRequest
+                    SecurePolicy = CookieSecurePolicy.SameAsRequest,
                 };
+                options.ExpireTimeSpan = TimeSpan.FromDays(365 * 10); // Thời hạn đăng nhập là 10 năm
                 options.Events = new CookieAuthenticationEvents
                 {
                     OnSignedIn = context =>
                     {
-                        Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
-                            "OnSignedIn", context.Principal.Identity.Name);
+                        //Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
+                        //    "OnSignedIn", context.Principal.Identity.Name);
                         return Task.CompletedTask;
                     },
                     OnSigningOut = context =>
                     {
-                        Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
-                            "OnSigningOut", context.HttpContext.User.Identity.Name);
+                        //Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
+                        //    "OnSigningOut", context.HttpContext.User.Identity.Name);
                         return Task.CompletedTask;
                     },
                     OnValidatePrincipal = context =>
                     {
-                        Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
-                            "OnValidatePrincipal", context.Principal.Identity.Name);
+                        //Console.WriteLine("{0} - {1}: {2}", DateTime.Now,
+                        //    "OnValidatePrincipal", context.Principal.Identity.Name);
                         return Task.CompletedTask;
                     }
                 };
