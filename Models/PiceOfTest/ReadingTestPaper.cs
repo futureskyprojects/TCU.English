@@ -20,29 +20,41 @@ namespace TCU.English.Models.PiceOfTest
         const int MAX_QUESTION_READING_PART_3 = 5;
         [JsonIgnore]
         const int MAX_QUESTION_READING_PART_4 = 10;
+
+        public class ReadingPartOneDTO
+        {
+            public TestCategory TestCategory { get; set; }
+            public List<ReadingPartOne> ReadingPart { get; set; }
+        }
+        public class ReadingPartTwoDTO
+        {
+            public TestCategory TestCategory { get; set; }
+            public List<ReadingPartTwo> ReadingPart { get; set; }
+        }
+
         [JsonIgnore]
         public int PiceOfTestId { get; set; }
-        public (TestCategory, List<ReadingPartOne>) ReadingPartOnes { get; set; }
-        public (TestCategory, List<ReadingPartTwo>) ReadingPartTwos { get; set; }
-        public (TestCategory, List<ReadingPartTwo>) ReadingPartThrees { get; set; }
-        public (TestCategory, List<ReadingPartTwo>) ReadingPartFours { get; set; }
+        public ReadingPartOneDTO ReadingPartOnes { get; set; }
+        public ReadingPartTwoDTO ReadingPartTwos { get; set; }
+        public ReadingPartTwoDTO ReadingPartThrees { get; set; }
+        public ReadingPartTwoDTO ReadingPartFours { get; set; }
 
         public ReadingTestPaper RemoveCorrectAnswers()
         {
             #region Remove for part 1
-            if (ReadingPartOnes.Item1 != null &&
-                ReadingPartOnes.Item2 != null &&
-                ReadingPartOnes.Item2.Count > 0)
+            if (ReadingPartOnes.TestCategory != null &&
+                ReadingPartOnes.ReadingPart != null &&
+                ReadingPartOnes.ReadingPart.Count > 0)
             {
-                for (int i = 0; i < ReadingPartOnes.Item2.Count; i++)
+                for (int i = 0; i < ReadingPartOnes.ReadingPart.Count; i++)
                 {
-                    if (ReadingPartOnes.Item2[i] != null &&
-                        ReadingPartOnes.Item2[i].AnswerList != null &&
-                        ReadingPartOnes.Item2[i].AnswerList.Count > 0)
+                    if (ReadingPartOnes.ReadingPart[i] != null &&
+                        ReadingPartOnes.ReadingPart[i].AnswerList != null &&
+                        ReadingPartOnes.ReadingPart[i].AnswerList.Count > 0)
                     {
-                        for (int j = 0; j < ReadingPartOnes.Item2[i].AnswerList.Count; j++)
+                        for (int j = 0; j < ReadingPartOnes.ReadingPart[i].AnswerList.Count; j++)
                         {
-                            ReadingPartOnes.Item2[i].AnswerList[j].IsCorrect = false;
+                            ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect = false;
                         }
                     }
                 }
@@ -50,19 +62,19 @@ namespace TCU.English.Models.PiceOfTest
             #endregion
 
             #region Remove for part 2
-            if (ReadingPartTwos.Item1 != null &&
-                ReadingPartTwos.Item2 != null &&
-                ReadingPartTwos.Item2.Count > 0)
+            if (ReadingPartTwos.TestCategory != null &&
+                ReadingPartTwos.ReadingPart != null &&
+                ReadingPartTwos.ReadingPart.Count > 0)
             {
-                for (int i = 0; i < ReadingPartTwos.Item2.Count; i++)
+                for (int i = 0; i < ReadingPartTwos.ReadingPart.Count; i++)
                 {
-                    if (ReadingPartTwos.Item2[i] != null &&
-                        ReadingPartTwos.Item2[i].AnswerList != null &&
-                        ReadingPartTwos.Item2[i].AnswerList.Count > 0)
+                    if (ReadingPartTwos.ReadingPart[i] != null &&
+                        ReadingPartTwos.ReadingPart[i].AnswerList != null &&
+                        ReadingPartTwos.ReadingPart[i].AnswerList.Count > 0)
                     {
-                        for (int j = 0; j < ReadingPartTwos.Item2[i].AnswerList.Count; j++)
+                        for (int j = 0; j < ReadingPartTwos.ReadingPart[i].AnswerList.Count; j++)
                         {
-                            ReadingPartTwos.Item2[i].AnswerList[j].IsCorrect = false;
+                            ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect = false;
                         }
                     }
                 }
@@ -70,19 +82,19 @@ namespace TCU.English.Models.PiceOfTest
             #endregion
 
             #region Remove for part 3
-            if (ReadingPartThrees.Item1 != null &&
-                ReadingPartThrees.Item2 != null &&
-                ReadingPartThrees.Item2.Count > 0)
+            if (ReadingPartThrees.TestCategory != null &&
+                ReadingPartThrees.ReadingPart != null &&
+                ReadingPartThrees.ReadingPart.Count > 0)
             {
-                for (int i = 0; i < ReadingPartThrees.Item2.Count; i++)
+                for (int i = 0; i < ReadingPartThrees.ReadingPart.Count; i++)
                 {
-                    if (ReadingPartThrees.Item2[i] != null &&
-                        ReadingPartThrees.Item2[i].AnswerList != null &&
-                        ReadingPartThrees.Item2[i].AnswerList.Count > 0)
+                    if (ReadingPartThrees.ReadingPart[i] != null &&
+                        ReadingPartThrees.ReadingPart[i].AnswerList != null &&
+                        ReadingPartThrees.ReadingPart[i].AnswerList.Count > 0)
                     {
-                        for (int j = 0; j < ReadingPartThrees.Item2[i].AnswerList.Count; j++)
+                        for (int j = 0; j < ReadingPartThrees.ReadingPart[i].AnswerList.Count; j++)
                         {
-                            ReadingPartThrees.Item2[i].AnswerList[j].IsCorrect = false;
+                            ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect = false;
                         }
                     }
                 }
@@ -90,19 +102,19 @@ namespace TCU.English.Models.PiceOfTest
             #endregion
 
             #region Remove for part 4
-            if (ReadingPartFours.Item1 != null &&
-                ReadingPartFours.Item2 != null &&
-                ReadingPartFours.Item2.Count > 0)
+            if (ReadingPartFours.TestCategory != null &&
+                ReadingPartFours.ReadingPart != null &&
+                ReadingPartFours.ReadingPart.Count > 0)
             {
-                for (int i = 0; i < ReadingPartFours.Item2.Count; i++)
+                for (int i = 0; i < ReadingPartFours.ReadingPart.Count; i++)
                 {
-                    if (ReadingPartFours.Item2[i] != null &&
-                        ReadingPartFours.Item2[i].AnswerList != null &&
-                        ReadingPartFours.Item2[i].AnswerList.Count > 0)
+                    if (ReadingPartFours.ReadingPart[i] != null &&
+                        ReadingPartFours.ReadingPart[i].AnswerList != null &&
+                        ReadingPartFours.ReadingPart[i].AnswerList.Count > 0)
                     {
-                        for (int j = 0; j < ReadingPartFours.Item2[i].AnswerList.Count; j++)
+                        for (int j = 0; j < ReadingPartFours.ReadingPart[i].AnswerList.Count; j++)
                         {
-                            ReadingPartFours.Item2[i].AnswerList[j].IsCorrect = false;
+                            ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect = false;
                         }
                     }
                 }
@@ -113,7 +125,7 @@ namespace TCU.English.Models.PiceOfTest
         }
 
         #region GENRATE QUESTION
-        public static (TestCategory, List<ReadingPartOne>) GeneratePart1(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartOneDTO GeneratePart1(TestCategoryManager _TestCategoryManager)
         {
             // Lấy danh mục
             var category = _TestCategoryManager
@@ -137,9 +149,13 @@ namespace TCU.English.Models.PiceOfTest
                     questions[i].AnswerList.Shuffle();
                 }
             }
-            return (category, questions);
+            return new ReadingPartOneDTO
+            {
+                TestCategory = category,
+                ReadingPart = questions
+            };
         }
-        public static (TestCategory, List<ReadingPartTwo>) GeneratePart2(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartTwoDTO GeneratePart2(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 2)
@@ -161,9 +177,13 @@ namespace TCU.English.Models.PiceOfTest
                     questions[i].AnswerList.Shuffle();
                 }
             }
-            return (category, questions);
+            return new ReadingPartTwoDTO
+            {
+                TestCategory = category,
+                ReadingPart = questions
+            };
         }
-        public static (TestCategory, List<ReadingPartTwo>) GeneratePart3(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartTwoDTO GeneratePart3(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 3)
@@ -185,9 +205,13 @@ namespace TCU.English.Models.PiceOfTest
                     questions[i].AnswerList.Shuffle();
                 }
             }
-            return (category, questions);
+            return new ReadingPartTwoDTO
+            {
+                TestCategory = category,
+                ReadingPart = questions
+            };
         }
-        public static (TestCategory, List<ReadingPartTwo>) GeneratePart4(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartTwoDTO GeneratePart4(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 4)
@@ -209,25 +233,29 @@ namespace TCU.English.Models.PiceOfTest
                     questions[i].AnswerList.Shuffle();
                 }
             }
-            return (category, questions);
+            return new ReadingPartTwoDTO
+            {
+                TestCategory = category,
+                ReadingPart = questions
+            };
         }
         #endregion
 
         #region CALCULATE TRUE
         private int CalculateTrueOfPart1(ReadingTestPaper paper)
         {
-            if (ReadingPartOnes.Item2 != null &&
-                ReadingPartOnes.Item2.Count > 0 &&
-                paper.ReadingPartOnes.Item2 != null &&
-                ReadingPartOnes.Item2.Count == paper.ReadingPartOnes.Item2.Count)
+            if (ReadingPartOnes.ReadingPart != null &&
+                ReadingPartOnes.ReadingPart.Count > 0 &&
+                paper.ReadingPartOnes.ReadingPart != null &&
+                ReadingPartOnes.ReadingPart.Count == paper.ReadingPartOnes.ReadingPart.Count)
             {
                 int count = 0;
-                for (int i = 0; i < ReadingPartOnes.Item2.Count; i++)
+                for (int i = 0; i < ReadingPartOnes.ReadingPart.Count; i++)
                 {
                     try
                     {
-                        string trueAnswerOfCurrent = ReadingPartOnes.Item2[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
-                        string trueAnswerOfDestination = paper.ReadingPartOnes.Item2[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                        string trueAnswerOfCurrent = ReadingPartOnes.ReadingPart[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
+                        string trueAnswerOfDestination = paper.ReadingPartOnes.ReadingPart[i].AnswerList.First(x => x.IsCorrect).AnswerContent;
                         if (trueAnswerOfCurrent.ToLower().Trim() == trueAnswerOfDestination.ToLower().Trim())
                         {
                             count++;
@@ -253,8 +281,8 @@ namespace TCU.English.Models.PiceOfTest
             }
             else if (partId > 1 && partId <= 4)
             {
-                List<ReadingPartTwo> current = new[] { ReadingPartTwos, ReadingPartThrees, ReadingPartFours }[partId].Item2;
-                List<ReadingPartTwo> dest = new[] { paper.ReadingPartTwos, paper.ReadingPartThrees, paper.ReadingPartFours }[partId].Item2;
+                List<ReadingPartTwo> current = new[] { ReadingPartTwos, ReadingPartThrees, ReadingPartFours }[partId].ReadingPart;
+                List<ReadingPartTwo> dest = new[] { paper.ReadingPartTwos, paper.ReadingPartThrees, paper.ReadingPartFours }[partId].ReadingPart;
                 if (current != null &&
                     current.Count > 0 &&
                     dest != null &&
@@ -310,8 +338,8 @@ namespace TCU.English.Models.PiceOfTest
 
         public bool IsPaperFullSelection()
         {
-            if (ReadingPartOnes.Item2 != null)
-                foreach (var answers in ReadingPartOnes.Item2)
+            if (ReadingPartOnes.ReadingPart != null)
+                foreach (var answers in ReadingPartOnes.ReadingPart)
                 {
                     if (!answers.AnswerList.Any(x => x.IsCorrect))
                     {
@@ -319,7 +347,7 @@ namespace TCU.English.Models.PiceOfTest
                     }
                 }
 
-            foreach (var item in new[] { ReadingPartTwos.Item2, ReadingPartThrees.Item2, ReadingPartFours.Item2 })
+            foreach (var item in new[] { ReadingPartTwos.ReadingPart, ReadingPartThrees.ReadingPart, ReadingPartFours.ReadingPart })
             {
                 if (item != null)
                     foreach (var answers in item)
@@ -336,14 +364,14 @@ namespace TCU.English.Models.PiceOfTest
         public int TotalQuestions()
         {
             int total = 0;
-            if (ReadingPartOnes.Item2 != null)
-                total += ReadingPartOnes.Item2.Count;
-            if (ReadingPartTwos.Item2 != null)
-                total += ReadingPartTwos.Item2.Count;
-            if (ReadingPartThrees.Item2 != null)
-                total += ReadingPartThrees.Item2.Count;
-            if (ReadingPartFours.Item2 != null)
-                total += ReadingPartFours.Item2.Count;
+            if (ReadingPartOnes.ReadingPart != null)
+                total += ReadingPartOnes.ReadingPart.Count;
+            if (ReadingPartTwos.ReadingPart != null)
+                total += ReadingPartTwos.ReadingPart.Count;
+            if (ReadingPartThrees.ReadingPart != null)
+                total += ReadingPartThrees.ReadingPart.Count;
+            if (ReadingPartFours.ReadingPart != null)
+                total += ReadingPartFours.ReadingPart.Count;
             return total;
         }
     }

@@ -28,7 +28,6 @@ namespace TCU.English.Models
         public virtual TestCategory TestCategory { get; set; }
 
         [NotMapped]
-        [JsonIgnore]
         public List<BaseAnswer> AnswerList { get; set; }
     }
 }

@@ -83,18 +83,21 @@ namespace TCU.English.Controllers
                 return NotFound();
             if (paper.PiceOfTestId <= 0)
                 return NotFound();
-            if (!paper.IsPaperFullSelection())
-            {
-                ModelState.AddModelError(string.Empty, "Please complete all questions.");
-                return View(paper);
-            }
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
+            // Kiểm tra check full
+            if (!paper.IsPaperFullSelection())
+            {
+                ModelState.AddModelError(string.Empty, "Please complete all questions.");
+                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers();
+                return View(paper);
+            }
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
             {
                 ModelState.AddModelError(string.Empty, "The test does not have any questions.");
+                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers();
                 return View(paper);
             }
             int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng
