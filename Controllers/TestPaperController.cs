@@ -50,10 +50,15 @@ namespace TCU.English.Controllers
         }
 
         //[HttpPost]
-        public IActionResult Result(PieceOfTest piece)
+        public IActionResult Result(int id)
         {
-            //ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
-            ViewBag.Scores = 8.5;
+            if (id <= 0)
+                return BadRequest();
+            var piece = _PieceOfTestManager.Get(id);
+            if (piece == null)
+                return NotFound();
+            ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
+            ViewBag.Scores = piece.Scores;
             return View(piece);
         }
 
@@ -86,22 +91,34 @@ namespace TCU.English.Controllers
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
+
+            // Tránh timer bị reset
+            if (piece.CreatedTime != null)
+            {
+                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
+            }
+
             // Kiểm tra check full
             if (!paper.IsPaperFullSelection())
             {
-                ModelState.AddModelError(string.Empty, "Please complete all questions.");
-                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers();
+                ViewBag.Error = "Please complete all questions.";
+
+                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
+                    .CopySelectedAnswers(paper);
+
                 return View(paper);
             }
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
             {
-                ModelState.AddModelError(string.Empty, "The test does not have any questions.");
-                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers();
+                ViewBag.Error = "The test does not have any questions.";
+
+                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
+                    .CopySelectedAnswers(paper);
                 return View(paper);
             }
             int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng
-            float scores = (float)correct / total;
+            float scores = Math.Ceiling(((float)correct / total) * Config.MAX_SCORE_POINT).ToFloat();
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
@@ -109,7 +126,7 @@ namespace TCU.English.Controllers
             piece.TimeToFinished = timeToFinished;
             _PieceOfTestManager.Update(piece);
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), piece);
+            return RedirectToAction(nameof(Result), new { id = piece.Id });
         }
     }
 }

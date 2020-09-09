@@ -4,8 +4,8 @@
 @model TCU.English.Models.PiceOfTest.ReadingTestPaper
 @{
     ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";
+    ViewData["Timer"] = ViewBag.Timer ?? 0;
     Layout = "~/Views/Shared/_TestPaperLayout.cshtml";
-
 }
 
 @using (Html.BeginForm(nameof(TestPaperController.Reading), NameUtils.ControllerName<TestPaperController>(), FormMethod.Post))
@@ -54,12 +54,12 @@
                     <div class="pt-1 row">
                         @for (int j = 0; j < Model.ReadingPartOnes.ReadingPart[i].AnswerList.Count; j++)
                         {
-                            Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent);
+                            @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent })
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
                             <div class="col-md-3">
                                 <div id="@($"answer_group_{uuid}")">
-                                    <span>@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
-                                    @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect)
+                                    <span class="@Html.Raw(Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect })
                                 </div>
                             </div>
                         }
@@ -118,11 +118,11 @@
                         {
                             @for (int j = 0; j < Model.ReadingPartTwos.ReadingPart[i].AnswerList.Count; j++)
                             {
-                                Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent);
+                                Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent });
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                 <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                    <span>@answerAlphapet.</span> @Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
-                                    @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect)
+                                    <span class="@Html.Raw(Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect })
                                 </div>
                             }
                         }
@@ -205,11 +205,11 @@
                         {
                             @for (int j = 0; j < Model.ReadingPartThrees.ReadingPart[i].AnswerList.Count; j++)
                             {
-                                Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent);
+                                Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent });
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                 <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                    <span>@answerAlphapet.</span> @Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
-                                    @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect)
+                                    <span class="@Html.Raw(Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect })
                                 </div>
                             }
                         }
@@ -289,11 +289,11 @@
                             <div class="row">
                                 @for (int j = 0; j < Model.ReadingPartFours.ReadingPart[i].AnswerList.Count; j++)
                                 {
-                                    Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent);
+                                    Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent });
                                     string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                     <div id="@($"answer_group_{uuid}")" class="col-3 pb-1">
-                                        <span>@answerAlphapet.</span> @Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
-                                        @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect)
+                                        <span class="@Html.Raw(Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
+                                        @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect })
                                     </div>
                                 }
                             </div>
@@ -312,10 +312,6 @@
 }
 @section FinishButton {
     <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#confirm-finish">FINISH</button>
-    @if (ViewContext.ViewData.ModelState.Where(x => x.Key == "").Any())
-    {
-        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger", @id = "validate-summary" })
-    }
 }
 
 @section Scripts {
@@ -341,6 +337,13 @@
             });
         });
     </script>
+
+    @if (ViewBag.Error != null && ((string)ViewBag.Error).Length > 0)
+    {
+        <script>
+            toastr['error']("@Html.Raw(ViewBag.Error)");
+        </script>
+    }
 }
 
 <style>

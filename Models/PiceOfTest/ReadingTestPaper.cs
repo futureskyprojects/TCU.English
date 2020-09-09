@@ -281,8 +281,8 @@ namespace TCU.English.Models.PiceOfTest
             }
             else if (partId > 1 && partId <= 4)
             {
-                List<ReadingPartTwo> current = new[] { ReadingPartTwos, ReadingPartThrees, ReadingPartFours }[partId].ReadingPart;
-                List<ReadingPartTwo> dest = new[] { paper.ReadingPartTwos, paper.ReadingPartThrees, paper.ReadingPartFours }[partId].ReadingPart;
+                List<ReadingPartTwo> current = new[] { ReadingPartTwos, ReadingPartThrees, ReadingPartFours }[partId - 2].ReadingPart;
+                List<ReadingPartTwo> dest = new[] { paper.ReadingPartTwos, paper.ReadingPartThrees, paper.ReadingPartFours }[partId - 2].ReadingPart;
                 if (current != null &&
                     current.Count > 0 &&
                     dest != null &&
@@ -320,9 +320,9 @@ namespace TCU.English.Models.PiceOfTest
         public int CalculateTrue(ReadingTestPaper paper)
         {
             int count = 0;
-            for (int i = 1; i <= 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                int res = CalculateTrueOfPart(i, paper);
+                int res = CalculateTrueOfPart(i + 1, paper);
                 if (res >= 0)
                     count += res;
             }
@@ -359,6 +359,70 @@ namespace TCU.English.Models.PiceOfTest
                     }
             }
             return true;
+        }
+
+        public ReadingTestPaper CopySelectedAnswers(ReadingTestPaper paper)
+        {
+            if (ReadingPartOnes.ReadingPart != null &&
+                paper.ReadingPartOnes.ReadingPart != null &&
+                ReadingPartOnes.ReadingPart.Count == paper.ReadingPartOnes.ReadingPart.Count)
+            {
+                for (int i = 0; i < ReadingPartOnes.ReadingPart.Count; i++)
+                {
+                    var correctIndex = paper.ReadingPartOnes.ReadingPart[i].AnswerList.FindIndex(0,
+                        paper.ReadingPartOnes.ReadingPart[i].AnswerList.Count, x => x.IsCorrect);
+                    if (correctIndex >= 0)
+                    {
+                        ReadingPartOnes.ReadingPart[i].AnswerList[correctIndex].IsCorrect = true;
+                    }
+                }
+            }
+
+            if (ReadingPartTwos.ReadingPart != null &&
+                paper.ReadingPartTwos.ReadingPart != null &&
+                ReadingPartTwos.ReadingPart.Count == paper.ReadingPartTwos.ReadingPart.Count)
+            {
+                for (int i = 0; i < ReadingPartTwos.ReadingPart.Count; i++)
+                {
+                    var correctIndex = paper.ReadingPartTwos.ReadingPart[i].AnswerList.FindIndex(0,
+                        paper.ReadingPartTwos.ReadingPart[i].AnswerList.Count, x => x.IsCorrect);
+                    if (correctIndex >= 0)
+                    {
+                        ReadingPartTwos.ReadingPart[i].AnswerList[correctIndex].IsCorrect = true;
+                    }
+                }
+            }
+
+            if (ReadingPartThrees.ReadingPart != null &&
+                paper.ReadingPartThrees.ReadingPart != null &&
+                ReadingPartThrees.ReadingPart.Count == paper.ReadingPartThrees.ReadingPart.Count)
+            {
+                for (int i = 0; i < ReadingPartThrees.ReadingPart.Count; i++)
+                {
+                    var correctIndex = paper.ReadingPartThrees.ReadingPart[i].AnswerList.FindIndex(0,
+                        paper.ReadingPartThrees.ReadingPart[i].AnswerList.Count, x => x.IsCorrect);
+                    if (correctIndex >= 0)
+                    {
+                        ReadingPartThrees.ReadingPart[i].AnswerList[correctIndex].IsCorrect = true;
+                    }
+                }
+            }
+
+            if (ReadingPartFours.ReadingPart != null &&
+                paper.ReadingPartFours.ReadingPart != null &&
+                ReadingPartFours.ReadingPart.Count == paper.ReadingPartFours.ReadingPart.Count)
+            {
+                for (int i = 0; i < ReadingPartFours.ReadingPart.Count; i++)
+                {
+                    var correctIndex = paper.ReadingPartFours.ReadingPart[i].AnswerList.FindIndex(0,
+                        paper.ReadingPartFours.ReadingPart[i].AnswerList.Count, x => x.IsCorrect);
+                    if (correctIndex >= 0)
+                    {
+                        ReadingPartFours.ReadingPart[i].AnswerList[correctIndex].IsCorrect = true;
+                    }
+                }
+            }
+            return this;
         }
 
         public int TotalQuestions()
