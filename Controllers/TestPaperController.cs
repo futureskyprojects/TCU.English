@@ -130,7 +130,7 @@ namespace TCU.English.Controllers
         }
 
         [HttpGet]
-        public IActionResult Reading(int id)
+        public IActionResult ReadingReview(int id)
         {
             if (id <= 0)
                 return NotFound();
