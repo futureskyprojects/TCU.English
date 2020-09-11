@@ -4,8 +4,6 @@
     string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>();
     string actionName = nameof(TCU.English.Controllers.ReadingManagerController.Part1CreateAjax);
     string errorMsg = "An error occurred during operation, please try again.";
-
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
 }
 
 <div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">

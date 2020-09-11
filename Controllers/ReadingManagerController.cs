@@ -417,11 +417,6 @@ namespace TCU.English.Controllers
             return View($"{nameof(Part3)}/Index", testCategories);
         }
 
-        //private IActionResult Part3Processing(ReadingCombined readingCombined)
-        //{
-
-        //}
-
         [HttpGet]
         public IActionResult Part3Create()
         {
@@ -431,56 +426,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public IActionResult Part3Create(ReadingCombined readingCombined)
         {
-            ModelState.Remove(nameof(ReadingPartTwo.Answers));
-            if (readingCombined != null && readingCombined.TestCategory != null &&
-                readingCombined.TestCategory.Name != null && readingCombined.TestCategory.Name.Length > 0 &&
-                readingCombined.TestCategory.TypeCode != null && readingCombined.TestCategory.TypeCode.Length > 0 &&
-                readingCombined.TestCategory.PartId > 0 &&
-                readingCombined.TestCategory.WYSIWYGContent != null && readingCombined.TestCategory.WYSIWYGContent.Length > 0 &&
-                readingCombined.ReadingPartTwos.Count > 0)
-            {
-                // Lấy mã người tạo
-                int userId = User.Id();
-                // Cập nhật mã người tạo cho category
-                readingCombined.TestCategory.CreatorId = userId;
-                // Tiến hành kiểm tra trong các phần câu hỏi và đặt mã người tạo + convert đối tượng thành Json và gán vào ANSWERS
-                for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                {
-                    if (readingCombined.ReadingPartTwos[i].QuestionText == null || readingCombined.ReadingPartTwos[i].QuestionText.Length <= 0)
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.QuestionText)} of question {i + 1} is required.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Create)}", readingCombined);
-                    }
-                    if (readingCombined.ReadingPartTwos[i].AnswerList.Count <= 0 || readingCombined.ReadingPartTwos[i].AnswerList.Any(x => string.IsNullOrEmpty(x.AnswerContent)))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Create)}", readingCombined);
-                    }
-                    if (!readingCombined.ReadingPartTwos[i].AnswerList.Any(it => it.IsCorrect))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Create)}", readingCombined);
-                    }
-                    readingCombined.ReadingPartTwos[i].CreatorId = userId;
-                    readingCombined.ReadingPartTwos[i].Answers = JsonConvert.SerializeObject(readingCombined.ReadingPartTwos[i].AnswerList);
-                }
-                // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Add(readingCombined.TestCategory);
-                if (readingCombined.TestCategory.Id > 0)
-                {
-                    for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                    {
-                        readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Add(readingCombined.ReadingPartTwos[i]);
-                    }
-                    return RedirectToAction(nameof(Part3));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred during execution.");
-                }
-            }
-            return View($"{nameof(Part3)}/{nameof(Part3Create)}", readingCombined);
+            return Part3Or4Processing(readingCombined, nameof(Part3), nameof(Part3Create));
         }
 
         [HttpGet]
@@ -528,62 +474,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public IActionResult Part3Update(ReadingCombined readingCombined)
         {
-            ModelState.Remove(nameof(ReadingPartTwo.Answers));
-            if (readingCombined != null && readingCombined.TestCategory != null &&
-                readingCombined.TestCategory.Name != null && readingCombined.TestCategory.Name.Length > 0 &&
-                readingCombined.TestCategory.TypeCode != null && readingCombined.TestCategory.TypeCode.Length > 0 &&
-                readingCombined.TestCategory.PartId > 0 &&
-                readingCombined.TestCategory.WYSIWYGContent != null && readingCombined.TestCategory.WYSIWYGContent.Length > 0 &&
-                readingCombined.ReadingPartTwos.Count > 0)
-            {
-                // Lấy mã người tạo
-                int userId = User.Id();
-                // Cập nhật mã người tạo cho category
-                if (readingCombined.TestCategory.CreatorId <= 0)
-                    readingCombined.TestCategory.CreatorId = userId;
-                // Tiến hành kiểm tra trong các phần câu hỏi và đặt mã người tạo + convert đối tượng thành Json và gán vào ANSWERS
-                for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                {
-                    if (readingCombined.ReadingPartTwos[i].QuestionText == null || readingCombined.ReadingPartTwos[i].QuestionText.Length <= 0)
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.QuestionText)} of question {i + 1} is required.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Update)}", readingCombined);
-                    }
-                    if (readingCombined.ReadingPartTwos[i].AnswerList.Count <= 0 || readingCombined.ReadingPartTwos[i].AnswerList.Any(x => string.IsNullOrEmpty(x.AnswerContent)))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Update)}", readingCombined);
-                    }
-                    if (!readingCombined.ReadingPartTwos[i].AnswerList.Any(it => it.IsCorrect))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part3)}/{nameof(Part3Update)}", readingCombined);
-                    }
-
-                    if (readingCombined.ReadingPartTwos[i].CreatorId <= 0)
-                        readingCombined.ReadingPartTwos[i].CreatorId = userId;
-                    string json = JsonConvert.SerializeObject(readingCombined.ReadingPartTwos[i].AnswerList);
-                    if (readingCombined.ReadingPartTwos[i].Answers != null && readingCombined.ReadingPartTwos[i].Answers != json)
-                        readingCombined.ReadingPartTwos[i].Answers = json;
-                }
-                // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Update(readingCombined.TestCategory);
-                if (readingCombined.TestCategory.Id > 0)
-                {
-                    for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                    {
-                        if (readingCombined.ReadingPartTwos[i].TestCategoryId < 0)
-                            readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
-                    }
-                    return RedirectToAction(nameof(Part3));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred during execution.");
-                }
-            }
-            return View($"{nameof(Part3)}/{nameof(Part3Update)}", readingCombined);
+            return Part3Or4Processing(readingCombined, nameof(Part3), nameof(Part3Update));
         }
 
 
@@ -639,56 +530,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public IActionResult Part4Create(ReadingCombined readingCombined)
         {
-            ModelState.Remove(nameof(ReadingPartTwo.Answers));
-            if (readingCombined != null && readingCombined.TestCategory != null &&
-                readingCombined.TestCategory.Name != null && readingCombined.TestCategory.Name.Length > 0 &&
-                readingCombined.TestCategory.TypeCode != null && readingCombined.TestCategory.TypeCode.Length > 0 &&
-                readingCombined.TestCategory.PartId > 0 &&
-                readingCombined.TestCategory.WYSIWYGContent != null && readingCombined.TestCategory.WYSIWYGContent.Length > 0 &&
-                readingCombined.ReadingPartTwos.Count > 0)
-            {
-                // Lấy mã người tạo
-                int userId = User.Id();
-                // Cập nhật mã người tạo cho category
-                readingCombined.TestCategory.CreatorId = userId;
-                // Tiến hành kiểm tra trong các phần câu hỏi và đặt mã người tạo + convert đối tượng thành Json và gán vào ANSWERS
-                for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                {
-                    //if (readingCombined.ReadingPartTwos[i].QuestionText == null || readingCombined.ReadingPartTwos[i].QuestionText.Length <= 0)
-                    //{
-                    //    ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.QuestionText)} of question {i + 1} is required.");
-                    //    return View($"{nameof(Part4)}/{nameof(Part4Create)}", readingCombined);
-                    //}
-                    if (readingCombined.ReadingPartTwos[i].AnswerList.Count <= 0 || readingCombined.ReadingPartTwos[i].AnswerList.Any(x => string.IsNullOrEmpty(x.AnswerContent)))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part4)}/{nameof(Part4Create)}", readingCombined);
-                    }
-                    if (!readingCombined.ReadingPartTwos[i].AnswerList.Any(it => it.IsCorrect))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part4)}/{nameof(Part4Create)}", readingCombined);
-                    }
-                    readingCombined.ReadingPartTwos[i].CreatorId = userId;
-                    readingCombined.ReadingPartTwos[i].Answers = JsonConvert.SerializeObject(readingCombined.ReadingPartTwos[i].AnswerList);
-                }
-                // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Add(readingCombined.TestCategory);
-                if (readingCombined.TestCategory.Id > 0)
-                {
-                    for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                    {
-                        readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Add(readingCombined.ReadingPartTwos[i]);
-                    }
-                    return RedirectToAction(nameof(Part4));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred during execution.");
-                }
-            }
-            return View($"{nameof(Part4)}/{nameof(Part4Create)}", readingCombined);
+            return Part3Or4Processing(readingCombined, nameof(Part4), nameof(Part4Create), false);
         }
 
         [HttpGet]
@@ -736,62 +578,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public IActionResult Part4Update(ReadingCombined readingCombined)
         {
-            ModelState.Remove(nameof(ReadingPartTwo.Answers));
-            if (readingCombined != null && readingCombined.TestCategory != null &&
-                readingCombined.TestCategory.Name != null && readingCombined.TestCategory.Name.Length > 0 &&
-                readingCombined.TestCategory.TypeCode != null && readingCombined.TestCategory.TypeCode.Length > 0 &&
-                readingCombined.TestCategory.PartId > 0 &&
-                readingCombined.TestCategory.WYSIWYGContent != null && readingCombined.TestCategory.WYSIWYGContent.Length > 0 &&
-                readingCombined.ReadingPartTwos.Count > 0)
-            {
-                // Lấy mã người tạo
-                int userId = User.Id();
-                // Cập nhật mã người tạo cho category
-                if (readingCombined.TestCategory.CreatorId <= 0)
-                    readingCombined.TestCategory.CreatorId = userId;
-                // Tiến hành kiểm tra trong các phần câu hỏi và đặt mã người tạo + convert đối tượng thành Json và gán vào ANSWERS
-                for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                {
-                    //if (readingCombined.ReadingPartTwos[i].QuestionText == null || readingCombined.ReadingPartTwos[i].QuestionText.Length <= 0)
-                    //{
-                    //    ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.QuestionText)} of question {i + 1} is required.");
-                    //    return View($"{nameof(Part4)}/{nameof(Part4Update)}", readingCombined);
-                    //}
-                    if (readingCombined.ReadingPartTwos[i].AnswerList.Count <= 0 || readingCombined.ReadingPartTwos[i].AnswerList.Any(x => string.IsNullOrEmpty(x.AnswerContent)))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} is required.");
-                        return View($"{nameof(Part4)}/{nameof(Part4Update)}", readingCombined);
-                    }
-                    if (!readingCombined.ReadingPartTwos[i].AnswerList.Any(it => it.IsCorrect))
-                    {
-                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} must have correct option.");
-                        return View($"{nameof(Part4)}/{nameof(Part4Update)}", readingCombined);
-                    }
-
-                    if (readingCombined.ReadingPartTwos[i].CreatorId <= 0)
-                        readingCombined.ReadingPartTwos[i].CreatorId = userId;
-                    string json = JsonConvert.SerializeObject(readingCombined.ReadingPartTwos[i].AnswerList);
-                    if (readingCombined.ReadingPartTwos[i].Answers != null && readingCombined.ReadingPartTwos[i].Answers != json)
-                        readingCombined.ReadingPartTwos[i].Answers = json;
-                }
-                // Tiến hành thêm danh mục vào CSDL và lấy ID
-                _TestCategoryManager.Update(readingCombined.TestCategory);
-                if (readingCombined.TestCategory.Id > 0)
-                {
-                    for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
-                    {
-                        if (readingCombined.ReadingPartTwos[i].TestCategoryId < 0)
-                            readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
-                        _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
-                    }
-                    return RedirectToAction(nameof(Part4));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred during execution.");
-                }
-            }
-            return View($"{nameof(Part4)}/{nameof(Part4Update)}", readingCombined);
+            return Part3Or4Processing(readingCombined, nameof(Part4), nameof(Part4Update), false);
         }
 
 
@@ -815,5 +602,67 @@ namespace TCU.English.Controllers
         }
 
         #endregion
+
+        private IActionResult Part3Or4Processing(ReadingCombined readingCombined, string partName, string partAction, bool isCheckQuestionText = true)
+        {
+            ModelState.Remove(nameof(ReadingPartTwo.Answers));
+            if (readingCombined != null && readingCombined.TestCategory != null &&
+                readingCombined.TestCategory.Name != null && readingCombined.TestCategory.Name.Length > 0 &&
+                readingCombined.TestCategory.TypeCode != null && readingCombined.TestCategory.TypeCode.Length > 0 &&
+                readingCombined.TestCategory.PartId > 0 &&
+                readingCombined.TestCategory.WYSIWYGContent != null && readingCombined.TestCategory.WYSIWYGContent.Length > 0 &&
+                readingCombined.ReadingPartTwos.Count > 0)
+            {
+                // Lấy mã người tạo
+                int userId = User.Id();
+                // Cập nhật mã người tạo cho category
+                if (readingCombined.TestCategory.CreatorId <= 0)
+                    readingCombined.TestCategory.CreatorId = userId;
+                // Tiến hành kiểm tra trong các phần câu hỏi và đặt mã người tạo + convert đối tượng thành Json và gán vào ANSWERS
+                for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
+                {
+                    if ((readingCombined.ReadingPartTwos[i].QuestionText == null || readingCombined.ReadingPartTwos[i].QuestionText.Length <= 0) && isCheckQuestionText)
+                    {
+                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.QuestionText)} of question {i + 1} is required.");
+                        return View($"{partName}/{partAction}", readingCombined);
+                    }
+                    string validation = readingCombined.ReadingPartTwos[i].AnswerList.BaseAnswerValidation();
+                    if (validation != null && validation.Length > 0)
+                    {
+                        ModelState.AddModelError(string.Empty, $"{nameof(ReadingPartTwo.Answers)} of question {i + 1} error: {validation}.");
+                        return View($"{partName}/{partAction}", readingCombined);
+                    }
+
+                    if (readingCombined.ReadingPartTwos[i].CreatorId <= 0)
+                        readingCombined.ReadingPartTwos[i].CreatorId = userId;
+                    readingCombined.ReadingPartTwos[i].Answers = readingCombined.ReadingPartTwos[i].AnswerList.ToJson();
+                }
+                // Tiến hành thêm danh mục vào CSDL và lấy ID
+                if (readingCombined.TestCategory.Id <= 0)
+                    _TestCategoryManager.Add(readingCombined.TestCategory);
+                else
+                    _TestCategoryManager.Update(readingCombined.TestCategory);
+
+                if (readingCombined.TestCategory.Id > 0)
+                {
+                    for (int i = 0; i < readingCombined.ReadingPartTwos.Count; i++)
+                    {
+                        if (readingCombined.ReadingPartTwos[i].TestCategoryId <= 0)
+                            readingCombined.ReadingPartTwos[i].TestCategoryId = readingCombined.TestCategory.Id;
+                        if (readingCombined.ReadingPartTwos[i].Id <= 0)
+                            _ReadingPartTwoManager.Add(readingCombined.ReadingPartTwos[i]);
+                        else
+                            _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
+                    }
+                    return RedirectToAction(partName);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred during execution.");
+                }
+            }
+            return View($"{partName}/{partAction}", readingCombined);
+        }
+
     }
 }
