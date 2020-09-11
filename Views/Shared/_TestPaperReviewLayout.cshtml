@@ -55,28 +55,19 @@
                                     <span class="h6 text-uppercase my-auto">@ViewData["Title"]</span>
                                 </span>
                                 <span class="ml-auto">
-                                    @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
-                                    {
-                                        <button class="btn btn-lg btn-outline-green px-3 mr-2" data-toggle="tooltip" data-placement="top" title="Your working timer"><span class="mr-1" id="time-counter-top">00:00:00</span></button>
-                                    }
+                                    <button class="btn btn-lg btn-outline-info px-3 mr-2" data-toggle="tooltip" data-placement="top" title="Your spent time"><span class="mr-1" id="time-counter-top">00:00:00</span></button>
                                     @RenderSection("FinishButton", required: true)
                                 </span>
                             </div>
                         </div>
                         <div class="card-body">
-                            @using (Html.BeginForm((string)ViewData["Action"], (string)ViewData["Controller"], FormMethod.Post))
-                            {
-                                @RenderBody()
-                            }
+                            @RenderBody()
                         </div>
                     </div>
                 </div>
-                @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
-                {
-                    <div id="float-br" class="float-br-hidden">
-                        <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1" id="time-counter">00:00:00</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
-                    </div>
-                }
+                <div id="float-br" class="float-br-hidden">
+                    <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
+                </div>
             </div>
             <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
                 @await Component.InvokeAsync(nameof(TCU.English.Components.Footer))
@@ -114,65 +105,31 @@
 
     @* https://sweetalert.js.org/guides/ *@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     <script>
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        });
-        var totalTestWorkingSeconds = 0 + @((ViewData["Timer"] != null && ViewData["Timer"].ToInt() > 0) ? ViewData["Timer"].ToInt() : 0);
-
-        //Get the button
-        var floatBottomRight = document.getElementById("float-br");
-
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function () { scrollFunction() };
-
-        function scrollFunction() {
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
-                floatBottomRight.style.display = "block";
-            }
-            else {
-                floatBottomRight.style.display = "none";
-            }
-        }
-        function topFunction() {
-            $("html, body").animate({ scrollTop: 0 }, 300);
-        }
-        // time-counter
-        setInterval(function () {
-            totalTestWorkingSeconds++;
+            $('[data-toggle="tooltip"]').tooltip();
+            var totalTestWorkingSeconds = 0 + @((ViewData["Timer"] != null && ViewData["Timer"].ToInt() > 0) ? ViewData["Timer"].ToInt() : 0);
             let displayTimer = new Date(totalTestWorkingSeconds * 1000).toISOString().substr(11, 8);
             $("#time-counter-top").html(displayTimer);
-            $("#time-counter").html(displayTimer);
-        }, 1000);
+            //Get the button
+            var floatBottomRight = document.getElementById("float-br");
 
-        // Mã chọn đáp án
-        $(document).ready(function () {
-            // Đoạn mã khoanh phương án đúng
-            $('div[id^="answer_group_"]').click(function () {
-                let ans_group_name = $(this).attr('id');
-                // Tạm xóa bỏ hết
-                $(`#${ans_group_name} span`).removeClass("border border-dark rounded-circle px-2");
-                $(`#${ans_group_name} input`).val(false);
-                // Thiết lập lại
-                $(this).children('span').addClass("border border-dark rounded-circle px-2");
-                $(this).children('input').val(true);
-            });
-        }
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () { scrollFunction() };
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                    floatBottomRight.style.display = "block";
+                }
+                else {
+                    floatBottomRight.style.display = "none";
+                }
+            }
+            function topFunction() {
+                $("html, body").animate({ scrollTop: 0 }, 300);
+            }
+        });
     </script>
-    @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
-    {
-        <script>
-            var totalTestWorkingSeconds = 0 + @((ViewData["Timer"] != null && ViewData["Timer"].ToInt() > 0) ? ViewData["Timer"].ToInt() : 0);
-            // time-counter
-            setInterval(function () {
-                totalTestWorkingSeconds++;
-                let displayTimer = new Date(totalTestWorkingSeconds * 1000).toISOString().substr(11, 8);
-                $("#time-counter-top").html(displayTimer);
-                $("#time-counter").html(displayTimer);
-            }, 1000);
-        </script>
-    }
     @RenderSection("Scripts", required: false)
 </body>
 </html>

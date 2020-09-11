@@ -57,7 +57,7 @@
 @* KẾT THÚCRENDER PHẦN THỐNG KÊ SỐ LƯỢNG *@
 
 @* RENDER PHẦN BẢNG HIỂN THỊ CHI TIẾT *@
-<section class="">
+<section class="pb-4">
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -107,10 +107,15 @@
                             </div>
                             <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
                                 @*<a href="@Url.Action(nameof(UserManagementController.UpdateUser), NameUtils.ControllerName<UserManagementController>(), new { id = user.Id })" class="btn btn-warning float-lg-right ml-lg-auto text-white">Edit</a>*@
-                                <button type="button" class="btn btn-info float-lg-right ml-auto" onclick="review(@Model.ElementAt(i).Id)">Review</button>
                                 @if (Model.ElementAt(i).ResultOfUserJson == null || Model.ElementAt(i).ResultOfUserJson.Length <= 0)
                                 {
-                                    <button type="button" class="btn btn-red float-lg-right ml-2" onclick="deleteConfirm(@Model.ElementAt(i).Id)">Delete</button>
+                                    <button type="button" class="btn btn-red float-lg-right ml-auto" onclick="deleteConfirm(@Model.ElementAt(i).Id)">Delete</button>
+                                    <button type="button" class="btn btn-info float-lg-right ml-2" onclick="review(@Model.ElementAt(i).Id)">Review</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto">@Model.ElementAt(i).Scores.ToString("0.0")/@Config.MAX_SCORE_POINT</button>
+                                    <button type="button" class="btn btn-info float-lg-right ml-2" onclick="review(@Model.ElementAt(i).Id)">Review</button>
                                 }
                             </div>
                         </div>
@@ -128,7 +133,7 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
         function review(pieceOfTestId) {
-            toastr['warning']("The review function will be available in the next update.");
+            window.location.href = `@Url.Action(nameof(TCU.English.Controllers.TestPaperController.Reading), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>())/${pieceOfTestId}`;
         }
         function deleteConfirm(pieceOfTestId) {
             swal({

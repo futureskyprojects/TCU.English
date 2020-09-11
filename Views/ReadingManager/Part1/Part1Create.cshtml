@@ -1,5 +1,4 @@
-﻿@model TCU.English.Models.ReadingPartOne
-@{
+﻿@{
     string modalId = nameof(TCU.English.Models.ReadingPartOne) + "_Create";
     string modalTitle = "New question for \"Reading Part 1\"";
     string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>();
@@ -7,7 +6,6 @@
     string errorMsg = "An error occurred during operation, please try again.";
 
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
-    IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_1_QUESTION);
 }
 
 <div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
@@ -30,57 +28,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        @Html.HiddenFor(x => x.Id)
-                        @Html.HiddenFor(x => x.CreatedTime)
-                        @Html.HiddenFor(x => x.UpdatedTime)
-                        @Html.HiddenFor(x => x.Active)
-                        @Html.HiddenFor(x => x.Answers)
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.QuestionText)
-                            @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Hint)
-                            @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ExplainLink)
-                            @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
-                        </div>
-                        <div class="form-group">
-                            <label>Select question category</label>
-                            <div class="select">
-                                @Html.DropDownListFor(x => x.TestCategoryId,
-                               new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
-                               new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="line"></div>
-
-                        @* REGION FOR CREATE ANSWERS *@
-                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
-                        @for (int i = 0; i < testAnswers.Count(); i++)
-                        {
-                            TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
-                            string answerAlphapet = ((char)((int)'A' + i)).ToString();
-                            <div class="form-group">
-                                <label>@Html.Raw($"Answer {answerAlphapet}")</label>
-                                <div class="row">
-                                    <div class="col-11">
-                                        <input type="text" placeholder="Enter your answer to the question here" class="form-control" id="@Html.Raw($"ans-content-{answerAlphapet}")" value="@Html.Raw(baseAnswer.AnswerContent)" onchange="updateValue()">
-                                    </div>
-                                    <div class="col-1 d-flex align-items-center">
-                                        <input type="radio" value="@i" name="ans-state" id="@Html.Raw($"ans-state-{answerAlphapet}") @Html.Raw(baseAnswer.IsCorrect?" checked":"")" onchange="updateValue()">
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @* END REGION FOR CREATE ANSWERS *@
-
+                        <partial name="~/Views/ReadingManager/Part1/_Part1FormContent.cshtml" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />
@@ -104,23 +52,6 @@
 </div>
 
 <script type="text/javascript">
-    var testAnswersJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(testAnswers));
-    function updateValue() {
-        for (var i = 0; i < testAnswersJson.length; i++) {
-            let charTemp = String.fromCharCode("A".charCodeAt(0) + i);
-            testAnswersJson[i].AnswerContent = $(`#ans-content-${charTemp}`).val();
-            testAnswersJson[i].IsCorrect = false;
-        }
-
-        let value = $('input[name=ans-state]:checked', '#@(modalId)_form').val();
-        if (value != null && value != undefined) {
-            console.log(value);
-            testAnswersJson[value].IsCorrect = true;
-        }
-
-        $("#Answers").val(JSON.stringify(testAnswersJson));
-        console.log($("#Answers").val());
-    }
 
     $("#@(modalId)_loading").hide();
 

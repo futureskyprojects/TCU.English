@@ -99,7 +99,7 @@ namespace TCU.English.Models.DataManager
             }
             else
             {
-                instantce.PieceOfTests
+                query = instantce.PieceOfTests
                     .Where(x =>
                             x.UserId == userId &&
                             x.ResultOfUserJson != null &&
@@ -114,11 +114,12 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return QueryableOfUserTest(userId, typeCode)
+                var x = QueryableOfUserTest(userId, typeCode)
                     .Where(x => x.ResultOfTestJson.Contains(searchKey))
                     .Count();
+                return x;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return 0;
             }

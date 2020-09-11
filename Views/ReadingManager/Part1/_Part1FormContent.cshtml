@@ -1,0 +1,71 @@
+﻿@model TCU.English.Models.ReadingPartOne
+@{
+    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    string groupName = "";
+    if (Model.Answers != null && Model.Answers.Length > 0)
+    {
+        Model.AnswerList = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers);
+        groupName = $"update_reading_part_1";
+    }
+    else
+    {
+        Model.AnswerList = TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_1_QUESTION);
+        groupName = $"create_reading_part_1";
+    }
+}
+
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.CreatedTime)
+@Html.HiddenFor(x => x.UpdatedTime)
+@Html.HiddenFor(x => x.CreatorId)
+@Html.HiddenFor(x => x.Active)
+@Html.HiddenFor(x => x.Answers)
+<div class="form-group">
+    @Html.LabelFor(x => x.QuestionText)
+    @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.Hint)
+    @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.ExplainLink)
+    @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
+</div>
+<div class="form-group">
+    <label>Select question category</label>
+    <div class="select">
+        @Html.DropDownListFor(x => x.TestCategoryId,
+       new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
+       new { @class = "form-control" })
+    </div>
+</div>
+<div class="line"></div>
+
+@* REGION FOR CREATE ANSWERS *@
+<small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
+@for (int i = 0; i < Model.AnswerList.Count; i++)
+{
+    //TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
+    string answerAlphapet = ((char)((int)'A' + i)).ToString();
+    <div class="form-group">
+        <label>@Html.Raw($"Answer {answerAlphapet}")</label>
+        <div class="row">
+            <div class="col-11">
+                @Html.TextBoxFor(x => x.AnswerList[i].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
+                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.AnswerList[i].AnswerContent)</small>
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                @Html.CheckBoxFor(x => x.AnswerList[i].IsCorrect, new { @groupname = $"group_{groupName}", @value = Model.AnswerList[i].IsCorrect.ToString().ToLower() })
+            </div>
+        </div>
+    </div>
+}
+
+@* END REGION FOR CREATE ANSWERS *@
+
+<script src="~/js/custom.js"></script>

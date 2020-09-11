@@ -1,5 +1,4 @@
-﻿@using TCU.English.Utils
-@model TCU.English.Models.ReadingPartTwo
+﻿@model TCU.English.Models.ReadingPartTwo
 @{
     string modalId = nameof(TCU.English.Models.ReadingPartTwo) + "_Update";
     string modalTitle = "Update question of \"Reading Part 2\"";
@@ -8,7 +7,6 @@
     string errorMsg = "An error occurred during operation, please try again.";
 
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
-    IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
 
     bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
 }
@@ -34,73 +32,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        @Html.HiddenFor(x => x.Id)
-                        @Html.HiddenFor(x => x.CreatedTime)
-                        @Html.HiddenFor(x => x.UpdatedTime)
-                        @Html.HiddenFor(x => x.CreatorId)
-                        @Html.HiddenFor(x => x.Active)
-                        @Html.HiddenFor(x => x.Answers)
-                        @Html.HiddenFor(x => x.QuestionImage)
-                        @* Question Image for Uploader *@
-                        <div class="form-group">
-                            <div class="text-center mb-3">
-                                <img id="update-img-default" src="@(Model.QuestionImage??"")" alt="Question Image" class="img-fluid shadow" style="width:320px;" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
-                                <img id="update-img-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
-                            </div>
-                            <div class="text-center">
-                                <input type="file" name="@(nameof(TCU.English.Models.ReadingPartTwo.QuestionImage).ToCamelCase())" id="update-img-picker" onchange="updateImgPicked(this)" hidden />
-                                <button type="button" class="btn btn-info" onclick="$('#update-img-picker').click();">Select Image</button>
-                                <button type="button" class="btn btn-danger" id="update-img-remove-picker-btn">Remove Picked</button>
-                            </div>
-                            <small class="form-text text-danger mr-3 text-center">@Html.ValidationMessageFor(x => x.QuestionImage)</small>
-                        </div>
-                        @* Question Image uploader *@
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.QuestionText)
-                            @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Hint)
-                            @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ExplainLink)
-                            @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
-                        </div>
-                        <div class="form-group">
-                            <label>Select question category</label>
-                            <div class="select">
-                                @Html.DropDownListFor(x => x.TestCategoryId,
-                               new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
-                               new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="line"></div>
-
-                        @* REGION FOR CREATE ANSWERS *@
-                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
-                        @for (int i = 0; i < testAnswers.Count(); i++)
-                        {
-                            TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
-                            string answerAlphapet = ((char)((int)'A' + i)).ToString();
-                            <div class="form-group">
-                                <label>@Html.Raw($"Answer {answerAlphapet}")</label>
-                                <div class="row">
-                                    <div class="col-11">
-                                        <input type="text" placeholder="Enter your answer to the question here" class="form-control" id="@Html.Raw($"ans-content-{answerAlphapet}")" value="@Html.Raw(baseAnswer.AnswerContent)" onchange="updateValue()">
-                                    </div>
-                                    <div class="col-1 d-flex align-items-center">
-                                        <input type="radio" value="@i" name="ans-state" id="@Html.Raw($"ans-state-{answerAlphapet}")" onchange="updateValue()" @Html.Raw(baseAnswer.IsCorrect ? " checked" : "")>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @* END REGION FOR CREATE ANSWERS *@
-
+                        <partial name="~/Views/ReadingManager/Part2/_Part2FormContent.cshtml" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />
@@ -125,23 +57,6 @@
 
 <script type="text/javascript">
     var isShowImmediately = @(isShowImmediately.ToString().ToLower());
-    var testAnswersJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(testAnswers));
-    function updateValue() {
-        for (var i = 0; i < testAnswersJson.length; i++) {
-            let charTemp = String.fromCharCode("A".charCodeAt(0) + i);
-            testAnswersJson[i].AnswerContent = $(`#ans-content-${charTemp}`).val();
-            testAnswersJson[i].IsCorrect = false;
-        }
-
-        let value = $('input[name=ans-state]:checked', '#@(modalId)_form').val();
-        if (value != null && value != undefined) {
-            console.log(value);
-            testAnswersJson[value].IsCorrect = true;
-        }
-
-        $("#Answers").val(JSON.stringify(testAnswersJson));
-        console.log($("#Answers").val());
-    }
 
     $("#@(modalId)_loading").hide();
 
@@ -178,43 +93,5 @@
 
     if (isShowImmediately) {
         $("#@modalId").modal('show');
-    }
-
-    //============================================//
-    $('#update-img-preview').hide();
-    $('#update-img-remove-picker-btn').hide();
-
-    $('#update-img-remove-picker-btn').click(function () {
-        $('#update-img-picker').val(null);
-        $(this).hide();
-        $('#update-img-default').show();
-        $('#update-img-preview').hide();
-    });
-    function updateImgPicked(input) {
-        // Hide
-        $('#update-img-default').show();
-        $('#update-img-preview').hide();
-        $('#update-img-remove-picker-btn').hide();
-        // Cheking ...
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            const fileType = file['type'];
-            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-            if (!validImageTypes.includes(fileType)) {
-                // invalid file type code goes here.
-                $(input).val(null);
-                toastr["error"]("Please only select image type for avatar!");
-            } else {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#update-img-preview').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-                // Show
-                $('#update-img-default').hide();
-                $('#update-img-preview').show();
-                $('#update-img-remove-picker-btn').show();
-            }
-        }
     }
 </script>

@@ -188,12 +188,12 @@ namespace TCU.English.Models.PiceOfTest
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 3)
                 .ToList()
-                .Shuffle()
+                //.Shuffle() // Không trộn thứ tự câu hỏi
                 .First();
             var questions = category
                 .ReadingPartTwos
                 .ToList()
-                .Shuffle()
+                .Shuffle() // Chỉ trộn thứ tự câu trả lời
                 .Take(MAX_QUESTION_READING_PART_3)
                 .ToList();
             // Kiến tạo, trộn đáp án
@@ -216,12 +216,12 @@ namespace TCU.English.Models.PiceOfTest
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 4)
                 .ToList()
-                .Shuffle()
+                //.Shuffle() // Không trộn thứ tự câu hỏi
                 .First();
             var questions = category
                 .ReadingPartTwos
                 .ToList()
-                .Shuffle()
+                .Shuffle() // Chỉ trộn thứ tự câu trả lời
                 .Take(MAX_QUESTION_READING_PART_4)
                 .ToList();
             // Kiến tạo, trộn đáp án

@@ -108,63 +108,34 @@ namespace TCU.English.Controllers
             return View($"{nameof(Part1)}/Index");
         }
 
-        [HttpGet]
-        public IActionResult Part1Create(ReadingPartOne readingPartOne)
+        private IActionResult Part1Processing(ReadingPartOne readingPartOne)
         {
-            if (readingPartOne == null)
-                readingPartOne = new ReadingPartOne();
-            ViewBag.TestCategories = _TestCategoryManager.GetAll(TestCategory.READING, 1) ?? new List<TestCategory>();
-            return PartialView($"{nameof(Part1)}/{nameof(Part1Create)}", readingPartOne);
-        }
-
-        [HttpPost]
-        public IActionResult Part1CreateAjax(ReadingPartOne readingPartOne)
-        {
+            ModelState.Remove(nameof(ReadingPartOne.Answers));
             if (ModelState.IsValid)
             {
                 if (readingPartOne.TestCategoryId <= 0)
                 {
                     return Json(new { status = false, message = "Please choose a category for this question" });
                 }
-                if (readingPartOne.Answers != null && readingPartOne.Answers.Length > 10)
+                if (readingPartOne.AnswerList != null && readingPartOne.AnswerList.Count == Config.MAX_READING_PART_1_QUESTION)
                 {
-                    List<BaseAnswer> answers = BaseAnswer.GetAnswers(readingPartOne.Answers);
-                    if (answers != null && answers.Count == Config.MAX_READING_PART_1_QUESTION)
+                    string validation = readingPartOne.AnswerList.BaseAnswerValidation();
+                    if (validation != null && validation.Length > 0)
                     {
-                        bool isFullAnswer = true;
-                        bool isHaveCorrectAnswer = false;
-
-                        for (int i = 0; i < answers.Count; i++)
-                        {
-                            if (answers.ElementAt(i).AnswerContent.Length <= 0)
-                            {
-                                isFullAnswer = false;
-                                break;
-                            }
-                            if (answers.ElementAt(i).IsCorrect)
-                            {
-                                if (isHaveCorrectAnswer)
-                                {
-                                    return Json(new { status = false, message = "There cannot be more than one correct answer" });
-                                }
-                                isHaveCorrectAnswer = true;
-                            }
-                        }
-
-                        if (isFullAnswer && isHaveCorrectAnswer)
-                        {
+                        return Json(new { status = false, message = validation });
+                    }
+                    // Tạo json trả lời để lưu
+                    readingPartOne.Answers = readingPartOne.AnswerList.ToJson();
+                    // Kết thúc phần kiểm tra
+                    if (readingPartOne.Answers != null && readingPartOne.Answers.Length > 10)
+                    {
+                        if (readingPartOne.CreatorId <= 0)
                             readingPartOne.CreatorId = User.Id();
+                        if (readingPartOne.Id <= 0)
                             _ReadingPartOneManager.Add(readingPartOne);
-                            return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
-                        }
-                        else if (!isFullAnswer)
-                        {
-                            return Json(new { status = false, message = "Please provide a full range of answers" });
-                        }
                         else
-                        {
-                            return Json(new { status = false, message = "Please determine the correct answer for the answer" });
-                        }
+                            _ReadingPartOneManager.Update(readingPartOne);
+                        return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
                     }
                 }
                 return Json(new { status = false, message = "Unable to determine the answer to this question" });
@@ -183,6 +154,21 @@ namespace TCU.English.Controllers
                 }
                 return Json(new { status = false, message = errors });
             }
+        }
+
+        [HttpGet]
+        public IActionResult Part1Create(ReadingPartOne readingPartOne)
+        {
+            if (readingPartOne == null)
+                readingPartOne = new ReadingPartOne();
+            ViewBag.TestCategories = _TestCategoryManager.GetAll(TestCategory.READING, 1) ?? new List<TestCategory>();
+            return PartialView($"{nameof(Part1)}/{nameof(Part1Create)}", readingPartOne);
+        }
+
+        [HttpPost]
+        public IActionResult Part1CreateAjax(ReadingPartOne readingPartOne)
+        {
+            return Part1Processing(readingPartOne);
         }
 
         [HttpGet]
@@ -206,68 +192,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public IActionResult Part1UpdateAjax(ReadingPartOne readingPartOne)
         {
-            if (ModelState.IsValid)
-            {
-                if (readingPartOne.TestCategoryId <= 0)
-                {
-                    return Json(new { status = false, message = "Please choose a category for this question" });
-                }
-                if (readingPartOne.Answers != null && readingPartOne.Answers.Length > 10)
-                {
-                    List<BaseAnswer> answers = BaseAnswer.GetAnswers(readingPartOne.Answers);
-                    if (answers != null && answers.Count == Config.MAX_READING_PART_1_QUESTION)
-                    {
-                        bool isFullAnswer = true;
-                        bool isHaveCorrectAnswer = false;
-
-                        for (int i = 0; i < answers.Count; i++)
-                        {
-                            if (answers.ElementAt(i).AnswerContent.Length <= 0)
-                            {
-                                isFullAnswer = false;
-                                break;
-                            }
-                            if (answers.ElementAt(i).IsCorrect)
-                            {
-                                if (isHaveCorrectAnswer)
-                                {
-                                    return Json(new { status = false, message = "There cannot be more than one correct answer" });
-                                }
-                                isHaveCorrectAnswer = true;
-                            }
-                        }
-
-                        if (isFullAnswer && isHaveCorrectAnswer)
-                        {
-                            _ReadingPartOneManager.Update(readingPartOne);
-                            return Json(new { status = true, message = "Successfully updated, the list will refresh again in 1 second." });
-                        }
-                        else if (!isFullAnswer)
-                        {
-                            return Json(new { status = false, message = "Please provide a full range of answers" });
-                        }
-                        else
-                        {
-                            return Json(new { status = false, message = "Please determine the correct answer for the answer" });
-                        }
-                    }
-                }
-                return Json(new { status = false, message = "Unable to determine the answer to this question" });
-            }
-            else
-            {
-                string errors = "";
-                foreach (var modelState in ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        if (errors.Length > 0)
-                            errors += "\r\n";
-                        errors += error.ErrorMessage;
-                    }
-                }
-                return Json(new { status = false, message = errors });
-            }
+            return Part1Processing(readingPartOne);
         }
 
         [HttpDelete]
@@ -347,71 +272,52 @@ namespace TCU.English.Controllers
             return View($"{nameof(Part2)}/Index");
         }
 
-        [HttpGet]
-        public IActionResult Part2Create(ReadingPartTwo readingPartTwo)
+        private async Task<IActionResult> Part2Processing(ReadingPartTwo readingPartTwo, IFormFile questionImage)
         {
-            if (readingPartTwo == null)
-                readingPartTwo = new ReadingPartTwo();
-            ViewBag.TestCategories = _TestCategoryManager.GetAll(TestCategory.READING, 2) ?? new List<TestCategory>();
-            return PartialView($"{nameof(Part2)}/{nameof(Part2Create)}", readingPartTwo);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Part2CreateAjax(ReadingPartTwo readingPartTwo, IFormFile questionImage)
-        {
+            ModelState.Remove(nameof(ReadingPartOne.Answers));
             if (ModelState.IsValid)
             {
                 if (readingPartTwo.TestCategoryId <= 0)
                 {
                     return Json(new { status = false, message = "Please choose a category for this question" });
                 }
-                if (readingPartTwo.Answers != null && readingPartTwo.Answers.Length > 10)
+                if (readingPartTwo.AnswerList != null && readingPartTwo.AnswerList.Count == Config.MAX_READING_PART_2_QUESTION)
                 {
-                    List<BaseAnswer> answers = BaseAnswer.GetAnswers(readingPartTwo.Answers);
-                    if (answers != null && answers.Count == Config.MAX_READING_PART_2_QUESTION)
+                    string validation = readingPartTwo.AnswerList.BaseAnswerValidation();
+                    if (validation != null && validation.Length > 0)
                     {
-                        bool isFullAnswer = true;
-                        bool isHaveCorrectAnswer = false;
-
-                        for (int i = 0; i < answers.Count; i++)
+                        return Json(new { status = false, message = validation });
+                    }
+                    // Tạo json trả lời để lưu
+                    readingPartTwo.Answers = readingPartTwo.AnswerList.ToJson();
+                    if (readingPartTwo.Answers != null && readingPartTwo.Answers.Length > 10)
+                    {
+                        if (questionImage == null && readingPartTwo.Id <= 0)
                         {
-                            if (answers.ElementAt(i).AnswerContent.Length <= 0)
-                            {
-                                isFullAnswer = false;
-                                break;
-                            }
-                            if (answers.ElementAt(i).IsCorrect)
-                            {
-                                if (isHaveCorrectAnswer)
-                                {
-                                    return Json(new { status = false, message = "There cannot be more than one correct answer" });
-                                }
-                                isHaveCorrectAnswer = true;
-                            }
+                            return Json(new { status = false, message = "Please select picture for the question." });
                         }
-
-                        if (isFullAnswer && isHaveCorrectAnswer)
+                        string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
+                        if ((uploadResult == null || uploadResult.Length <= 0) && questionImage != null && questionImage.Length > 0)
                         {
-                            string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
-                            if (uploadResult == null || uploadResult.Length <= 0)
-                            {
-                                return Json(new { status = false, message = "Please check the picture of the question again" });
-                            }
-                            else
-                            {
-                                readingPartTwo.QuestionImage = uploadResult;
-                                readingPartTwo.CreatorId = User.Id();
-                                _ReadingPartTwoManager.Add(readingPartTwo);
-                                return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
-                            }
-                        }
-                        else if (!isFullAnswer)
-                        {
-                            return Json(new { status = false, message = "Please provide a full range of answers" });
+                            return Json(new { status = false, message = "Please check the picture of the question again" });
                         }
                         else
                         {
-                            return Json(new { status = false, message = "Please determine the correct answer for the answer" });
+                            if (uploadResult != null && uploadResult.Length > 0)
+                            {
+                                if (readingPartTwo.QuestionImage != null && readingPartTwo.QuestionImage.Length > 0)
+                                {
+                                    host.RemoveUploadMeida(readingPartTwo.QuestionImage);
+                                }
+                                readingPartTwo.QuestionImage = uploadResult;
+                            }
+                            if (readingPartTwo.CreatorId <= 0)
+                                readingPartTwo.CreatorId = User.Id();
+                            if (readingPartTwo.Id <= 0)
+                                _ReadingPartTwoManager.Add(readingPartTwo);
+                            else
+                                _ReadingPartTwoManager.Update(readingPartTwo);
+                            return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
                         }
                     }
                 }
@@ -431,6 +337,21 @@ namespace TCU.English.Controllers
                 }
                 return Json(new { status = false, message = errors });
             }
+        }
+
+        [HttpGet]
+        public IActionResult Part2Create(ReadingPartTwo readingPartTwo)
+        {
+            if (readingPartTwo == null)
+                readingPartTwo = new ReadingPartTwo();
+            ViewBag.TestCategories = _TestCategoryManager.GetAll(TestCategory.READING, 2) ?? new List<TestCategory>();
+            return PartialView($"{nameof(Part2)}/{nameof(Part2Create)}", readingPartTwo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Part2CreateAjax(ReadingPartTwo readingPartTwo, IFormFile questionImage)
+        {
+            return await Part2Processing(readingPartTwo, questionImage);
         }
 
         [HttpGet]
@@ -454,77 +375,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public async Task<IActionResult> Part2UpdateAjax(ReadingPartTwo readingPartTwo, IFormFile questionImage)
         {
-            if (ModelState.IsValid)
-            {
-                if (readingPartTwo.TestCategoryId <= 0)
-                {
-                    return Json(new { status = false, message = "Please choose a category for this question" });
-                }
-                if (readingPartTwo.Answers != null && readingPartTwo.Answers.Length > 10)
-                {
-                    List<BaseAnswer> answers = BaseAnswer.GetAnswers(readingPartTwo.Answers);
-                    if (answers != null && answers.Count == Config.MAX_READING_PART_2_QUESTION)
-                    {
-                        bool isFullAnswer = true;
-                        bool isHaveCorrectAnswer = false;
-
-                        for (int i = 0; i < answers.Count; i++)
-                        {
-                            if (answers.ElementAt(i).AnswerContent.Length <= 0)
-                            {
-                                isFullAnswer = false;
-                                break;
-                            }
-                            if (answers.ElementAt(i).IsCorrect)
-                            {
-                                if (isHaveCorrectAnswer)
-                                {
-                                    return Json(new { status = false, message = "There cannot be more than one correct answer" });
-                                }
-                                isHaveCorrectAnswer = true;
-                            }
-                        }
-
-                        if (isFullAnswer && isHaveCorrectAnswer)
-                        {
-                            string uploadResult = await host.UploadForTestImage(questionImage, TestCategory.READING, 2);
-                            if (uploadResult != null && uploadResult.Length > 0)
-                            {
-                                if (readingPartTwo.QuestionImage != null && readingPartTwo.QuestionImage.Length > 0)
-                                {
-                                    host.RemoveUploadMeida(readingPartTwo.QuestionImage);
-                                }
-                                readingPartTwo.QuestionImage = uploadResult;
-                            }
-                            _ReadingPartTwoManager.Update(readingPartTwo);
-                            return Json(new { status = true, message = "Successfully updated, the list will refresh again in 1 second." });
-                        }
-                        else if (!isFullAnswer)
-                        {
-                            return Json(new { status = false, message = "Please provide a full range of answers" });
-                        }
-                        else
-                        {
-                            return Json(new { status = false, message = "Please determine the correct answer for the answer" });
-                        }
-                    }
-                }
-                return Json(new { status = false, message = "Unable to determine the answer to this question" });
-            }
-            else
-            {
-                string errors = "";
-                foreach (var modelState in ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        if (errors.Length > 0)
-                            errors += "\r\n";
-                        errors += error.ErrorMessage;
-                    }
-                }
-                return Json(new { status = false, message = errors });
-            }
+            return await Part2Processing(readingPartTwo, questionImage);
         }
 
         [HttpDelete]
@@ -565,6 +416,11 @@ namespace TCU.English.Controllers
 
             return View($"{nameof(Part3)}/Index", testCategories);
         }
+
+        //private IActionResult Part3Processing(ReadingCombined readingCombined)
+        //{
+
+        //}
 
         [HttpGet]
         public IActionResult Part3Create()

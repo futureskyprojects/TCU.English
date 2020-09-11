@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace TCU.English.Models
 {
@@ -17,7 +18,7 @@ namespace TCU.English.Models
         [DisplayName("Explain Link")]
         public string ExplainLink { get; set; }
         public int CreatorId { get; set; }
-        
+
         [ForeignKey(nameof(CreatorId))]
         [JsonIgnore]
         public virtual User User { get; set; }

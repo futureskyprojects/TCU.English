@@ -1,5 +1,4 @@
-﻿@using TCU.English.Utils
-@model TCU.English.Models.ReadingPartTwo
+﻿@model TCU.English.Models.ReadingPartTwo
 @{
     string modalId = nameof(TCU.English.Models.ReadingPartTwo) + "_Create";
     string modalTitle = "New question for \"Reading Part 2\"";
@@ -8,7 +7,6 @@
     string errorMsg = "An error occurred during operation, please try again.";
 
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
-    IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
 }
 
 <div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
@@ -32,70 +30,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        @Html.HiddenFor(x => x.Id)
-                        @Html.HiddenFor(x => x.CreatedTime)
-                        @Html.HiddenFor(x => x.UpdatedTime)
-                        @Html.HiddenFor(x => x.Active)
-                        @Html.HiddenFor(x => x.Answers)
-                        @Html.HiddenFor(x => x.QuestionImage)
-                        @* Question Image for Uploader *@
-                        <div class="form-group">
-                            <div class="text-center mb-3">
-                                <img id="question-image-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
-                            </div>
-                            <div class="text-center">
-                                <input type="file" name="@(nameof(TCU.English.Models.ReadingPartTwo.QuestionImage).ToCamelCase())" id="question-image-picker" onchange="questionImagePicked(this)" hidden />
-                                <button type="button" class="btn btn-info" onclick="$('#question-image-picker').click();">Select Image</button>
-                            </div>
-                            <small class="form-text text-danger mr-3 text-center">@Html.ValidationMessageFor(x => x.QuestionImage)</small>
-                        </div>
-                        @* Question Image uploader *@
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.QuestionText)
-                            @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Hint)
-                            @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ExplainLink)
-                            @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
-                        </div>
-                        <div class="form-group">
-                            <label>Select question category</label>
-                            <div class="select">
-                                @Html.DropDownListFor(x => x.TestCategoryId,
-                               new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
-                               new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="line"></div>
-
-                        @* REGION FOR CREATE ANSWERS *@
-                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
-                        @for (int i = 0; i < testAnswers.Count(); i++)
-                        {
-                            TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
-                            string answerAlphapet = ((char)((int)'A' + i)).ToString();
-                            <div class="form-group">
-                                <label>@Html.Raw($"Answer {answerAlphapet}")</label>
-                                <div class="row">
-                                    <div class="col-11">
-                                        <input type="text" placeholder="Enter your answer to the question here" class="form-control" id="@Html.Raw($"ans-content-{answerAlphapet}")" value="@Html.Raw(baseAnswer.AnswerContent)" onchange="updateValue()">
-                                    </div>
-                                    <div class="col-1 d-flex align-items-center">
-                                        <input type="radio" value="@i" name="ans-state" id="@Html.Raw($"ans-state-{answerAlphapet}") @Html.Raw(baseAnswer.IsCorrect?" checked":"")" onchange="updateValue()">
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        @* END REGION FOR CREATE ANSWERS *@
-
+                        <partial name="~/Views/ReadingManager/Part2/_Part2FormContent.cshtml" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />
@@ -119,23 +54,6 @@
 </div>
 
 <script type="text/javascript">
-    var testAnswersJson = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(testAnswers));
-    function updateValue() {
-        for (var i = 0; i < testAnswersJson.length; i++) {
-            let charTemp = String.fromCharCode("A".charCodeAt(0) + i);
-            testAnswersJson[i].AnswerContent = $(`#ans-content-${charTemp}`).val();
-            testAnswersJson[i].IsCorrect = false;
-        }
-
-        let value = $('input[name=ans-state]:checked', '#@(modalId)_form').val();
-        if (value != null && value != undefined) {
-            console.log(value);
-            testAnswersJson[value].IsCorrect = true;
-        }
-
-        $("#Answers").val(JSON.stringify(testAnswersJson));
-        console.log($("#Answers").val());
-    }
 
     $("#@(modalId)_loading").hide();
 
@@ -169,25 +87,4 @@
     var onFailed = function (xhr, status, error) {
         toastr["error"]("@errorMsg");
     };
-
-    function questionImagePicked(input) {
-        $("#question-image-preview").attr('src', '/img/no-image-box.png');
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            const fileType = file['type'];
-            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-            if (!validImageTypes.includes(fileType)) {
-                // invalid file type code goes here.
-                toastr["error"]("Please only select image type for avatar!")
-                $(input).val(null);
-            } else {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#question-image-preview').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    }
 </script>

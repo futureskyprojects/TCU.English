@@ -128,5 +128,37 @@ namespace TCU.English.Controllers
             // Chuyển đến trang kết quả
             return RedirectToAction(nameof(Result), new { id = piece.Id });
         }
+
+        [HttpGet]
+        public IActionResult Reading(int id)
+        {
+            if (id <= 0)
+                return NotFound();
+            ViewBag.IsReviewMode = true;
+            // Sau khi hoàn tất lọc các lỗi, tiến hành lấy
+            PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            // Thời gian làm bài
+            if (piece.CreatedTime != null)
+            {
+                if (piece.UpdatedTime == null)
+                {
+                    ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
+                }
+                else
+                {
+                    ViewBag.Timer = ((DateTime)piece.UpdatedTime).Subtract((DateTime)piece.CreatedTime).TotalSeconds;
+                }
+            }
+            ViewBag.Scores = piece.Scores;
+
+            // Bài thi của học viên
+            ReadingTestPaper userPaper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfUserJson ?? "");
+            // Bài thi mẫu (Được tạo khi thi, của học viên)
+            ReadingTestPaper resultPaper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson ?? "");
+            ViewBag.ResultPaper = resultPaper;
+
+            return View(userPaper);
+        }
     }
 }

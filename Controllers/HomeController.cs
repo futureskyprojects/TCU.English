@@ -26,11 +26,11 @@ namespace TCU.English.Controllers
             ViewBag.PassedTests = _PieceOfTestManager.PassedTestsCount(userId);
             ViewBag.FaildTests = _PieceOfTestManager.FaildTestsCount(userId);
 
-            ViewBag.ListeningGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.LISTENING);
-            ViewBag.ReadingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.READING);
-            ViewBag.WritingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.WRITING);
+            ViewBag.ListeningGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.LISTENING).ToString("0.0");
+            ViewBag.ReadingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.READING).ToString("0.0");
+            ViewBag.WritingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.WRITING).ToString("0.0");
 
-            ViewBag.YourGPA = _PieceOfTestManager.CalculateGPA(userId);
+            ViewBag.YourGPA = _PieceOfTestManager.CalculateGPA(userId).ToString("0.0");
 
             return View();
         }

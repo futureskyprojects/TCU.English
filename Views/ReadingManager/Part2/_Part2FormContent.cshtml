@@ -1,0 +1,122 @@
+﻿@using TCU.English.Utils
+@model TCU.English.Models.ReadingPartTwo
+@{
+    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    string groupName = "";
+    if (Model.Answers != null && Model.Answers.Length > 0)
+    {
+        Model.AnswerList = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers);
+        groupName = $"update_reading_part_2";
+    }
+    else
+    {
+        Model.AnswerList = TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
+        groupName = $"create_reading_part_2";
+    }
+}
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.CreatedTime)
+@Html.HiddenFor(x => x.UpdatedTime)
+@Html.HiddenFor(x => x.CreatorId)
+@Html.HiddenFor(x => x.Active)
+@Html.HiddenFor(x => x.Answers)
+@Html.HiddenFor(x => x.QuestionImage)
+@* Question Image for Uploader *@
+<div class="form-group">
+    <div class="text-center mb-3">
+        <img id="@groupName-img-default" src="@(Model.QuestionImage??"")" alt="Question Image" class="img-fluid shadow" style="width:320px;" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
+        <img id="@groupName-img-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
+    </div>
+    <div class="text-center">
+        <input type="file" name="@(nameof(TCU.English.Models.ReadingPartTwo.QuestionImage).ToCamelCase())" id="@groupName-img-picker" onchange="ImagePicked(this)" hidden />
+        <button type="button" class="btn btn-info" onclick="$('#@groupName-img-picker').click();">Select Image</button>
+        <button type="button" class="btn btn-danger" id="@groupName-img-remove-picker-btn">Remove Picked</button>
+    </div>
+    <small class="form-text text-danger mr-3 text-center">@Html.ValidationMessageFor(x => x.QuestionImage)</small>
+</div>
+@* Question Image uploader *@
+<div class="form-group">
+    @Html.LabelFor(x => x.QuestionText)
+    @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.Hint)
+    @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.ExplainLink)
+    @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
+</div>
+<div class="form-group">
+    <label>Select question category</label>
+    <div class="select">
+        @Html.DropDownListFor(x => x.TestCategoryId,
+       new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
+       new { @class = "form-control" })
+    </div>
+</div>
+<div class="line"></div>
+
+@* REGION FOR CREATE ANSWERS *@
+<small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
+@for (int i = 0; i < Model.AnswerList.Count(); i++)
+{
+    string answerAlphapet = ((char)((int)'A' + i)).ToString();
+    <div class="form-group">
+        <label>@Html.Raw($"Answer {answerAlphapet}")</label>
+        <div class="row">
+            <div class="col-11">
+                @Html.TextBoxFor(x => x.AnswerList[i].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
+                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.AnswerList[i].AnswerContent)</small>
+            </div>
+            <div class="col-1 d-flex align-items-center">
+                @Html.CheckBoxFor(x => x.AnswerList[i].IsCorrect, new { @groupname = $"group_{groupName}", @value = Model.AnswerList[i].IsCorrect.ToString().ToLower() })
+            </div>
+        </div>
+    </div>
+}
+
+@* END REGION FOR CREATE ANSWERS *@
+
+<script src="~/js/custom.js"></script>
+<script>
+    $('#@groupName-img-preview').hide();
+    $('#@groupName-img-remove-picker-btn').hide();
+    $('#@groupName-img-remove-picker-btn').click(function () {
+        $('#@groupName-img-picker').val(null);
+        $(this).hide();
+        $('#@groupName-img-default').show();
+        $('#@groupName-img-preview').hide();
+    });
+    function ImagePicked(input) {
+        // Hide
+        $('#@groupName-img-default').show();
+        $('#@groupName-img-preview').hide();
+        $('#@groupName-img-remove-picker-btn').hide();
+        // Cheking ...
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileType = file['type'];
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+            if (!validImageTypes.includes(fileType)) {
+                // invalid file type code goes here.
+                $(input).val(null);
+                toastr["error"]("Please only select image type for avatar!");
+            } else {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#@groupName-img-preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+                // Show
+                $('#@groupName-img-default').hide();
+                $('#@groupName-img-preview').show();
+                $('#@groupName-img-remove-picker-btn').show();
+            }
+        }
+    }
+</script>
