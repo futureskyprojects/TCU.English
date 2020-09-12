@@ -20,26 +20,21 @@
     }
 
     // Phương thức tạo hiển thị cho câu trả lời ở chế độ xem lại
-    bool renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
+    void renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
     {
-        if (isReviewMode)
+        string answerAlphapet = ((char)((int)'A' + index)).ToString();
+        if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
         {
-            string answerAlphapet = ((char)((int)'A' + index)).ToString();
-            if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
-            {
-                <span class="border border-success rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
-            }
-            else if (userAns[index].IsCorrect)
-            {
-                <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
-            }
-            else
-            {
-                <span>@answerAlphapet.</span> @testAns[index].AnswerContent
-            }
-            return true;
+            <span class="border border-success rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
         }
-        return false;
+        else if (userAns[index].IsCorrect)
+        {
+            <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
+        }
+        else
+        {
+            <span>@answerAlphapet.</span> @testAns[index].AnswerContent
+        }
     }
 }
 
@@ -96,10 +91,14 @@ else
                         string answerAlphapet = ((char)((int)'A' + j)).ToString();
                         <div class="col-md-3">
                             <div id="@($"answer_group_{uuid}")">
-                                @if (!renderAnswerReviewMode(j, Model.ReadingPartOnes.ReadingPart[i].AnswerList, resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList))
+                                @if (!isReviewMode)
                                 {
                                     <span class="@Html.Raw(Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
                                     @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingPartOnes.ReadingPart[i].AnswerList, resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList);
                                 }
                             </div>
                         </div>
@@ -167,10 +166,14 @@ else
                             @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent })
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
                             <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                @if (!renderAnswerReviewMode(j, Model.ReadingPartTwos.ReadingPart[i].AnswerList, resultPaper.ReadingPartTwos.ReadingPart[i].AnswerList))
+                                @if (!isReviewMode)
                                 {
                                     <span class="@Html.Raw(Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
                                     @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingPartTwos.ReadingPart[i].AnswerList, resultPaper.ReadingPartTwos.ReadingPart[i].AnswerList);
                                 }
                             </div>
                         }
@@ -262,10 +265,14 @@ else
                             @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent })
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
                             <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                @if (!renderAnswerReviewMode(j, Model.ReadingPartThrees.ReadingPart[i].AnswerList, resultPaper.ReadingPartThrees.ReadingPart[i].AnswerList))
+                                @if (!isReviewMode)
                                 {
                                     <span class="@Html.Raw(Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
                                     @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingPartThrees.ReadingPart[i].AnswerList, resultPaper.ReadingPartThrees.ReadingPart[i].AnswerList);
                                 }
                             </div>
                         }
@@ -354,10 +361,14 @@ else
                                 @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent })
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                 <div id="@($"answer_group_{uuid}")" class="col-3 pb-1">
-                                    @if (!renderAnswerReviewMode(j, Model.ReadingPartFours.ReadingPart[i].AnswerList, resultPaper.ReadingPartFours.ReadingPart[i].AnswerList))
+                                    @if (!isReviewMode)
                                     {
                                         <span class="@Html.Raw(Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
                                         @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect })
+                                    }
+                                    else
+                                    {
+                                        renderAnswerReviewMode(j, Model.ReadingPartFours.ReadingPart[i].AnswerList, resultPaper.ReadingPartFours.ReadingPart[i].AnswerList);
                                     }
                                 </div>
                             }

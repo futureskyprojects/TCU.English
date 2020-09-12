@@ -62,23 +62,48 @@ namespace TCU.English.Controllers
             return View(piece);
         }
 
-        public IActionResult Reading()
+        public IActionResult ReadingNewTest()
         {
-            ViewBag.Title = "READING TESTING";
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
             ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager, User.Id());
-
             if (paper.PiceOfTestId > 0)
             {
                 // Nếu lưu trữ thành công, thì tiến hành cho thí sinh làm
-                return View(paper);
+                return RedirectToAction(nameof(Reading), new { id = paper.PiceOfTestId });
             }
             else
             {
                 // Không thì trả về trang Index
                 return RedirectToAction(nameof(Index));
             }
+        }
 
+        [HttpGet]
+        public IActionResult Reading(int id)
+        {
+            ViewBag.Title = "READING TESTING";
+            if (id <= 0)
+                return NotFound();
+
+            // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
+            PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
+            if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
+            {
+                return RedirectToAction(nameof(ReadingReview), new { id = id });
+            }
+
+            // Tránh timer bị reset
+            if (piece.CreatedTime != null)
+            {
+                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
+            }
+
+            ReadingTestPaper paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson)
+                .RemoveCorrectAnswers();
+            paper.PiceOfTestId = piece.Id;
+            return View(paper);
         }
 
         [HttpPost]
@@ -148,7 +173,8 @@ namespace TCU.English.Controllers
             {
                 if (piece.UpdatedTime == null)
                 {
-                    ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
+                    ViewBag.Timer = 0;
+                    //ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
                 }
                 else
                 {
@@ -161,7 +187,15 @@ namespace TCU.English.Controllers
             ReadingTestPaper userPaper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfUserJson ?? "");
             // Bài thi mẫu (Được tạo khi thi, của học viên)
             ReadingTestPaper resultPaper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson ?? "");
+
+            bool isReviewOfFailTest = piece.ResultOfUserJson == null || piece.ResultOfUserJson.Length <= 0 || piece.UpdatedTime == null;
+            ViewBag.IsReviewOfFailTest = isReviewOfFailTest;
             ViewBag.ResultPaper = resultPaper;
+
+            if (isReviewOfFailTest)
+            {
+                userPaper = resultPaper;
+            }
 
             return View(nameof(Reading), userPaper);
         }

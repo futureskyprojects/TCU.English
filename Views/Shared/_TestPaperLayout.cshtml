@@ -119,7 +119,6 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         });
-        var totalTestWorkingSeconds = 0 + @((ViewData["Timer"] != null && ViewData["Timer"].ToInt() > 0) ? ViewData["Timer"].ToInt() : 0);
 
         //Get the button
         var floatBottomRight = document.getElementById("float-br");
@@ -138,13 +137,6 @@
         function topFunction() {
             $("html, body").animate({ scrollTop: 0 }, 300);
         }
-        // time-counter
-        setInterval(function () {
-            totalTestWorkingSeconds++;
-            let displayTimer = new Date(totalTestWorkingSeconds * 1000).toISOString().substr(11, 8);
-            $("#time-counter-top").html(displayTimer);
-            $("#time-counter").html(displayTimer);
-        }, 1000);
 
         // Mã chọn đáp án
         $(document).ready(function () {
@@ -159,6 +151,16 @@
                 $(this).children('input').val(true);
             });
         });
+
+        // Không cho phép nhấn phím F5
+        function disableF5(e) {
+            if ((e.which || e.keyCode) == 116) {
+                e.preventDefault();
+                toastr["error"]("Please do not refresh the page while the test is in progress.");
+            }
+        };
+        $(document).on("keydown", disableF5);
+        ////////////////////
     </script>
     @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
     {

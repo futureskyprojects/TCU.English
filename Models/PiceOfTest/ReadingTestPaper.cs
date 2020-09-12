@@ -188,12 +188,12 @@ namespace TCU.English.Models.PiceOfTest
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 3)
                 .ToList()
-                //.Shuffle() // Không trộn thứ tự câu hỏi
+                .Shuffle()
                 .First();
             var questions = category
                 .ReadingPartTwos
                 .ToList()
-                .Shuffle() // Chỉ trộn thứ tự câu trả lời
+                //.Shuffle() // Không trộn thứ tự câu hỏi
                 .Take(MAX_QUESTION_READING_PART_3)
                 .ToList();
             // Kiến tạo, trộn đáp án
@@ -202,7 +202,7 @@ namespace TCU.English.Models.PiceOfTest
                 questions[i].AnswerList = JsonConvert.DeserializeObject<List<BaseAnswer>>(questions[i].Answers);
                 if (questions[i].AnswerList != null && questions[i].AnswerList.Count > 0)
                 {
-                    questions[i].AnswerList.Shuffle();
+                    questions[i].AnswerList.Shuffle(); // Chỉ trộn câu trả lời
                 }
             }
             return new ReadingPartTwoDTO
@@ -216,12 +216,12 @@ namespace TCU.English.Models.PiceOfTest
             var category = _TestCategoryManager
                 .GetAll(TestCategory.READING, 4)
                 .ToList()
-                //.Shuffle() // Không trộn thứ tự câu hỏi
+                .Shuffle()
                 .First();
             var questions = category
                 .ReadingPartTwos
                 .ToList()
-                .Shuffle() // Chỉ trộn thứ tự câu trả lời
+                //.Shuffle() // Không trộn thứ tự câu hỏi
                 .Take(MAX_QUESTION_READING_PART_4)
                 .ToList();
             // Kiến tạo, trộn đáp án
@@ -230,7 +230,7 @@ namespace TCU.English.Models.PiceOfTest
                 questions[i].AnswerList = JsonConvert.DeserializeObject<List<BaseAnswer>>(questions[i].Answers);
                 if (questions[i].AnswerList != null && questions[i].AnswerList.Count > 0)
                 {
-                    questions[i].AnswerList.Shuffle();
+                    questions[i].AnswerList.Shuffle();// Chỉ trộn thứ tự câu trả lời
                 }
             }
             return new ReadingPartTwoDTO
