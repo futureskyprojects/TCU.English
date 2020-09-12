@@ -111,24 +111,25 @@
             var totalTestWorkingSeconds = 0 + @((ViewData["Timer"] != null && ViewData["Timer"].ToInt() > 0) ? ViewData["Timer"].ToInt() : 0);
             let displayTimer = new Date(totalTestWorkingSeconds * 1000).toISOString().substr(11, 8);
             $("#time-counter-top").html(displayTimer);
-            //Get the button
-            var floatBottomRight = document.getElementById("float-br");
-
-            // When the user scrolls down 20px from the top of the document, show the button
-            window.onscroll = function () { scrollFunction() };
-
-            function scrollFunction() {
-                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
-                    floatBottomRight.style.display = "block";
-                }
-                else {
-                    floatBottomRight.style.display = "none";
-                }
-            }
-            function topFunction() {
-                $("html, body").animate({ scrollTop: 0 }, 300);
-            }
         });
+
+        //Get the button
+        var floatBottomRight = document.getElementById("float-br");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                floatBottomRight.style.display = "block";
+            }
+            else {
+                floatBottomRight.style.display = "none";
+            }
+        }
+        function topFunction() {
+            $("html, body").animate({ scrollTop: 0 }, 300);
+        }
     </script>
     @RenderSection("Scripts", required: false)
 </body>

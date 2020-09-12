@@ -7,7 +7,7 @@ namespace TCU.English.Utils
     {
         public static string ToCamelCase(this string name)
         {
-            return Char.ToLowerInvariant(name[0]) + name.Substring(1).Replace("_", string.Empty);
+            return char.ToLowerInvariant(name[0]) + name.Substring(1).Replace("_", string.Empty);
         }
         public static int ToInt(this object number)
         {

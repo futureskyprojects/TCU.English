@@ -12,8 +12,8 @@
         <div class="pr-lg-5"><img src="img/learn-panel.jpg" alt="" class="img-fluid"></div>
     </div>
     <div class="col-lg-5 px-lg-4">
-        <h1 class="text-base text-primary text-uppercase mb-4">@Config.ProjectName</h1>
-        <h2 class="mb-4">Welcome to CMS!</h2>
+        <h1 class="text-base text-primary text-uppercase mb-4">Welcome to</h1>
+        <h2 class="mb-4">@Config.ProjectName</h2>
         @if (ViewContext.ViewData.ModelState.Where(x => x.Key == "").Any())
         {
             @Html.ValidationSummary(false, "", new { @class = "alert alert-danger", @id = "validate-summary" })

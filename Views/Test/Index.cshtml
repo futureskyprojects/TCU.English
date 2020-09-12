@@ -114,7 +114,7 @@
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto">@Model.ElementAt(i).Scores.ToString("0.0")/@Config.MAX_SCORE_POINT</button>
+                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto">@Model.ElementAt(i).Scores.ToScores()/@Config.MAX_SCORE_POINT</button>
                                     <button type="button" class="btn btn-info float-lg-right ml-2" onclick="review(@Model.ElementAt(i).Id)">Review</button>
                                 }
                             </div>

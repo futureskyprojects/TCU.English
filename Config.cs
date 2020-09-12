@@ -1,4 +1,5 @@
 ﻿using System;
+using TCU.English.Utils;
 
 namespace TCU.English
 {
@@ -18,5 +19,18 @@ namespace TCU.English
 
         public static float THRESHOLD_POINT = 5;
         public static float MAX_SCORE_POINT = 10;
+
+        public static string ToScores(this object scores)
+        {
+            float theScores = scores.ToString().ToFloat();
+            if (theScores.ToInt() == theScores)
+            {
+                return theScores.ToInt().ToString();
+            }
+            else
+            {
+                return theScores.ToString("0.0");
+            }
+        }
     }
 }

@@ -89,6 +89,8 @@ namespace TCU.English.Controllers
             if (paper.PiceOfTestId <= 0)
                 return NotFound();
 
+            ViewBag.Title = "READING TESTING";
+
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
@@ -134,6 +136,9 @@ namespace TCU.English.Controllers
         {
             if (id <= 0)
                 return NotFound();
+
+            ViewBag.Title = "READING TESTING";
+
             ViewBag.IsReviewMode = true;
             // Sau khi hoàn tất lọc các lỗi, tiến hành lấy
             PieceOfTest piece = _PieceOfTestManager.Get(id);
@@ -158,7 +163,7 @@ namespace TCU.English.Controllers
             ReadingTestPaper resultPaper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson ?? "");
             ViewBag.ResultPaper = resultPaper;
 
-            return View(userPaper);
+            return View(nameof(Reading), userPaper);
         }
     }
 }

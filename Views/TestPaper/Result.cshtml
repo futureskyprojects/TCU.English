@@ -13,9 +13,9 @@
         <img src="~/img/success.gif" alt="Success" class="w-50" />
         <p>Congratulations, you finished the test with a score of</p>
         <p style="font-size: 50px;" class="font-weight-bold p-4 text-red">
-            @(((float)ViewBag.Scores).ToString("0.0"))/@Config.MAX_SCORE_POINT
+            @(((float)ViewBag.Scores).ToScores())/@Config.MAX_SCORE_POINT
         </p>
-        <button type="button" class="btn btn-lg btn-info" onclick="toastr['warning']('Currently the function is not available.');">Detail</button>
+        <button type="button" class="btn btn-lg btn-info" onclick="review(@Model.Id)">Detail</button>
     </div>
 </section>
 @section FinishButton {
@@ -23,6 +23,9 @@
 }
 
 @section Scripts {
-
-
+    <script>
+        function review(pieceOfTestId) {
+            window.location.href = `@Url.Action(nameof(TCU.English.Controllers.TestPaperController.ReadingReview), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>())/${pieceOfTestId}`;
+        }
+    </script>
 }

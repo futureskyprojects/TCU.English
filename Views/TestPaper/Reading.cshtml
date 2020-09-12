@@ -18,11 +18,39 @@
         Layout = "~/Views/Shared/_TestPaperReviewLayout.cshtml";
         resultPaper = ViewBag.ResultPaper;
     }
+
+    // Phương thức tạo hiển thị cho câu trả lời ở chế độ xem lại
+    bool renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
+    {
+        if (isReviewMode)
+        {
+            string answerAlphapet = ((char)((int)'A' + index)).ToString();
+            if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
+            {
+                <span class="border border-success rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
+            }
+            else if (userAns[index].IsCorrect)
+            {
+                <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
+            }
+            else
+            {
+                <span>@answerAlphapet.</span> @testAns[index].AnswerContent
+            }
+            return true;
+        }
+        return false;
+    }
 }
 
 @Html.HiddenFor(x => x.PiceOfTestId)
 @* PART 1 *@
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory, new { @value = Model.ReadingPartOnes.TestCategory })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Id, new { @value = Model.ReadingPartOnes.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.TypeCode, new { @value = Model.ReadingPartOnes.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.PartId, new { @value = Model.ReadingPartOnes.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Name, new { @value = Model.ReadingPartOnes.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Description, new { @value = Model.ReadingPartOnes.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartOnes.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartOnes.TestCategory == null || Model.ReadingPartOnes.ReadingPart == null || Model.ReadingPartOnes.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 1</div>
@@ -68,20 +96,7 @@ else
                         string answerAlphapet = ((char)((int)'A' + j)).ToString();
                         <div class="col-md-3">
                             <div id="@($"answer_group_{uuid}")">
-                                @if (isReviewMode)
-                                {
-                                    if ((Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect &&
-                                        resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect) ||
-                                        resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect)
-                                    {
-                                        <span class="@Html.Raw(resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-success rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
-                                    }
-                                    else if (Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect)
-                                    {
-                                        <span class="@Html.Raw(Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-danger rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
-                                    }
-                                }
-                                else
+                                @if (!renderAnswerReviewMode(j, Model.ReadingPartOnes.ReadingPart[i].AnswerList, resultPaper.ReadingPartOnes.ReadingPart[i].AnswerList))
                                 {
                                     <span class="@Html.Raw(Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
                                     @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect })
@@ -99,7 +114,12 @@ else
 <div class="my-3"></div>
 
 @* PART 2 *@
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory)
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Id, new { @value = Model.ReadingPartTwos.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.TypeCode, new { @value = Model.ReadingPartTwos.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.PartId, new { @value = Model.ReadingPartTwos.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Name, new { @value = Model.ReadingPartTwos.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Description, new { @value = Model.ReadingPartTwos.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartTwos.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartTwos.TestCategory == null || Model.ReadingPartTwos.ReadingPart == null || Model.ReadingPartTwos.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 2</div>
@@ -147,8 +167,11 @@ else
                             @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent })
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
                             <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                <span class="@Html.Raw(Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
-                                @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect })
+                                @if (!renderAnswerReviewMode(j, Model.ReadingPartTwos.ReadingPart[i].AnswerList, resultPaper.ReadingPartTwos.ReadingPart[i].AnswerList))
+                                {
+                                    <span class="@Html.Raw(Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
                             </div>
                         }
                     }
@@ -167,7 +190,12 @@ else
 <div class="my-3"></div>
 
 @* PART 3 *@
-@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory)
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.Id, new { @value = Model.ReadingPartThrees.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.TypeCode, new { @value = Model.ReadingPartThrees.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.PartId, new { @value = Model.ReadingPartThrees.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.Name, new { @value = Model.ReadingPartThrees.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.Description, new { @value = Model.ReadingPartThrees.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartThrees.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartThrees.TestCategory == null || Model.ReadingPartThrees.ReadingPart == null || Model.ReadingPartThrees.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 2</div>
@@ -234,8 +262,11 @@ else
                             @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent })
                             string answerAlphapet = ((char)((int)'A' + j)).ToString();
                             <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                <span class="@Html.Raw(Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
-                                @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect })
+                                @if (!renderAnswerReviewMode(j, Model.ReadingPartThrees.ReadingPart[i].AnswerList, resultPaper.ReadingPartThrees.ReadingPart[i].AnswerList))
+                                {
+                                    <span class="@Html.Raw(Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
                             </div>
                         }
                     }
@@ -249,7 +280,12 @@ else
 <div class="my-3"></div>
 
 @* PART 4 *@
-@Html.HiddenFor(x => x.ReadingPartFours.TestCategory)
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.Id, new { @value = Model.ReadingPartFours.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.TypeCode, new { @value = Model.ReadingPartFours.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.PartId, new { @value = Model.ReadingPartFours.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.Name, new { @value = Model.ReadingPartFours.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.Description, new { @value = Model.ReadingPartFours.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingPartFours.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartFours.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartFours.TestCategory == null || Model.ReadingPartFours.ReadingPart == null || Model.ReadingPartFours.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 2</div>
@@ -318,8 +354,11 @@ else
                                 @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent })
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                 <div id="@($"answer_group_{uuid}")" class="col-3 pb-1">
-                                    <span class="@Html.Raw(Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
-                                    @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect })
+                                    @if (!renderAnswerReviewMode(j, Model.ReadingPartFours.ReadingPart[i].AnswerList, resultPaper.ReadingPartFours.ReadingPart[i].AnswerList))
+                                    {
+                                        <span class="@Html.Raw(Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
+                                        @Html.HiddenFor(x => x.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect })
+                                    }
                                 </div>
                             }
                         </div>
