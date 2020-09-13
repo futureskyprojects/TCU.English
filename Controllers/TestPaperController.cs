@@ -88,6 +88,10 @@ namespace TCU.English.Controllers
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
+            // Nếu tìm không thấy bài Test
+            if (piece == null)
+                return NotFound();
+
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {

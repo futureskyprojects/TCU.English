@@ -137,7 +137,7 @@ namespace TCU.English.Models.PiceOfTest
             var questions = category
                 .ReadingPartOnes
                 .ToList()
-                .Shuffle()
+                .Shuffle() // Trộn câu hỏi
                 .Take(MAX_QUESTION_READING_PART_1)
                 .ToList();
             // Kiến tạo, trộn đáp án
@@ -146,7 +146,7 @@ namespace TCU.English.Models.PiceOfTest
                 questions[i].AnswerList = JsonConvert.DeserializeObject<List<BaseAnswer>>(questions[i].Answers);
                 if (questions[i].AnswerList != null && questions[i].AnswerList.Count > 0)
                 {
-                    questions[i].AnswerList.Shuffle();
+                    questions[i].AnswerList.Shuffle(); // Trộn đáp án
                 }
             }
             return new ReadingPartOneDTO

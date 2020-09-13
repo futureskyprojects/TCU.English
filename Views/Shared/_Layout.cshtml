@@ -45,6 +45,12 @@
             </footer>
         </div>
     </div>
+    @* BACK TOP TOP *@
+    <div id="float-br" class="float-br-hidden">
+        <button onclick="topFunction()" class="btn btn-lg btn-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
+    </div>
+    @* END BACK TOP TOP *@
+
     <!-- JavaScript files-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/popper.js/umd/popper.min.js"></script>
@@ -69,6 +75,24 @@
                 $(obj).addClass('active');
             }
         });
+
+        //Get the button
+        var floatBottomRight = document.getElementById("float-br");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                floatBottomRight.style.display = "block";
+            }
+            else {
+                floatBottomRight.style.display = "none";
+            }
+        }
+        function topFunction() {
+            $("html, body").animate({ scrollTop: 0 }, 300);
+        }
     </script>
     <!-- https://gijgo.com/datepicker/configuration -->
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>

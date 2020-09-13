@@ -119,7 +119,7 @@ namespace TCU.English.Models.DataManager
                     .Count();
                 return x;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0;
             }
@@ -142,7 +142,7 @@ namespace TCU.English.Models.DataManager
 
         public PieceOfTest Get(long id)
         {
-            return instantce.PieceOfTests.First(it => it.Id == id);
+            return instantce.PieceOfTests.FirstOrDefault(it => it.Id == id);
         }
 
         public IEnumerable<PieceOfTest> GetAll()
