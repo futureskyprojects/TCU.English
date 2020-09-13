@@ -73,8 +73,9 @@ namespace TCU.English.Models.DataManager
             }
             else
             {
-                totalPiceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper()).Count();
-                totalScores = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper()).Sum(x => x.Scores);
+                var pieceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0);
+                totalPiceOfTests = pieceOfTests.Count();
+                totalScores = pieceOfTests.Sum(x => x.Scores);
             }
             if (totalPiceOfTests > 0)
                 return (totalScores / ((float)totalPiceOfTests));
