@@ -5,6 +5,7 @@
     string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>();
     string actionName = nameof(TCU.English.Controllers.TestCategoryController.UpdateAjax);
     string errorMsg = "An error occurred during operation, please try again.";
+    string formName = ViewBag.FromName ?? "_BaseTestCategoryForm";
 
     bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
 }
@@ -28,23 +29,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        @Html.HiddenFor(x => x.Id)
-                        @Html.HiddenFor(x => x.TypeCode)
-                        @Html.HiddenFor(x => x.PartId)
-                        @Html.HiddenFor(x => x.CreatorId)
-                        @Html.HiddenFor(x => x.CreatedTime)
-                        @Html.HiddenFor(x => x.UpdatedTime)
-                        @Html.HiddenFor(x => x.Active)
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Name)
-                            @Html.TextBoxFor(x => x.Name, new { @placeholder = "Category name", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Name)</small>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.Description)
-                            @Html.TextBoxFor(x => x.Description, new { @placeholder = "Description", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Description)</small>
-                        </div>
+                        <partial name="@formName" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />

@@ -66,7 +66,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public async Task<IActionResult> Part1Create(ListeningBaseCombined listeningBaseCombined, IFormFile audio, params IFormFile[] images)
         {
-            return await Processing(nameof(Part1), nameof(Part1Create), listeningBaseCombined, audio, images);
+            return await Processing(nameof(Part1), nameof(Part1Create), listeningBaseCombined, audio, images, false);
         }
 
         [HttpGet]
@@ -208,10 +208,11 @@ namespace TCU.English.Controllers
         }
         private async Task<bool> UpdateAudio(ListeningBaseCombined listeningBaseCombined, IFormFile audio)
         {
-            // Tiến hành tải audio lên
-            string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, 1);
-            if ((audio == null || audio.Length <= 0) && listeningBaseCombined.ListeningMedia.TestCategoryId > 0)
+            if ((audio == null || audio.Length <= 0) && listeningBaseCombined.TestCategory.Id > 0)
                 return true;
+
+            // Tiến hành tải audio lên
+            string audioUploadPath = await host.UploadForTestAudio(audio, TestCategory.LISTENING, listeningBaseCombined.TestCategory.PartId);
 
             if (audioUploadPath == null || audioUploadPath.Length <= 0)
             {
@@ -242,8 +243,17 @@ namespace TCU.English.Controllers
 
             return true;
         }
-        private async Task UpdateImages(ListeningBaseCombined listeningBaseCombined, IFormFile[] images)
+        private async Task<bool> UpdateImages(ListeningBaseCombined listeningBaseCombined, IFormFile[] images)
         {
+            if (listeningBaseCombined.TestCategory.Id > 0 && (images == null || images.Length <= 0))
+                return true;
+
+            if (listeningBaseCombined.TestCategory.Id <= 0 && images.Length < listeningBaseCombined.ListeningBaseQuestions.Count)
+            {
+                ModelState.AddModelError(string.Empty, "Missing photos for the answers.");
+                return false;
+            }
+
             // Tiến hành tải các ảnh lên
             List<string> uploadImgePaths = new List<string>();
             for (int i = 0; i < images.Length; i++)
@@ -255,12 +265,14 @@ namespace TCU.English.Controllers
                 }
                 uploadImgePaths.Add(uploadResult);
             }
+            var imgPathIndex = 0;
             // Cập nhật các đường dẫn được tải lên vào các câu trả lời
             for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
             {
                 for (int j = 0; j < listeningBaseCombined.ListeningBaseQuestions[i].AnswerList.Count; j++)
                 {
-                    listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent = uploadImgePaths[i * listeningBaseCombined.ListeningBaseQuestions.Count + j];
+                    if (string.IsNullOrEmpty(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent))
+                        listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent = uploadImgePaths[imgPathIndex++];
                 }
                 listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
             }
@@ -277,6 +289,7 @@ namespace TCU.English.Controllers
                     _ListeningBaseQuestionManager.Update(listeningBaseCombined.ListeningBaseQuestions[i]);
                 }
             }
+            return true;
         }
         private async Task<IActionResult> Processing(string partName, string actionName, ListeningBaseCombined listeningBaseCombined, IFormFile audio, bool isCheckQuestionText = true, bool isUploadImages = false, IFormFile[] images = null)
         {
@@ -309,8 +322,8 @@ namespace TCU.English.Controllers
                 return View($"{partName}/{actionName}", listeningBaseCombined);
 
             // Cho phép upload hình ảnh
-            if (isUploadImages)
-                await UpdateImages(listeningBaseCombined, images);
+            if (isUploadImages && !await UpdateImages(listeningBaseCombined, images))
+                return View($"{partName}/{actionName}", listeningBaseCombined);
 
             // Chuyển hướng đến hiển thị danh sách
             return RedirectToAction(partName);

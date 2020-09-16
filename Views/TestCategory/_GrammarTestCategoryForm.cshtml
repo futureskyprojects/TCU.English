@@ -1,0 +1,37 @@
+﻿@model TCU.English.Models.TestCategory
+
+@{
+    string uniqueId = $"WYSIWYGContent_{Guid.NewGuid().ToString()}";
+}
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.TypeCode)
+@Html.HiddenFor(x => x.PartId)
+@Html.HiddenFor(x => x.CreatorId)
+@Html.HiddenFor(x => x.CreatedTime)
+@Html.HiddenFor(x => x.UpdatedTime)
+@Html.HiddenFor(x => x.Active)
+<div class="form-group">
+    @Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name, new { @placeholder = "Category name", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Name)</small>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.Description)
+    @Html.TextBoxFor(x => x.Description, new { @placeholder = "Description", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Description)</small>
+</div>
+<div class="form-group">
+    @Html.Label("Grammar")
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WYSIWYGContent)</small>
+    @Html.TextAreaFor(x => x.WYSIWYGContent, new { id = uniqueId })
+</div>
+
+<script>
+    $(document).ready(function () {
+        if (CKEDITOR.instances['@Html.Raw(uniqueId)']) {
+            CKEDITOR.instances['@Html.Raw(uniqueId)'].destroy();
+        }
+        CKEDITOR.replace('@Html.Raw(uniqueId)');
+    });
+</script>

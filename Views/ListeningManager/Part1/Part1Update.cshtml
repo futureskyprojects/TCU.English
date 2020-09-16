@@ -83,6 +83,7 @@
                     @for (int i = 0; i < Model.ListeningBaseQuestions.Count; i++)
                     {
                         @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Id)
+                        @Html.HiddenFor(x => x.ListeningBaseQuestions[i].TestCategoryId)
                         @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatorId)
                         @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Active)
                         @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Answers)
@@ -197,14 +198,31 @@
         //==========================================//
         CKEDITOR.replace('Transcript');
         //==========================================//
-      
+
         // Ẩn chế độ xem trước và nút xóa xem trước, hiển thị ảnh mặc định
         //==========================================//
+        var imgPickObject = [];
+        function reapplyDefaultImageLink(i, j) {
+            var obj = imgPickObject.find(x => x.key == `#img-q_${i}_ans_${j}`);
+            if (obj) {
+                $(`#img-q_${i}_ans_${j}`).val(obj.value);
+            }
+        }
+        function removeDefaultImageLink(i, j) {
+            if (!imgPickObject.find(x => x.key == `#img-q_${i}_ans_${j}`)) {
+                imgPickObject.push({
+                    key: `#img-q_${i}_ans_${j}`,
+                    value: $(`#img-q_${i}_ans_${j}`).val()
+                });
+            }
+            $(`#img-q_${i}_ans_${j}`).val(null);
+        }
         function ansImagePicked(input, i, j) {
             // Ẩn chế độ xem trước và nút xóa xem trước, hiển thị ảnh mặc định
             $(`#answer-image-preview-${i}-${j}`).hide();
             $(`#answer-default-btn-${i}-${j}`).hide();
             $(`#answer-image-${i}-${j}`).show();
+            reapplyDefaultImageLink(i,j);
             // Kiểm tra xem file có khả dụng không
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -220,10 +238,11 @@
                         $(`#answer-image-preview-${i}-${j}`).attr('src', e.target.result);
                     }
                     reader.readAsDataURL(input.files[0]);
-                    // Hiển thị chế độ xem trước và nút xóa xem trước, ẩn thị ảnh mặc định
+                    // Hiển thị chế độ xem trước và nút xóa xem trước, ẩn ảnh mặc định
                     $(`#answer-image-preview-${i}-${j}`).show();
                     $(`#answer-default-btn-${i}-${j}`).show();
                     $(`#answer-image-${i}-${j}`).hide();
+                    removeDefaultImageLink(i,j);
                 }
             }
         }

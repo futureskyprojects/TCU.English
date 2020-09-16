@@ -68,16 +68,16 @@
                                 @Html.TextBoxFor(x => x.ReadingPartTwos[i].QuestionText, new { @placeholder = "Your question", @class = "form-control" })
                                 <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].QuestionText)</small>
                             </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.ReadingPartTwos[i].Hint)
-                                @Html.TextBoxFor(x => x.ReadingPartTwos[i].Hint, new { @placeholder = "Hint", @class = "form-control" })
-                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].Hint)</small>
-                            </div>
-                            <div class="form-group">
-                                @Html.LabelFor(x => x.ReadingPartTwos[i].ExplainLink)
-                                @Html.TextBoxFor(x => x.ReadingPartTwos[i].ExplainLink, new { @placeholder = "Explain Link", @class = "form-control" })
-                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].ExplainLink)</small>
-                            </div>
+                            @*<div class="form-group">
+                                    @Html.LabelFor(x => x.ReadingPartTwos[i].Hint)
+                                    @Html.TextBoxFor(x => x.ReadingPartTwos[i].Hint, new { @placeholder = "Hint", @class = "form-control" })
+                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].Hint)</small>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(x => x.ReadingPartTwos[i].ExplainLink)
+                                    @Html.TextBoxFor(x => x.ReadingPartTwos[i].ExplainLink, new { @placeholder = "Explain Link", @class = "form-control" })
+                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].ExplainLink)</small>
+                                </div>*@
                             <div class="line"></div>
                             @* REGION FOR CREATE ANSWERS *@
                             <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].AnswerList)</small>
@@ -99,6 +99,22 @@
                                 </div>
                             }
                             @* END REGION FOR CREATE ANSWERS *@
+                            <div class="form-group">
+                                @{
+                                    string explainId = $"_part_3_form_content_{i}";
+                                }
+                                @Html.Label("Explain for the correct answer")
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].ExplainLink)</small>
+                                @Html.TextAreaFor(x => x.ReadingPartTwos[i].ExplainLink, new { id = explainId })
+                                <script>
+                                    $(document).ready(function () {
+                                        if (CKEDITOR.instances['@Html.Raw(explainId)']) {
+                                            CKEDITOR.instances['@Html.Raw(explainId)'].destroy();
+                                        }
+                                        CKEDITOR.replace('@Html.Raw(explainId)');
+                                    });
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>

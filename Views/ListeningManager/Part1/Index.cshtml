@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TCU.English.Models.TestCategory>
+﻿@using TCU.English.Utils
+@model IEnumerable<TCU.English.Models.TestCategory>
 @{
     ViewData["Title"] = "Listening Part 1 Manager";
 }
@@ -20,8 +21,8 @@
                         <div class="card-body">
                             <div class="align-items-center flex-row">
                                 <div onclick="window.location.href='@Url.Action(nameof(TCU.English.Controllers.ListeningManagerController.Part1), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>(), new { category = Model.ElementAt(i).Id })'" class="float-left">
-                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(Model.ElementAt(i).Name) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(Model.ElementAt(i).ListeningBaseQuestions.Count))</sup></span></p>
-                                    <small class="text-muted">@Html.Raw(Model.ElementAt(i).Description)</small>
+                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(Model.ElementAt(i).Name.TrimMax(100)) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(Model.ElementAt(i).ListeningBaseQuestions.Count))</sup></span></p>
+                                    <small class="text-muted">@Html.Raw(Model.ElementAt(i).Description.TrimMax(80))</small>
                                 </div>
                                 <span class="float-right">
                                     <button type="button" class="btn btn-warning mx-2" onclick="window.location.href='@Url.Action(nameof(TCU.English.Controllers.ListeningManagerController.Part1Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>(), new { id = Model.ElementAt(i).Id })'">Edit</button>

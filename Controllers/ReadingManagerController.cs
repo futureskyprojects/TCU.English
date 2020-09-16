@@ -518,7 +518,7 @@ namespace TCU.English.Controllers
         private IActionResult Part1Processing(ReadingPartOne readingPartOne)
         {
             // Kiểm tra tính hợp lệ
-            string validateMsg = IsValidate(readingPartOne.TestCategory.Id, readingPartOne.AnswerList, Config.MAX_READING_PART_1_QUESTION);
+            string validateMsg = IsValidate(readingPartOne.TestCategoryId, readingPartOne.AnswerList, Config.MAX_READING_PART_1_QUESTION);
             if (!string.IsNullOrEmpty(validateMsg))
                 return Json(new { status = false, message = validateMsg });
             // Chuyển danh sách câu trả lời thành JSON để lưu trữ
@@ -540,7 +540,7 @@ namespace TCU.English.Controllers
         private async Task<IActionResult> Part2Processing(ReadingPartTwo readingPartTwo, IFormFile questionImage)
         {
             // Kiểm tra tính hợp lệ
-            string validateMsg = IsValidate(readingPartTwo.TestCategory.Id, readingPartTwo.AnswerList, Config.MAX_READING_PART_2_QUESTION);
+            string validateMsg = IsValidate(readingPartTwo.TestCategoryId, readingPartTwo.AnswerList, Config.MAX_READING_PART_2_QUESTION);
             if (!string.IsNullOrEmpty(validateMsg))
                 return Json(new { status = false, message = validateMsg });
             // Chuyển danh sách câu trả lời thành JSON để lưu trữ

@@ -39,6 +39,9 @@ namespace TCU.English.Controllers
             }
             else
             {
+                // Nếu là READING PART 1 -> Cho tạo mục ngữ pháp
+                if (testCategory.TypeCode == TestCategory.READING && testCategory.PartId == 1)
+                    ViewBag.FromName = "_GrammarTestCategoryForm";
                 return PartialView(testCategory);
             }
         }
@@ -90,6 +93,9 @@ namespace TCU.English.Controllers
                 if (testCategory == null)
                     return NotFound();
                 ViewBag.IsShowImmediately = true;
+                // Nếu là READING PART 1 -> Cho tạo mục ngữ pháp
+                if (testCategory.TypeCode == TestCategory.READING && testCategory.PartId == 1)
+                    ViewBag.FromName = "_GrammarTestCategoryForm";
                 return PartialView(testCategory);
             }
         }

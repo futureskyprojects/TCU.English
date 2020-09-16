@@ -24,20 +24,20 @@
 <div class="form-group">
     @Html.LabelFor(x => x.QuestionText)
     @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
-    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>
+    @*<small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>*@
 </div>
+@*<div class="form-group">
+        @Html.LabelFor(x => x.Hint)
+        @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
+        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.ExplainLink)
+        @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
+        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
+    </div>*@
 <div class="form-group">
-    @Html.LabelFor(x => x.Hint)
-    @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
-    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
-</div>
-<div class="form-group">
-    @Html.LabelFor(x => x.ExplainLink)
-    @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
-    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>
-</div>
-<div class="form-group">
-    <label>Select question category</label>
+    <label>Select a grammar category</label>
     <div class="select">
         @Html.DropDownListFor(x => x.TestCategoryId,
        new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
@@ -47,7 +47,7 @@
 <div class="line"></div>
 
 @* REGION FOR CREATE ANSWERS *@
-<small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>
+@*<small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.Answers)</small>*@
 @for (int i = 0; i < Model.AnswerList.Count; i++)
 {
     //TCU.English.Models.BaseAnswer baseAnswer = testAnswers.ElementAt(i) ?? new TCU.English.Models.BaseAnswer();
