@@ -104,14 +104,9 @@
                                     </div>
                                     <div class="form-group">
                                         @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
-                                        @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].Hint, new { @placeholder = "Hint", @class = "form-control" })
                                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
+                                        @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = "HintForAnswer" })
                                     </div>
-                                    @*<div class="form-group">
-                                            @Html.LabelFor(x => x.ListeningBaseQuestions[i].ExplainLink)
-                                            @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].ExplainLink, new { @placeholder = "Explain Link", @class = "form-control" })
-                                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].ExplainLink)</small>
-                                        </div>*@
                                     <div class="line"></div>
                                     @* REGION FOR CREATE ANSWERS *@
                                     <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList)</small>
@@ -136,6 +131,12 @@
                                         </div>
                                     }
                                     @* END REGION FOR CREATE ANSWERS *@
+                                    <div class="form-group">
+                                        @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
+                                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
+                                        @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = "HintForAnswer" })
+                                       
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +149,6 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.ckeditor.com/4.14.1/full/ckeditor.js"></script>
     <script>
         var defaultAudioPath = "@Html.Raw(Model.ListeningMedia.Audio.Replace("\\","/"))";
         function loadAudio(path = defaultAudioPath) {
@@ -187,8 +187,16 @@
         }
         //==========================================//
         CKEDITOR.replace('Transcript');
+        CKEDITOR.replace('HintForAnswer', {
+            toolbar:
+                [
+                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                    { name: 'tools', items: ['Maximize', '-', 'About'] }
+                ]
+        });
         //==========================================//
-       
+
 
         //==========================================//
         function changeHandler(input) {

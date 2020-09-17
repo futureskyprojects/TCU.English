@@ -32,6 +32,13 @@
         if (CKEDITOR.instances['@Html.Raw(uniqueId)']) {
             CKEDITOR.instances['@Html.Raw(uniqueId)'].destroy();
         }
-        CKEDITOR.replace('@Html.Raw(uniqueId)');
+        CKEDITOR.replace('@Html.Raw(uniqueId)', {
+            toolbar:
+                [
+                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                    { name: 'tools', items: ['Maximize', '-', 'About'] }
+                ]
+        });
     });
 </script>
