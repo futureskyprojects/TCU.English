@@ -57,53 +57,11 @@ namespace TCU.English.Controllers
             string questionSearchKey = "")
         {
             int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
             int questionStart = (questionPage - 1) * limit;
 
-            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.READING, 1, categoryStart, limit);
-            ViewBag.TestCategories = testCategories;
+            ViewBag.TestCategories = CategoryRender(nameof(Part1), TestCategory.READING, 1, categoryPage, categorySearchKey);
 
-            var readingPartOneQuestions = new List<ReadingPartOne>();
-
-            if (category > 0)
-            {
-                var testCategory = _TestCategoryManager.Get(category);
-                if (testCategory == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    ViewBag.QuestionType = testCategory.Name ?? "";
-                    readingPartOneQuestions = _ReadingPartOneManager.GetByPagination(category, questionStart, limit).ToList();
-                }
-            }
-            else
-            {
-                ViewBag.QuestionType = "ALL";
-                readingPartOneQuestions = _ReadingPartOneManager.GetByPagination(questionStart, limit).ToList();
-            }
-
-            ViewBag.ReadingPartOneQuestions = readingPartOneQuestions;
-            // Tạo đối tượng phân trang cho Category
-            ViewBag.CategoryPagination = new Pagination(nameof(Part1), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(categoryPage),
-                PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
-                Offset = limit
-            };
-
-            // Tạo đối tượng phân trang cho Reading Part 1
-            ViewBag.ReadingPartOnePagination = new Pagination(nameof(Part1), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(questionPage),
-                PageCurrent = questionPage,
-                TypeKey = nameof(category),
-                Type = "0",
-                NumberPage = PaginationUtils.TotalPageCount(readingPartOneQuestions.Count(), limit),
-                Offset = limit
-            };
+            ViewBag.Questions = QuestionRender(nameof(Part1), TestCategory.READING, 1, questionPage, category.ToInt(), questionSearchKey);
 
             return View($"{nameof(Part1)}/Index");
         }
@@ -163,54 +121,9 @@ namespace TCU.English.Controllers
            string categorySearchKey = "",
            string questionSearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
-            int questionStart = (questionPage - 1) * limit;
+            ViewBag.TestCategories = CategoryRender(nameof(Part2), TestCategory.READING, 2, categoryPage, categorySearchKey);
 
-            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.READING, 2, categoryStart, limit);
-            ViewBag.TestCategories = testCategories;
-
-            var readingQuestions = new List<ReadingPartTwo>();
-
-            if (category > 0)
-            {
-                var testCategory = _TestCategoryManager.Get(category);
-                if (testCategory == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    ViewBag.QuestionType = testCategory.Name ?? "";
-                    readingQuestions = _ReadingPartTwoManager.GetByPagination(category, TestCategory.READING, 2, questionStart, limit).ToList();
-                }
-            }
-            else
-            {
-                ViewBag.QuestionType = "ALL";
-                readingQuestions = _ReadingPartTwoManager.GetByPagination(TestCategory.READING, 2, questionStart, limit).ToList();
-            }
-
-            ViewBag.ReadingPartTwos = readingQuestions;
-            // Tạo đối tượng phân trang cho Category
-            ViewBag.CategoryPagination = new Pagination(nameof(Part2), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(categoryPage),
-                PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
-                Offset = limit
-            };
-
-            // Tạo đối tượng phân trang cho Reading Part 1
-            ViewBag.ReadingPagination = new Pagination(nameof(Part2), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(questionPage),
-                PageCurrent = questionPage,
-                TypeKey = nameof(category),
-                Type = "0",
-                NumberPage = PaginationUtils.TotalPageCount(readingQuestions.Count(), limit),
-                Offset = limit
-            };
+            ViewBag.Questions = QuestionRender(nameof(Part2), TestCategory.READING, 2, questionPage, category.ToInt(), questionSearchKey);
 
             return View($"{nameof(Part2)}/Index");
         }
@@ -267,20 +180,7 @@ namespace TCU.English.Controllers
            int categoryPage = 1,
            string categorySearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
-
-            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.READING, 3, categoryStart, limit);
-
-            // Tạo đối tượng phân trang cho Category
-            ViewBag.CategoryPagination = new Pagination(nameof(Part3), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(categoryPage),
-                PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
-                Offset = limit
-            };
-
+            var testCategories = CategoryRender(nameof(Part3), TestCategory.READING, 3, categoryPage, categorySearchKey);
             return View($"{nameof(Part3)}/Index", testCategories);
         }
 
@@ -358,19 +258,7 @@ namespace TCU.English.Controllers
            int categoryPage = 1,
            string categorySearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
-
-            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.READING, 4, categoryStart, limit);
-
-            // Tạo đối tượng phân trang cho Category
-            ViewBag.CategoryPagination = new Pagination(nameof(Part4), NameUtils.ControllerName<ReadingManagerController>())
-            {
-                PageKey = nameof(categoryPage),
-                PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
-                Offset = limit
-            };
+            var testCategories = CategoryRender(nameof(Part4), TestCategory.READING, 4, categoryPage, categorySearchKey);
 
             return View($"{nameof(Part4)}/Index", testCategories);
         }
@@ -638,6 +526,72 @@ namespace TCU.English.Controllers
             if (partId == 2) _ReadingPartTwoManager.Delete(readingPart2Question);
 
             return Json(new { success = true, id, responseText = "Deleted" });
+        }
+        private IEnumerable<TestCategory> CategoryRender(string actionName, string typeCode, int partId, int categoryPage = 1, string categorySearchKey = "")
+        {
+            int limit = 20;
+            int categoryStart = (categoryPage - 1) * limit;
+
+            var testCategories = _TestCategoryManager.GetByPagination(typeCode, partId, categoryStart, limit);
+
+            // Tạo đối tượng phân trang cho Category
+            ViewBag.CategoryPagination = new Pagination(actionName, NameUtils.ControllerName<ReadingManagerController>())
+            {
+                PageKey = nameof(categoryPage),
+                PageCurrent = categoryPage,
+                NumberPage = PaginationUtils.TotalPageCount(
+                    _TestCategoryManager.GetAll(typeCode, partId).Count(),
+                    limit),
+                Offset = limit
+            };
+            return testCategories;
+        }
+        private IEnumerable<object> QuestionRender(string actionName, string typeCode, int partId, int questionPage = 1, int category = 0, string questionSearchKey = "")
+        {
+            int limit = 20;
+            int questionStart = (questionPage - 1) * limit;
+
+            int total;
+            if (partId == 1)
+                total = _ReadingPartOneManager.GetAll(category).Count();
+            else
+                total = _ReadingPartTwoManager.GetAll(typeCode, partId, category).Count();
+
+            // Tạo đối tượng phân trang cho Câu hỏi
+            ViewBag.QuestionPagination = new Pagination(actionName, NameUtils.ControllerName<ReadingManagerController>())
+            {
+                PageKey = nameof(questionPage),
+                PageCurrent = questionPage,
+                TypeKey = nameof(category),
+                Type = "0",
+                NumberPage = PaginationUtils.TotalPageCount(total, limit),
+                Offset = limit
+            };
+
+            if (category > 0)
+            {
+                var testCategory = _TestCategoryManager.Get(category);
+                if (testCategory == null)
+                {
+                    return new List<object>();
+                }
+                else
+                {
+                    ViewBag.QuestionType = testCategory.Name ?? "";
+                    if (partId == 1)
+                        return _ReadingPartOneManager.GetByPagination(category, questionStart, limit);
+                    else
+                        return _ReadingPartTwoManager.GetByPagination(category, typeCode, partId, questionStart, limit);
+                }
+            }
+            else
+            {
+                ViewBag.QuestionType = "ALL";
+                if (partId == 1)
+                    return _ReadingPartOneManager.GetByPagination(questionStart, limit);
+                else
+                    return _ReadingPartTwoManager.GetByPagination(typeCode, partId, questionStart, limit);
+            }
         }
     }
 }

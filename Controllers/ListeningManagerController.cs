@@ -361,7 +361,9 @@ namespace TCU.English.Controllers
             {
                 PageKey = nameof(categoryPage),
                 PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
+                NumberPage = PaginationUtils.TotalPageCount(
+                    _TestCategoryManager.GetAll(typeCode, partId).Count(),
+                    limit),
                 Offset = limit
             };
             return testCategories;

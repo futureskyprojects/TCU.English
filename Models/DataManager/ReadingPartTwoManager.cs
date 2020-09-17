@@ -46,6 +46,32 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.ReadingPartTwos.Where(x => x.TestCategoryId == categoryId).ToList();
         }
+        public IEnumerable<ReadingPartTwo> GetAll(string typeCode, int partId, long categoryId = 0)
+        {
+            if (categoryId > 0)
+                return instantce.ReadingPartTwos
+                .Join(instantce.TestCategories,
+                reading => reading.TestCategoryId,
+                category => category.Id,
+                (reading, category) => new { reading, category })
+                .Where(full => full.category.TypeCode.ToLower() == typeCode.ToLower() && full.category.PartId == partId && full.category.Id == categoryId)
+                .Select(full => full.reading)
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            else
+                return instantce.ReadingPartTwos
+                .Join(instantce.TestCategories,
+                reading => reading.TestCategoryId,
+                category => category.Id,
+                (reading, category) => new { reading, category })
+                .Where(full => full.category.TypeCode.ToLower() == typeCode.ToLower() && full.category.PartId == partId)
+                .Select(full => full.reading)
+                .OrderByDescending(x => x.Id)
+                .ToList();
+        }
+        /// <summary>
+        /// Danh sách tất cả câu hỏi thuộc một phần nào đó của Reading
+        /// </summary>
         public IEnumerable<ReadingPartTwo> GetByPagination(string testTypeCode, long partId, int start, int limit)
         {
             return instantce.ReadingPartTwos
@@ -60,6 +86,10 @@ namespace TCU.English.Models.DataManager
                 .Take(limit)
                 .ToList();
         }
+
+        /// <summary>
+        /// Lấy theo phân trang danh sách câu hỏi của một phân mục nhất định
+        /// </summary>
         public IEnumerable<ReadingPartTwo> GetByPagination(long categoryId, string testTypeCode, long partId, int start, int limit)
         {
             return instantce.ReadingPartTwos

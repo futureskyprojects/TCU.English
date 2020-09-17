@@ -97,11 +97,6 @@ namespace TCU.English
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapAreaControllerRoute(
-                //    name: "AdminAreaRoute",
-                //    areaName: nameof(Areas.Admin),
-                //    pattern: nameof(Areas.Admin) + "/{controller:slugify=Login}/{action:slugify=Index}/{id:slugify?}");
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller:slugify=Home}/{action:slugify=Index}/{id:slugify?}"

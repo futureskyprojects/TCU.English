@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Reading Part 1 Manager";
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
-    IEnumerable<TCU.English.Models.ReadingPartOne> readingPartOnes = ViewBag.ReadingPartOneQuestions;
+    IEnumerable<TCU.English.Models.ReadingPartOne> readingPartOnes = ViewBag.Questions;
 
     string questionType = ViewBag.QuestionType ?? "";
 }
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         }
-                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.ReadingPartOnePagination);
+                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.QuestionPagination);
                     }
                     else
                     {
