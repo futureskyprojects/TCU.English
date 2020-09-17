@@ -26,13 +26,17 @@ namespace TCU.English.Controllers
             this._UserTypeManager = (UserTypeManager)_UserTypeManager;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index(string RequestPath)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                if (string.IsNullOrEmpty(RequestPath))
+                    return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                else
+                    return Redirect(RequestPath);
             }
-            return View();
+            return View(new UserLogin { RequestPath = RequestPath });
         }
         public async Task<IActionResult> LogOut()
         {
@@ -53,7 +57,6 @@ namespace TCU.English.Controllers
                     var (Verified, NeedsUpgrade) = Utils.PasswordUtils.PasswordHasher.VerifyHashedPassword(user.HashPassword, userLogin.Password);
                     if (Verified)
                     {
-                        string RequestPath = HttpContext.Request.Query[CookieAuthenticationConfig.ReturnUrlParameter];
                         // create claims
                         List<Claim> claims = new List<Claim>
                         {
@@ -84,10 +87,10 @@ namespace TCU.English.Controllers
                                     IsPersistent = userLogin.IsRemember, // for 'remember me' feature
                                     ExpiresUtc = DateTime.UtcNow.AddMinutes(10)
                                 });
-                        if (string.IsNullOrEmpty(RequestPath))
+                        if (string.IsNullOrEmpty(userLogin.RequestPath))
                             return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
                         else
-                            return Redirect(RequestPath);
+                            return Redirect(userLogin.RequestPath);
                     }
                     else
                     {

@@ -25,6 +25,7 @@
         }
         @using (@Html.BeginForm(nameof(AuthenticationController.LogIn), NameUtils.ControllerName<AuthenticationController>(), FormMethod.Post, new { @id = "loginForm", @class = "mt-4" }))
         {
+            @Html.HiddenFor(x => x.RequestPath);
             <div class="form-group mb-4">
                 @Html.TextBoxFor(x => x.Identity, new { @type = "text", @placeholder = "Username", @class = "form-control border-0 shadow form-control-lg" })
                 <small class="form-text text-danger ml-3 mt-2">@Html.ValidationMessageFor(x => x.Identity)</small>
