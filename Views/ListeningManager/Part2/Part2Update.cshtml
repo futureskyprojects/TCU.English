@@ -135,7 +135,7 @@
                                         @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
                                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
                                         @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = "HintForAnswer" })
-                                       
+
                                     </div>
                                 </div>
                             </div>
@@ -187,13 +187,15 @@
         }
         //==========================================//
         CKEDITOR.replace('Transcript');
-        CKEDITOR.replace('HintForAnswer', {
-            toolbar:
-                [
-                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
-                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-                    { name: 'tools', items: ['Maximize', '-', 'About'] }
-                ]
+        $("[id^=HintForAnswer_]").filter(function (index, value) {
+            CKEDITOR.replace($(value).attr('id'), {
+                toolbar:
+                    [
+                        { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                        { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                        { name: 'tools', items: ['Maximize', '-', 'About'] }
+                    ]
+            });
         });
         //==========================================//
 
