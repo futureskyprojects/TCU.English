@@ -187,7 +187,12 @@ namespace TCU.English.Controllers
         [HttpGet]
         public IActionResult Part3Create()
         {
-            return View($"{nameof(Part3)}/{nameof(Part3Create)}", new ReadingCombined { TestCategory = TestCategory.ReadingCategory(3), ReadingPartTwos = ReadingPartTwo.Generate(5) });
+            return View($"{nameof(Part3)}/{nameof(Part3Create)}",
+                new ReadingCombined
+                {
+                    TestCategory = TestCategory.ReadingCategory(3),
+                    ReadingPartTwos = ReadingPartTwo.Generate(Config.MAX_READING_PART_3_QUESTION)
+                });
         }
 
         [HttpPost]
@@ -213,7 +218,7 @@ namespace TCU.English.Controllers
                 var readingPartTwos = _ReadingPartTwoManager.GetAll(testCategory.Id).ToList();
                 if (readingPartTwos.Count <= 0)
                 {
-                    readingPartTwos = ReadingPartTwo.Generate(5);
+                    readingPartTwos = ReadingPartTwo.Generate(Config.MAX_READING_PART_3_QUESTION);
                 }
                 for (int i = 0; i < readingPartTwos.Count(); i++)
                 {
@@ -266,7 +271,12 @@ namespace TCU.English.Controllers
         [HttpGet]
         public IActionResult Part4Create()
         {
-            return View($"{nameof(Part4)}/{nameof(Part4Create)}", new ReadingCombined { TestCategory = TestCategory.ReadingCategory(4), ReadingPartTwos = ReadingPartTwo.Generate(10) });
+            return View($"{nameof(Part4)}/{nameof(Part4Create)}",
+                new ReadingCombined
+                {
+                    TestCategory = TestCategory.ReadingCategory(4),
+                    ReadingPartTwos = ReadingPartTwo.Generate(Config.MAX_READING_PART_4_QUESTION)
+                });
         }
 
         [HttpPost]
@@ -292,7 +302,7 @@ namespace TCU.English.Controllers
                 var readingPartTwos = _ReadingPartTwoManager.GetAll(testCategory.Id).ToList();
                 if (readingPartTwos.Count <= 0)
                 {
-                    readingPartTwos = ReadingPartTwo.Generate(10);
+                    readingPartTwos = ReadingPartTwo.Generate(Config.MAX_READING_PART_4_QUESTION);
                 }
                 for (int i = 0; i < readingPartTwos.Count(); i++)
                 {

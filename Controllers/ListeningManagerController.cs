@@ -59,7 +59,7 @@ namespace TCU.English.Controllers
             {
                 TestCategory = TestCategory.ListeningCategory(1),
                 ListeningMedia = ListeningMedia.Generate(),
-                ListeningBaseQuestions = ListeningBaseQuestion.Generate(1)
+                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_1_QUESTION)
             });
         }
 
@@ -104,7 +104,7 @@ namespace TCU.English.Controllers
             {
                 TestCategory = TestCategory.ListeningCategory(2),
                 ListeningMedia = ListeningMedia.Generate(),
-                ListeningBaseQuestions = ListeningBaseQuestion.Generate(6)
+                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_2_QUESTION)
             });
         }
 
@@ -276,19 +276,7 @@ namespace TCU.English.Controllers
                 }
                 listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
             }
-            // Cập nhật người tạo, đồng thời thêm vào CSDL
-            for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
-            {
-                if (listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId <= 0)
-                {
-                    listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId = listeningBaseCombined.TestCategory.Id;
-                    _ListeningBaseQuestionManager.Add(listeningBaseCombined.ListeningBaseQuestions[i]);
-                }
-                else
-                {
-                    _ListeningBaseQuestionManager.Update(listeningBaseCombined.ListeningBaseQuestions[i]);
-                }
-            }
+
             return true;
         }
         private async Task<IActionResult> Processing(string partName, string actionName, ListeningBaseCombined listeningBaseCombined, IFormFile audio, bool isCheckQuestionText = true, bool isUploadImages = false, IFormFile[] images = null)
@@ -324,6 +312,20 @@ namespace TCU.English.Controllers
             // Cho phép upload hình ảnh
             if (isUploadImages && !await UpdateImages(listeningBaseCombined, images))
                 return View($"{partName}/{actionName}", listeningBaseCombined);
+
+            // Cập nhật người tạo câu hỏi, đồng thời thêm vào CSDL
+            for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
+            {
+                if (listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId <= 0)
+                {
+                    listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId = listeningBaseCombined.TestCategory.Id;
+                    _ListeningBaseQuestionManager.Add(listeningBaseCombined.ListeningBaseQuestions[i]);
+                }
+                else
+                {
+                    _ListeningBaseQuestionManager.Update(listeningBaseCombined.ListeningBaseQuestions[i]);
+                }
+            }
 
             // Chuyển hướng đến hiển thị danh sách
             return RedirectToAction(partName);
@@ -383,7 +385,7 @@ namespace TCU.English.Controllers
 
             // Tạo câu hỏi nếu chưa có
             if (listeningBaseQuestions.Count <= 0)
-                listeningBaseQuestions = ListeningBaseQuestion.Generate(10);
+                listeningBaseQuestions = ListeningBaseQuestion.Generate(testCategory.PartId == 1 ? Config.MAX_LISTENING_PART_1_QUESTION : Config.MAX_LISTENING_PART_2_QUESTION);
 
             // Chuyển json câu hỏi thành danh sách để thao tác
             for (int i = 0; i < listeningBaseQuestions.Count(); i++)

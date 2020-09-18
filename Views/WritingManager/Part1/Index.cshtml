@@ -28,7 +28,7 @@
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(testCategories.ElementAt(i).Name.TrimMax(100)) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(testCategories.ElementAt(i).WritingPartOnes.Count))</sup></span></p>
                                             <small class="text-muted">@Html.Raw(testCategories.ElementAt(i).Description.TrimMax(80))</small>
                                         </div>
-                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id, '@Html.Raw(testCategories.ElementAt(i).Name)')">
+                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id)">
                                             <img src="~/img/3dot.webp" width="18" />
                                         </div>
                                     </div>
@@ -63,7 +63,7 @@
                                         <div class="col-11">
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i + 1)<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(readingPartOnes.ElementAt(i).DefaultSentence)</span></p>
                                         </div>
-                                        <div class="col-1" onclick="readingPartOnePopupOptions(@readingPartOnes.ElementAt(i).Id, '@Html.Raw(readingPartOnes.ElementAt(i).DefaultSentence)')">
+                                        <div class="col-1" onclick="displayPopupOptions(@readingPartOnes.ElementAt(i).Id)">
                                             <img src="~/img/3dot.webp" width="18" />
                                         </div>
                                     </div>
@@ -101,9 +101,9 @@
             });
             $("#modal-create-writing-part-1-question").load("@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part1Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())");
         };
-        function testCategoryPopupOptions(id, name) {
+        function testCategoryPopupOptions(id) {
             $("#modal-update-test-category").empty();
-            swal(`What do you want to do with the category "${name}"?`, {
+            swal(`What do you want to do with this category?`, {
                 icon: "warning",
                 dangerMode: true,
                 buttons: {
@@ -123,7 +123,7 @@
                             break;
 
                         case "remove":
-                            testCategoryDeleteConfirm(id,name);
+                            testCategoryDeleteConfirm(id);
                             break;
 
                         default:
@@ -132,7 +132,7 @@
                     }
                 });
         }
-        function testCategoryDeleteConfirm(id, name) {
+        function testCategoryDeleteConfirm(id) {
             swal({
                 title: "Are you sure?",
                 text: `Once deleted, this action cannot be undone.`,
@@ -147,7 +147,7 @@
                         }).then(function (response) {
                             response.json().then(function (data) {
                                 if (data.success) {
-                                    swal(`OK! '${name}' has been deleted.`, {
+                                    swal(`OK! Category has been deleted.`, {
                                         icon: "success",
                                     });
                                     setTimeout(function () { location.reload(); }, 100);
@@ -158,25 +158,25 @@
                                 }
                             }).catch(function (error) {
                                 console.log(error);
-                                swal(`Sorry! '${name}' has not been deleted.`, {
+                                swal(`Sorry! Category has not been deleted.`, {
                                     icon: "error",
                                 });
                             });
                         }).catch(function (error) {
                             console.log(error);
-                            swal(`Sorry! '${name}' has not been deleted.`, {
+                            swal(`Sorry! Category has not been deleted.`, {
                                 icon: "error",
                             });
                         })
                     } else {
-                        swal(`${name}'s`, " is safe!");
+                        swal(`Category`, " is safe!");
                     }
                 });
         }
         //==============================================================//
-        function readingPartOnePopupOptions(id, questionText) {
+        function displayPopupOptions(id) {
             $("#modal-update-test-category").empty();
-            swal(`What do you want to do with the question "${questionText}"?`, {
+            swal(`What do you want to do with this question?`, {
                 icon: "warning",
                 dangerMode: true,
                 buttons: {
@@ -196,7 +196,7 @@
                             break;
 
                         case "remove":
-                            readingPartOneDeleteConfirm(id,questionText);
+                            readingPartOneDeleteConfirm(id);
                             break;
 
                         default:
@@ -205,7 +205,7 @@
                     }
                 });
         }
-        function readingPartOneDeleteConfirm(id, questionText) {
+        function readingPartOneDeleteConfirm(id) {
             swal({
                 title: "Are you sure?",
                 text: `Once deleted, this action cannot be undone.`,
@@ -220,7 +220,7 @@
                         }).then(function (response) {
                             response.json().then(function (data) {
                                 if (data.success) {
-                                    swal(`OK! Question '${questionText}' has been deleted.`, {
+                                    swal(`OK! Question has been deleted.`, {
                                         icon: "success",
                                     });
                                     setTimeout(function () { location.reload(); }, 100);
@@ -231,18 +231,18 @@
                                 }
                             }).catch(function (error) {
                                 console.log(error);
-                                swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                swal(`Sorry! Question has not been deleted.`, {
                                     icon: "error",
                                 });
                             });
                         }).catch(function (error) {
                             console.log(error);
-                            swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                            swal(`Sorry! Question has not been deleted.`, {
                                 icon: "error",
                             });
                         })
                     } else {
-                        swal(`${questionText}`, "safe!");
+                        swal('FINISH', "safe!");
                     }
                 });
         }

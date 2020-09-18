@@ -26,12 +26,9 @@
                                 </div>
                                 <span class="float-right">
                                     <button type="button" class="btn btn-warning mx-2" onclick="window.location.href='@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part4Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>(), new { id = Model.ElementAt(i).Id })'">Edit</button>
-                                    <button type="button" class="btn btn-danger" onclick="releteCategory(@Model.ElementAt(i).Id, '@Model.ElementAt(i).Name')">Delete</button>
+                                    <button type="button" class="btn btn-danger" onclick="releteCategory(@Model.ElementAt(i).Id)">Delete</button>
                                     @*                                    <button type="button" class="btn btn-info">View</button>*@
                                 </span>
-                                @*<div class="col-2" onclick="testCategoryPopupOptions(@Model.ElementAt(i).Id, '@Html.Raw(Model.ElementAt(i).Name)')">
-                                        <img src="~/img/3dot.webp" width="18" />
-                                    </div>*@
                             </div>
                         </div>
                     </div>
@@ -50,7 +47,7 @@
 
 @section Scripts {
     <script>
-    function releteCategory(id, categoryName) {
+    function releteCategory(id) {
             swal({
                 title: "Are you sure?",
                 text: `Once deleted, this action cannot be undone.`,
@@ -65,7 +62,7 @@
                         }).then(function (response) {
                             response.json().then(function (data) {
                                 if (data.success) {
-                                    swal(`OK! Paragraph '${categoryName}' has been deleted.`, {
+                                    swal(`OK! Paragraph has been deleted.`, {
                                         icon: "success",
                                     });
                                     setTimeout(function () { location.reload(); }, 100);
@@ -76,18 +73,18 @@
                                 }
                             }).catch(function (error) {
                                 console.log(error);
-                                swal(`Sorry! Paragraph '${categoryName}' has not been deleted.`, {
+                                swal(`Sorry! Paragraph has not been deleted.`, {
                                     icon: "error",
                                 });
                             });
                         }).catch(function (error) {
                             console.log(error);
-                            swal(`Sorry! Paragraph '${categoryName}' has not been deleted.`, {
+                            swal(`Sorry! Paragraph has not been deleted.`, {
                                 icon: "error",
                             });
                         })
                     } else {
-                        swal(`${categoryName}`, "safe!");
+                        swal(`Paragraph`, "safe!");
                     }
                 });
     }

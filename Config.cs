@@ -16,6 +16,13 @@ namespace TCU.English
 
         public static int MAX_READING_PART_1_QUESTION = 4;
         public static int MAX_READING_PART_2_QUESTION = 3;
+        public static int MAX_READING_PART_3_QUESTION = 5;
+        public static int MAX_READING_PART_4_QUESTION = 10;
+
+        public static int MAX_LISTENING_PART_1_QUESTION = 1;
+        public static int MAX_LISTENING_PART_2_QUESTION = 6;
+
+        public static int MAX_WRITING_PART_1_QUESTION = 1;
 
         public static float THRESHOLD_POINT = 5;
         public static float MAX_SCORE_POINT = 10;

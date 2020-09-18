@@ -14,6 +14,19 @@
 </div>
 <div class="form-group">
     @Html.LabelFor(x => x.Description)
-    @Html.TextBoxFor(x => x.Description, new { @placeholder = "Description", @class = "form-control" })
+    @Html.TextAreaFor(x => x.Description, new { id = $"Description_of_test_category_{Model.Id}" })
     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Description)</small>
 </div>
+<script>
+    if (CKEDITOR.instances['Description_of_test_category_@Model.Id']) {
+        CKEDITOR.instances['Description_of_test_category_@Model.Id'].destroy();
+    }
+    CKEDITOR.replace('Description_of_test_category_@Model.Id', {
+        toolbar:
+            [
+                { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                { name: 'tools', items: ['Maximize', '-', 'About'] }
+            ]
+    });
+</script>

@@ -29,7 +29,7 @@
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(testCategories.ElementAt(i).Name.TrimMax()) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(testCategories.ElementAt(i).ReadingPartTwos.Count))</sup></span></p>
                                             <small class="text-muted">@Html.Raw(testCategories.ElementAt(i).Description.TrimMax())</small>
                                         </div>
-                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id, '@Html.Raw(testCategories.ElementAt(i).Name)')">
+                                        <div class="col-2" onclick="testCategoryPopupOptions(@testCategories.ElementAt(i).Id)">
                                             <img src="~/img/3dot.webp" width="18" />
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                                 </span>
                                             </p>
                                         </div>
-                                        <div class="col-1" onclick="readingPopupOptions(@readingPartTwos.ElementAt(i).Id, '@Html.Raw(readingPartTwos.ElementAt(i).QuestionText)')">
+                                        <div class="col-1" onclick="displayPopupOptions(@readingPartTwos.ElementAt(i).Id)">
                                             <img src="~/img/3dot.webp" width="18" />
                                         </div>
                                     </div>
@@ -115,10 +115,10 @@
             $("#modal-create-reading-part-2-question").load("@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part2Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())");
         };
 
-        function testCategoryPopupOptions(id, name) {
+        function testCategoryPopupOptions(id) {
 
             $("#modal-update-test-category").empty();
-            swal(`What do you want to do with the category "${name}"?`, {
+            swal(`What do you want to do with this category?`, {
                 icon: "warning",
                 dangerMode: true,
                 buttons: {
@@ -138,7 +138,7 @@
                             break;
 
                         case "remove":
-                            testCategoryDeleteConfirm(id,name);
+                            testCategoryDeleteConfirm(id);
                             break;
 
                         default:
@@ -147,7 +147,7 @@
                     }
                 });
         }
-        function testCategoryDeleteConfirm(id, name) {
+        function testCategoryDeleteConfirm(id) {
             swal({
                 title: "Are you sure?",
                 text: `Once deleted, this action cannot be undone.`,
@@ -162,7 +162,7 @@
                         }).then(function (response) {
                             response.json().then(function (data) {
                                 if (data.success) {
-                                    swal(`OK! '${name}' has been deleted.`, {
+                                    swal(`OK! Category has been deleted.`, {
                                         icon: "success",
                                     });
                                     setTimeout(function () { location.reload(); }, 100);
@@ -173,25 +173,25 @@
                                 }
                             }).catch(function (error) {
                                 console.log(error);
-                                swal(`Sorry! '${name}' has not been deleted.`, {
+                                swal(`Sorry! Category has not been deleted.`, {
                                     icon: "error",
                                 });
                             });
                         }).catch(function (error) {
                             console.log(error);
-                            swal(`Sorry! '${name}' has not been deleted.`, {
+                            swal(`Sorry! Category has not been deleted.`, {
                                 icon: "error",
                             });
                         })
                     } else {
-                        swal(`${name}'s`, " is safe!");
+                        swal('Category', " is safe!");
                     }
                 });
         }
         //==============================================================//
-        function readingPopupOptions(id, questionText) {
+        function displayPopupOptions(id) {
             $("#modal-update-test-category").empty();
-            swal(`What do you want to do with the question "${questionText}"?`, {
+            swal(`What do you want to do with this quenstion?`, {
                 icon: "warning",
                 dangerMode: true,
                 buttons: {
@@ -211,7 +211,7 @@
                             break;
 
                         case "remove":
-                            readingDeleteConfirm(id,questionText);
+                            readingDeleteConfirm(id);
                             break;
 
                         default:
@@ -220,7 +220,7 @@
                     }
                 });
         }
-        function readingDeleteConfirm(id, questionText) {
+        function readingDeleteConfirm(id) {
             swal({
                 title: "Are you sure?",
                 text: `Once deleted, this action cannot be undone.`,
@@ -235,7 +235,7 @@
                         }).then(function (response) {
                             response.json().then(function (data) {
                                 if (data.success) {
-                                    swal(`OK! Question '${questionText}' has been deleted.`, {
+                                    swal(`OK! Question has been deleted.`, {
                                         icon: "success",
                                     });
                                     setTimeout(function () { location.reload(); }, 100);
@@ -246,18 +246,18 @@
                                 }
                             }).catch(function (error) {
                                 console.log(error);
-                                swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                                swal(`Sorry! Question has not been deleted.`, {
                                     icon: "error",
                                 });
                             });
                         }).catch(function (error) {
                             console.log(error);
-                            swal(`Sorry! Question '${questionText}' has not been deleted.`, {
+                            swal(`Sorry! Question has not been deleted.`, {
                                 icon: "error",
                             });
                         })
                     } else {
-                        swal(`${questionText}`, "safe!");
+                        swal(`FINISHED`, "safe!");
                     }
                 });
         }

@@ -32,7 +32,7 @@ namespace TCU.English.Models
         [JsonIgnore]
         public List<BaseAnswer> AnswerList { get; set; }
 
-        public static List<ListeningBaseQuestion> Generate(int size, int answerSize = 3)
+        public static List<ListeningBaseQuestion> Generate(int size, int answerSize = 1)
         {
             List<ListeningBaseQuestion> listeningBaseQuestions = new List<ListeningBaseQuestion>();
             for (int i = 0; i < size; i++)
