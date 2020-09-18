@@ -111,7 +111,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public async Task<IActionResult> Part2Create(ListeningBaseCombined listeningBaseCombined, IFormFile audio)
         {
-            return await Processing(nameof(Part1), nameof(Part1Create), listeningBaseCombined, audio);
+            return await Processing(nameof(Part2), nameof(Part2Create), listeningBaseCombined, audio);
         }
 
         [HttpGet]
@@ -123,7 +123,7 @@ namespace TCU.English.Controllers
         [HttpPost]
         public async Task<IActionResult> Part2Update(ListeningBaseCombined listeningBaseCombined, IFormFile audio)
         {
-            return await Processing(nameof(Part1), nameof(Part1Create), listeningBaseCombined, audio);
+            return await Processing(nameof(Part2), nameof(Part2Update), listeningBaseCombined, audio);
         }
 
         [HttpDelete]
