@@ -36,6 +36,7 @@
             <span>@answerAlphapet.</span> @testAns[index].AnswerContent
         }
     }
+    int qIndex = 1;
 }
 
 @Html.HiddenFor(x => x.PiceOfTestId)
@@ -58,7 +59,7 @@
 else
 {
     <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.TestCategory.Name</span></div>
-    <div class="font-weight-bold mt-2">* Choose the best option: </div>
+    <div class="my-2">@Html.Raw(Model.ReadingPartOnes.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingPartOnes.ReadingPart.Count(); i++)
         {
@@ -73,7 +74,7 @@ else
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].TestCategoryId)
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].UpdatedTime)
             string uuid = Guid.NewGuid().ToString();
-            <div class="pt-3">@(i + 1). @Model.ReadingPartOnes.ReadingPart[i].QuestionText</div>
+            <div class="pt-3">@(qIndex++). @Model.ReadingPartOnes.ReadingPart[i].QuestionText</div>
             if (Model.ReadingPartOnes.ReadingPart[i].AnswerList == null || Model.ReadingPartOnes.ReadingPart[i].AnswerList.Count <= 0)
             {
                 <div class="alert alert-danger mt-2" role="alert">
@@ -131,7 +132,7 @@ else
 else
 {
     <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartTwos.TestCategory.Name</span></div>
-    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartTwos.ReadingPart.Count())</div>
+    <div class="my-2">@Html.Raw(Model.ReadingPartTwos.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingPartTwos.ReadingPart.Count(); i++)
         {
@@ -150,7 +151,7 @@ else
             string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-md-8">
-                    <div>@(i + 1). <span class="font-weight-bold">@Model.ReadingPartTwos.ReadingPart[i].QuestionText</span></div>
+                    <div>@(qIndex++). <span class="">@Model.ReadingPartTwos.ReadingPart[i].QuestionText</span></div>
                     @if (Model.ReadingPartTwos.ReadingPart[i].AnswerList == null || Model.ReadingPartTwos.ReadingPart[i].AnswerList.Count <= 0)
                     {
                         <div class="alert alert-danger mt-2" role="alert">
@@ -201,7 +202,7 @@ else
 @Html.HiddenFor(x => x.ReadingPartThrees.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartThrees.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartThrees.TestCategory == null || Model.ReadingPartThrees.ReadingPart == null || Model.ReadingPartThrees.ReadingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="h6 font-weight-bold my-auto">Part 3</div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.
@@ -210,13 +211,8 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartThrees.TestCategory.Name</span></div>
-    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartThrees.ReadingPart.Count())</div>
-    <p class="pt-1">
-        Read the text and questions below.
-        <br />
-        For each question, mark the correct letter A, B, C or D on your answer sheet.
-    </p>
+    <div class="h6 font-weight-bold my-auto">Part 3. <span class="text-uppercase ml-3">@Model.ReadingPartThrees.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingPartThrees.TestCategory.Description)</div>
     @if (Model.ReadingPartThrees.TestCategory.WYSIWYGContent != null && Model.ReadingPartThrees.TestCategory.WYSIWYGContent.Length > 0)
     {
         <div class="p-3 border border-dark mb-4">
@@ -249,7 +245,7 @@ else
             string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-12">
-                    <div>@(i + 1). <span class="font-weight-bold">@Model.ReadingPartThrees.ReadingPart[i].QuestionText</span></div>
+                    <div>@(qIndex++). <span class="">@Model.ReadingPartThrees.ReadingPart[i].QuestionText</span></div>
                     @if (Model.ReadingPartThrees.ReadingPart[i].AnswerList == null || Model.ReadingPartThrees.ReadingPart[i].AnswerList.Count <= 0)
                     {
                         <div class="alert alert-danger mt-2" role="alert">
@@ -295,7 +291,7 @@ else
 @Html.HiddenFor(x => x.ReadingPartFours.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartFours.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartFours.TestCategory == null || Model.ReadingPartFours.ReadingPart == null || Model.ReadingPartFours.ReadingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="h6 font-weight-bold my-auto">Part 4</div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.
@@ -304,13 +300,8 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartFours.TestCategory.Name</span></div>
-    <div class="font-weight-bold mt-2">Question 1-@(Model.ReadingPartFours.ReadingPart.Count())</div>
-    <p class="pt-1">
-        Read the text below and choose the correct word for each space.
-        <br />
-        For each question, mark the correct letter A, B, C or D on your answer sheet.
-    </p>
+    <div class="h6 font-weight-bold my-auto">Part 4. <span class="text-uppercase ml-3">@Model.ReadingPartFours.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingPartFours.TestCategory.Description)</div>
     @if (Model.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
     {
         <div class="p-3 border border-dark mb-4">
@@ -343,7 +334,7 @@ else
             string uuid = Guid.NewGuid().ToString();
             <div class="row pb-3">
                 <div class="col-12">
-                    <span class="float-left">@(i + 1). <span class="font-weight-bold">@Model.ReadingPartFours.ReadingPart[i].QuestionText</span></span>
+                    <span class="float-left">@(qIndex++). <span class="">@Model.ReadingPartFours.ReadingPart[i].QuestionText</span></span>
                     @if (Model.ReadingPartFours.ReadingPart[i].AnswerList == null || Model.ReadingPartFours.ReadingPart[i].AnswerList.Count <= 0)
                     {
                         <br />

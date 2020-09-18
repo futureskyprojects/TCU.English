@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using TCU.English.Models.Repository;
 using TCU.English.Utils.PasswordUtils;
@@ -72,6 +73,18 @@ namespace TCU.English.Models.DataManager
         public IEnumerable<TestCategory> GetAll()
         {
             return instantce.TestCategories.ToList();
+        }
+        public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId, int minQuestions = 0)
+        {
+            return instantce.TestCategories
+                .Include(x => x.ReadingPartOnes)
+                .Include(x => x.ReadingPartTwos)
+                .Where(it =>
+                    it.TypeCode.ToLower() == type.ToLower() &&
+                    it.PartId == partId &&
+                    (it.ReadingPartOnes.Count >= minQuestions ||
+                    it.ReadingPartTwos.Count >= minQuestions))
+                .ToList();
         }
         public IEnumerable<TestCategory> GetAll(string type, int partId)
         {

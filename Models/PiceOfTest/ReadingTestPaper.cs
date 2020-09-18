@@ -129,7 +129,7 @@ namespace TCU.English.Models.PiceOfTest
         {
             // Lấy danh mục
             var category = _TestCategoryManager
-                .GetAll(TestCategory.READING, 1)
+                .GetForGenerateTest(TestCategory.READING, 1)
                 .ToList()
                 .Shuffle()
                 .First();
@@ -158,7 +158,7 @@ namespace TCU.English.Models.PiceOfTest
         public static ReadingPartTwoDTO GeneratePart2(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
-                .GetAll(TestCategory.READING, 2)
+                .GetForGenerateTest(TestCategory.READING, 2)
                 .ToList()
                 .Shuffle()
                 .First();
@@ -186,7 +186,7 @@ namespace TCU.English.Models.PiceOfTest
         public static ReadingPartTwoDTO GeneratePart3(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
-                .GetAll(TestCategory.READING, 3)
+                .GetForGenerateTest(TestCategory.READING, 3)
                 .ToList()
                 .Shuffle()
                 .First();
@@ -214,7 +214,7 @@ namespace TCU.English.Models.PiceOfTest
         public static ReadingPartTwoDTO GeneratePart4(TestCategoryManager _TestCategoryManager)
         {
             var category = _TestCategoryManager
-                .GetAll(TestCategory.READING, 4)
+                .GetForGenerateTest(TestCategory.READING, 4)
                 .ToList()
                 .Shuffle()
                 .First();
