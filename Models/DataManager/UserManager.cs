@@ -143,7 +143,10 @@ namespace TCU.English.Models.DataManager
                         prv => prv.utu.UserTypeId,
                         ut => ut.Id,
                         (prv, ut) => new { prv, ut })
-                        .Where(full => full.ut.UserTypeName.ToUpper().Equals(UserType.ROLE_INSTRUCTOR_USER))
+                        .Where(full =>
+                            full.ut.UserTypeName.ToUpper().Equals(UserType.ROLE_INSTRUCTOR_USER) ||
+                            full.ut.UserTypeName.ToUpper().Equals(UserType.ROLE_ALL)
+                        )
                         .Select(full => full.prv.u)
                         .OrderByDescending(x => x.Id)
                         .ToList();

@@ -61,7 +61,7 @@ namespace TCU.English.Controllers
             int limit = 20;
             int start = (page - 1) * limit;
             // Lấy danh sách
-            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPagination(User.Id(), type, start, limit, searchKey);
+            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimple(User.Id(), type, start, limit, searchKey);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<TestController>())
             {

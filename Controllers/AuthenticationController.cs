@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -41,7 +42,7 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(
-            scheme: CookieAuthenticationConfig.DefaultSchemeName);
+            scheme: CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction(nameof(LogIn));
         }
@@ -80,12 +81,12 @@ namespace TCU.English.Controllers
 
                         // sign-in
                         await HttpContext.SignInAsync(
-                                scheme: CookieAuthenticationConfig.DefaultSchemeName,
+                                scheme: CookieAuthenticationDefaults.AuthenticationScheme,
                                 principal: principal,
                                 properties: new AuthenticationProperties
                                 {
                                     IsPersistent = userLogin.IsRemember, // for 'remember me' feature
-                                    ExpiresUtc = DateTime.UtcNow.AddMinutes(10)
+                                    ExpiresUtc = DateTime.UtcNow.AddMinutes(Config.MAX_COOKIE_LIFE_MINUTES)
                                 });
                         if (string.IsNullOrEmpty(userLogin.RequestPath))
                             return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());

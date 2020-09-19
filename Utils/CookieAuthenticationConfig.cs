@@ -9,12 +9,12 @@ namespace TCU.English.Utils
 {
     public static class CookieAuthenticationConfig
     {
-        public static readonly string DefaultSchemeName = "TCU.English.SecuritySchema";
         public static readonly string ReturnUrlParameter = "RequestPath";
         public static void CustomCookieAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication(DefaultSchemeName)
-            .AddCookie(DefaultSchemeName, options =>
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
             {
                 options.AccessDeniedPath = new PathString("/Account/Access");
                 options.Cookie = new CookieBuilder
@@ -26,7 +26,7 @@ namespace TCU.English.Utils
                     SameSite = SameSiteMode.Lax,
                     SecurePolicy = CookieSecurePolicy.SameAsRequest,
                 };
-                options.ExpireTimeSpan = TimeSpan.FromDays(365 * 10); // Thời hạn đăng nhập là 10 năm
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(Config.MAX_COOKIE_LIFE_MINUTES); // Thời hạn đăng nhập là 10 năm
                 options.Events = new CookieAuthenticationEvents
                 {
                     OnSignedIn = context =>

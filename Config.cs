@@ -12,6 +12,11 @@ namespace TCU.English
         public static string ProjectAuthor = "services@vistark@gmail.com";
         public static string ProjectPortfolioAddress = "https://fb.com/tx.trongnghia98";
 
+        /// <summary>
+        /// Thời gian sống của cookie và phiên đăng nhập
+        /// </summary>
+        public static long MAX_COOKIE_LIFE_MINUTES = 1 * 365 * 24 * 60;
+
         public static long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
         public static int MAX_READING_PART_1_QUESTION = 4;

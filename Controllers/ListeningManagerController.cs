@@ -59,7 +59,7 @@ namespace TCU.English.Controllers
             {
                 TestCategory = TestCategory.ListeningCategory(1),
                 ListeningMedia = ListeningMedia.Generate(),
-                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_1_QUESTION)
+                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_1_QUESTION, 3)
             });
         }
 
@@ -104,7 +104,7 @@ namespace TCU.English.Controllers
             {
                 TestCategory = TestCategory.ListeningCategory(2),
                 ListeningMedia = ListeningMedia.Generate(),
-                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_2_QUESTION)
+                ListeningBaseQuestions = ListeningBaseQuestion.Generate(Config.MAX_LISTENING_PART_2_QUESTION, 3)
             });
         }
 
@@ -385,7 +385,7 @@ namespace TCU.English.Controllers
 
             // Tạo câu hỏi nếu chưa có
             if (listeningBaseQuestions.Count <= 0)
-                listeningBaseQuestions = ListeningBaseQuestion.Generate(testCategory.PartId == 1 ? Config.MAX_LISTENING_PART_1_QUESTION : Config.MAX_LISTENING_PART_2_QUESTION);
+                listeningBaseQuestions = ListeningBaseQuestion.Generate(testCategory.PartId == 1 ? Config.MAX_LISTENING_PART_1_QUESTION : Config.MAX_LISTENING_PART_2_QUESTION, 3);
 
             // Chuyển json câu hỏi thành danh sách để thao tác
             for (int i = 0; i < listeningBaseQuestions.Count(); i++)

@@ -63,12 +63,6 @@
                     </div>
                     <div id="collapseOne_@i" class="collapse" aria-labelledby="headingOne_@i" data-parent="#accordion">
                         <div class="card-body">
-                            @*<div class="form-group">
-                                    @Html.LabelFor(x => x.ReadingPartTwos[i].Hint)
-                                    @Html.TextBoxFor(x => x.ReadingPartTwos[i].Hint, new { @placeholder = "Hint", @class = "form-control" })
-                                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].Hint)</small>
-                                </div>*@
-                            <div class="line"></div>
                             @* REGION FOR CREATE ANSWERS *@
                             <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ReadingPartTwos[i].AnswerList)</small>
                             @for (int j = 0; j < Model.ReadingPartTwos[i].AnswerList.Count; j++)
@@ -101,7 +95,14 @@
                                         if (CKEDITOR.instances['@Html.Raw(explainId)']) {
                                             CKEDITOR.instances['@Html.Raw(explainId)'].destroy();
                                         }
-                                        CKEDITOR.replace('@Html.Raw(explainId)');
+                                        CKEDITOR.replace('@Html.Raw(explainId)', {
+                                            toolbar:
+                                                [
+                                                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                                                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                                                    { name: 'tools', items: ['Maximize', '-', 'About'] }
+                                                ]
+                                        });
                                     });
                                 </script>
                             </div>

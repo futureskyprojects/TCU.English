@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +75,7 @@ namespace TCU.English
         {
             if (env.IsDevelopment())
             {
+                //DatabaseInitializer.Initialize(db);
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -88,15 +90,12 @@ namespace TCU.English
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-
-
             app.UseRouting();
-
-            // Khởi tạo CSDL
-            DatabaseInitializer.Initialize(db);
 
             app.UseAuthentication(); // Bật xác thực
             app.UseAuthorization();
+
+            // Khởi tạo CSDL
 
             app.UseEndpoints(endpoints =>
             {

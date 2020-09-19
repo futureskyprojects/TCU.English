@@ -1,0 +1,11 @@
+﻿@using TCU.English.Models
+@* Menu dành cho giáo viên chấm điểm hoặc reivew bài thi của HV *@
+@if (User.IsInRole(UserType.ROLE_ALL) || User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
+{
+    <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">INSTRUCTOR</div>
+    <ul class="sidebar-menu list-unstyled">
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>Own Students</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-tasks mr-3 text-gray"></i><span>Mark</span></a></li>
+@*        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.CreateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-user-plus mr-3 text-gray"></i><span>Create User</span></a></li>*@
+    </ul>
+}
