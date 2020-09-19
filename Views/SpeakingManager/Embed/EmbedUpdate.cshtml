@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = $"Update {Model.TestCategory.Name ?? "Speaking Embed"}";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingManagerController>();
+    string actionName = nameof(TCU.English.Controllers.SpeakingManagerController.EmbedUpdate);
+}
+
+<div class="py-5">
+    @using (Html.BeginForm(actionName, controller, FormMethod.Post))
+    {
+        <partial name="~/Views/SpeakingManager/Embed/_EmbedFormContent.cshtml" />
+    }
+</div>

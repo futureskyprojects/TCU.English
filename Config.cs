@@ -22,6 +22,8 @@ namespace TCU.English
         public static int MAX_LISTENING_PART_1_QUESTION = 1;
         public static int MAX_LISTENING_PART_2_QUESTION = 6;
 
+        public static int SPEAKING_EMBED_PART_ID = 999;
+
         public static int MAX_WRITING_PART_1_QUESTION = 1;
 
         public static float THRESHOLD_POINT = 5;

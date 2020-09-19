@@ -51,7 +51,7 @@
         <div class="card-body" style="padding: 0px;">
             <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
                 <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part1), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 1</a></li>
-                @*<li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part2), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 2</a></li>*@
+                <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part2), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 2</a></li>
                 @*                <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part3), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 3</a></li>*@
                 @*              <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.WritingManagerController.Part4), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>())" class="sidebar-link text-muted pl-lg-5">Part 4</a></li>*@
             </ul>
@@ -59,39 +59,18 @@
     </div>
     // END WRITING
 
-    @*// SPEAKING
-        <div class="card" style="border-radius: 0px;">
-            <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
-                <h3 class="h6 text-uppercase mb-0">
-                    <a class="text-muted"><i class="fas fa-headset mr-3 text-gray"></i><span>Speaking</span></a>
-                </h3>
-            </div>
-            <div class="card-body" style="padding: 0px;">
-                <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
-                    @foreach ((string, string) speakingItem in speakingItems)
-                    {
-                        <li class="sidebar-list-item"><a href="@speakingItem.Item2" class="sidebar-link text-muted pl-lg-5">@Html.Raw(speakingItem.Item1)</a></li>
-                    }
-                </ul>
-            </div>
+    // SPEAKING
+    <div class="card" style="border-radius: 0px;">
+        <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
+            <h3 class="h6 text-uppercase mb-0">
+                <a class="text-muted"><i class="fas fa-headset mr-3 text-gray"></i><span>Speaking</span></a>
+            </h3>
         </div>
-        // END SPEAKING
-
-        // WRITING
-        <div class="card" style="border-radius: 0px;">
-            <div class="card-header" style="border-radius: unset;padding-top: 1rem; padding-bottom: 1rem;">
-                <h3 class="h6 text-uppercase mb-0">
-                    <a class="text-muted"><i class="fas fa-feather-alt mr-3 text-gray"></i><span>Writing</span></a>
-                </h3>
-            </div>
-            <div class="card-body" style="padding: 0px;">
-                <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
-                    @foreach ((string, string) writingItem in writingItems)
-                    {
-                        <li class="sidebar-list-item"><a href="@writingItem.Item2" class="sidebar-link text-muted pl-lg-5">@Html.Raw(writingItem.Item1)</a></li>
-                    }
-                </ul>
-            </div>
+        <div class="card-body" style="padding: 0px;">
+            <ul class="sidebar-menu list-unstyled" style="margin-top:1rem;">
+                <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.SpeakingManagerController.Embed), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.SpeakingManagerController>())" class="sidebar-link text-muted pl-lg-5">Embed</a></li>
+            </ul>
         </div>
-        // END WRITING*@
+    </div>
+    // END SPEAKING
 }

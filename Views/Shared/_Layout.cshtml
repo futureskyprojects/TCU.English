@@ -30,6 +30,17 @@
     <link href="~/css/toastr.min.css" rel="stylesheet" type="text/css" />
 
     <script src="https://cdn.ckeditor.com/4.14.1/full/ckeditor.js"></script>
+    <!-- JavaScript files-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper.js/umd/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="js/front.js"></script>
+    <script src="~/js/moment.min.js"></script>
+    @* https://www.learnrazorpages.com/razor-pages/ajax/unobtrusive-ajax *@
+    <script src="~/lib/jquery.unobtrusive-ajax.js"></script>
+
 </head>
 <body>
     <!-- navbar-->
@@ -52,17 +63,6 @@
         <button onclick="topFunction()" class="btn btn-lg btn-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
     </div>
     @* END BACK TOP TOP *@
-
-    <!-- JavaScript files-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/popper.js/umd/popper.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/jquery.cookie/jquery.cookie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <script src="js/front.js"></script>
-    <script src="~/js/moment.min.js"></script>
-    @* https://www.learnrazorpages.com/razor-pages/ajax/unobtrusive-ajax *@
-    <script src="~/lib/jquery.unobtrusive-ajax.js"></script>
     <!-- Javascript for make menu item active -->
     <script>
         $('a.sidebar-link').each(function (i, obj) {

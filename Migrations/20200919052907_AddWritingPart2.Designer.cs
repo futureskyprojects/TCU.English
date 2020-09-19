@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TCU.English.Models;
 
 namespace TCU.English.Migrations
 {
     [DbContext(typeof(SystemDatabaseContext))]
-    partial class SystemDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200919052907_AddWritingPart2")]
+    partial class AddWritingPart2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,40 +227,6 @@ namespace TCU.English.Migrations
                     b.HasIndex("TestCategoryId");
 
                     b.ToTable("reading_part_2");
-                });
-
-            modelBuilder.Entity("TCU.English.Models.SpeakingEmbed", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TestCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("YoutubeVideo")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("TestCategoryId");
-
-                    b.ToTable("speaking_embed");
                 });
 
             modelBuilder.Entity("TCU.English.Models.TestCategory", b =>
@@ -494,7 +462,7 @@ namespace TCU.English.Migrations
 
                     b.HasIndex("TestCategoryId");
 
-                    b.ToTable("writing_part_2");
+                    b.ToTable("WritingPartTwos");
                 });
 
             modelBuilder.Entity("TCU.English.Models.ListeningBaseQuestion", b =>
@@ -560,21 +528,6 @@ namespace TCU.English.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TCU.English.Models.SpeakingEmbed", b =>
-                {
-                    b.HasOne("TCU.English.Models.User", "User")
-                        .WithMany("SpeakingEmbeds")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
-                        .WithMany("SpeakingEmbeds")
-                        .HasForeignKey("TestCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TCU.English.Models.TestCategory", b =>
                 {
                     b.HasOne("TCU.English.Models.User", "User")
@@ -617,13 +570,13 @@ namespace TCU.English.Migrations
             modelBuilder.Entity("TCU.English.Models.WritingPartTwo", b =>
                 {
                     b.HasOne("TCU.English.Models.User", "User")
-                        .WithMany("WritingPartTwos")
+                        .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TCU.English.Models.TestCategory", "TestCategory")
-                        .WithMany("WritingPartTwos")
+                        .WithMany()
                         .HasForeignKey("TestCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

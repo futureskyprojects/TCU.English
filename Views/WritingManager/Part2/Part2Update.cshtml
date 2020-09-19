@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = $"Update {Model.TestCategory.Name ?? "Writing Part 2"}";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.WritingManagerController>();
+    string actionName = nameof(TCU.English.Controllers.WritingManagerController.Part2Update);
+}
+
+<div class="py-5">
+    @using (Html.BeginForm(actionName, controller, FormMethod.Post))
+    {
+        <partial name="~/Views/WritingManager/Part2/_Part2FormContent.cshtml" />
+    }
+</div>

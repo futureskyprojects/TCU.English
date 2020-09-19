@@ -46,9 +46,11 @@ namespace TCU.English.Models
 
         [JsonIgnore]
         public virtual ICollection<ListeningMedia> ListeningMedias { get; set; }
-        
+
         [JsonIgnore]
         public virtual ICollection<WritingPartOne> WritingPartOnes { get; set; }
+        public virtual ICollection<WritingPartTwo> WritingPartTwos { get; set; }
+        public virtual ICollection<SpeakingEmbed> SpeakingEmbeds { get; set; }
         // ======================================================== //
         public TestCategory()
         {

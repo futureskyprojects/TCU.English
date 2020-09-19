@@ -41,6 +41,10 @@ namespace TCU.English.Models
         public virtual ICollection<WritingPartOne> WritingPartOnes { get; set; }
 
         [JsonIgnore]
+        public virtual ICollection<WritingPartTwo> WritingPartTwos { get; set; }
+        public virtual ICollection<SpeakingEmbed> SpeakingEmbeds { get; set; }
+
+        [JsonIgnore]
         public static (int, string)[] Genders = new (int, string)[]
         {
             (1, "Male"),

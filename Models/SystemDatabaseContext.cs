@@ -20,6 +20,8 @@ namespace TCU.English.Models
         public virtual DbSet<ListeningMedia> ListeningMedias { get; set; }
         public virtual DbSet<ListeningBaseQuestion> ListeningBaseQuestions { get; set; }
         public virtual DbSet<WritingPartOne> WritingPartOnes { get; set; }
+        public virtual DbSet<WritingPartTwo> WritingPartTwos { get; set; }
+        public virtual DbSet<SpeakingEmbed> SpeakingEmbeds { get; set; }
         public virtual DbSet<PieceOfTest> PieceOfTests { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
@@ -74,6 +76,16 @@ namespace TCU.English.Models
             modelBuilder.Entity<WritingPartOne>(entity =>
             {
                 entity.ToTable("writing_part_1");
+            });
+
+            modelBuilder.Entity<WritingPartTwo>(entity =>
+            {
+                entity.ToTable("writing_part_2");
+            });
+
+            modelBuilder.Entity<SpeakingEmbed>(entity =>
+            {
+                entity.ToTable("speaking_embed");
             });
 
             modelBuilder.Entity<PieceOfTest>(entity =>

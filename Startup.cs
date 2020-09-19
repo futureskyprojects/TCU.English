@@ -39,6 +39,9 @@ namespace TCU.English
             // Thiết lập thêm CROS (https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-3.1)
             services.AddCors();
 
+            // https://stackoverflow.com/questions/40523565/asp-net-core-x-frame-options-strange-behavior
+            services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
+
             // Thiết lập ngữ cảnh đến CSDL
             services.AddDbContext<SystemDatabaseContext>(options =>
                 options
