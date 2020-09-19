@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using TCU.English.Models.Repository;
 using TCU.English.Utils.PasswordUtils;
@@ -127,6 +128,31 @@ namespace TCU.English.Models.DataManager
             }
         }
 
+        public IEnumerable<User> GetAllInstructors()
+        {
+            try
+            {
+                return instantce.User
+                        .Join(
+                        instantce.UserTypeUser,
+                        user => user.Id,
+                        userTypeUser => userTypeUser.UserId,
+                        (u, utu) => new { u, utu })
+                        .Join(
+                        instantce.UserType,
+                        prv => prv.utu.UserTypeId,
+                        ut => ut.Id,
+                        (prv, ut) => new { prv, ut })
+                        .Where(full => full.ut.UserTypeName.ToUpper().Equals(UserType.ROLE_INSTRUCTOR_USER))
+                        .Select(full => full.prv.u)
+                        .OrderByDescending(x => x.Id)
+                        .ToList();
+            }
+            catch (Exception)
+            {
+                return new List<User>();
+            }
+        }
         public IEnumerable<User> GetAll()
         {
             try

@@ -15,6 +15,7 @@ namespace TCU.English.Controllers
     {
         private readonly IHostEnvironment host;
 
+        private readonly UserManager _UserManager;
         private readonly TestCategoryManager _TestCategoryManager;
         private readonly ReadingPartOneManager _ReadingPartOneManager;
         private readonly ReadingPartTwoManager _ReadingPartTwoManager;
@@ -25,6 +26,7 @@ namespace TCU.English.Controllers
 
         public TestController(
           IHostEnvironment _host,
+          IDataRepository<User> _UserManager,
           IDataRepository<TestCategory> _TestCategoryManager,
           IDataRepository<ReadingPartOne> _ReadingPartOneManager,
           IDataRepository<ReadingPartTwo> _ReadingPartTwoManager,
@@ -33,6 +35,7 @@ namespace TCU.English.Controllers
           IDataRepository<PieceOfTest> _PieceOfTestManager)
         {
             host = _host;
+            this._UserManager = (UserManager)_UserManager;
             this._TestCategoryManager = (TestCategoryManager)_TestCategoryManager;
             this._ReadingPartOneManager = (ReadingPartOneManager)_ReadingPartOneManager;
             this._ReadingPartTwoManager = (ReadingPartTwoManager)_ReadingPartTwoManager;
@@ -53,11 +56,12 @@ namespace TCU.English.Controllers
             ViewBag.UserTestCountOfSpeaking = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.SPEAKING);
             ViewBag.UserTestCountOfWriting = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.WRITING);
             ViewBag.UserTestCountOfCrash = _PieceOfTestManager.UserTestCountOfType(User.Id(), "CRASH");
+
             // Tiến hành cấu hình phân trang
             int limit = 20;
             int start = (page - 1) * limit;
             // Lấy danh sách
-            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPagination(User.Id(), type, start, limit, searchKey); ;
+            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPagination(User.Id(), type, start, limit, searchKey);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<TestController>())
             {
@@ -82,6 +86,10 @@ namespace TCU.English.Controllers
             ViewBag.ReadingQuestionCount = _TestCategoryManager.ReadingQuestionCount();
             ViewBag.SpeakingQuestionCount = _TestCategoryManager.SpeakingQuestionCount();
             ViewBag.WritingQuestionCount = _TestCategoryManager.WritingQuestionCount();
+
+            // Lấy danh sách GV Hướng dẫn
+            ViewBag.Instructors = _UserManager.GetAllInstructors();
+
             return View();
         }
     }

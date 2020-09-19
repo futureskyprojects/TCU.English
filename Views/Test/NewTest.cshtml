@@ -8,6 +8,20 @@
 }
 
 <div class="container-fluid px-xl-5">
+    <section class="mt-5 p-3 card">
+        <div class="mb-3 form-control-label font-weight-bold text-lg text-uppercase text-center">Select your Instructor</div>
+        <div class="form-group">
+            <div class="select">
+                <select class="form-control rounded" id="instructor-select">
+                    <option value="null" selected>Don't want to choose the instructor for this test</option>
+                    @foreach (TCU.English.Models.User item in ViewBag.Instructors)
+                    {
+                        <option value="@item.Id">@Html.Raw($"{item.FirstName} {item.LastName}")</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </section>
     <section class="py-5">
         <div class="row">
             <div class="col-md-6 mb-4 mb-xl-0">
@@ -37,7 +51,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-6 mb-4 mb-xl-0">
-                <div onclick="navigationHref('@Url.Action(speaking, controller)',@ViewBag.SpeakingQuestionCount)"
+                <div onclick="navigationHref('@Url.Action(speaking, controller)',@ViewBag.SpeakingQuestionCount,true)"
                      class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-blue">
                     <div class="flex-grow-1 d-flex align-items-center">
                         <div class="dot mr-3 bg-blue"></div>
@@ -49,7 +63,7 @@
                 </div>
             </div>
             <div class="col-md-6 mb-4 mb-xl-0">
-                <div onclick="navigationHref('@Url.Action(writing, controller)',@ViewBag.WritingQuestionCount)"
+                <div onclick="navigationHref('@Url.Action(writing, controller)',@ViewBag.WritingQuestionCount,true)"
                      class="bg-white shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-red">
                     <div class="flex-grow-1 d-flex align-items-center">
                         <div class="dot mr-3 bg-red"></div>
@@ -72,8 +86,15 @@
 
 @section Scripts {
     <script>
-        function navigationHref(address, count) {
-            if (count > 1) {
+        function navigationHref(address, count, isRequireInstructor = false) {
+            if (count > 0) {
+                let slectedInstructorId = $('#instructor-select').children("option:selected").val();
+                if (isRequireInstructor && slectedInstructorId == 'null') {
+                    toastr['error']('You need to select your instructor to be able to start this test.');
+                    return;
+                }
+                if (slectedInstructorId != 'null')
+                    address = `${address}/${slectedInstructorId}`;
                 window.location.href = address;
             } else {
                 toastr['warning']('Sorry, currently there is not enough data in this section.');

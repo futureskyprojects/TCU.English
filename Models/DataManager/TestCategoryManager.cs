@@ -45,13 +45,15 @@ namespace TCU.English.Models.DataManager
 
         public long SpeakingQuestionCount()
         {
-            return 0;
+            var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.SPEAKING);
+            return category.Sum(x => x.SpeakingEmbeds.Count);
         }
 
         public long WritingQuestionCount()
         {
             var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.WRITING);
-            return category.Sum(x => x.WritingPartOnes.Count);
+            return category.Sum(x => x.WritingPartOnes.Count) +
+                category.Sum(x => x.WritingPartTwos.Count);
         }
 
         public long Count()

@@ -62,10 +62,10 @@ namespace TCU.English.Controllers
             return View(piece);
         }
 
-        public IActionResult ReadingNewTest()
+        public IActionResult ReadingNewTest(int? id)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager, User.Id());
+            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager, User.Id(),id);
             if (paper.PiceOfTestId > 0)
             {
                 // Nếu lưu trữ thành công, thì tiến hành cho thí sinh làm

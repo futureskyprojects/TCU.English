@@ -21,7 +21,7 @@ namespace TCU.English.Utils
                 ReadingPartFours = ReadingTestPaper.GeneratePart4(_TestCategoryManager)
             };
         }
-        public static ReadingTestPaper GenerateReadingTestPaper(this TestCategoryManager _TestCategoryManager, PieceOfTestManager _PieceOfTestManager, int UserId)
+        public static ReadingTestPaper GenerateReadingTestPaper(this TestCategoryManager _TestCategoryManager, PieceOfTestManager _PieceOfTestManager, int UserId, int? InstructorId)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
             ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper();
@@ -29,6 +29,7 @@ namespace TCU.English.Utils
             var piceOfTest = new PieceOfTest
             {
                 UserId = UserId,
+                InstructorId = InstructorId,
                 TypeCode = TestCategory.READING,
                 PartId = -1,
                 ResultOfTestJson = JsonConvert.SerializeObject(paper),

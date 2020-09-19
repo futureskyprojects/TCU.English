@@ -23,7 +23,16 @@ namespace TCU.English.Models
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        [JsonIgnore] 
+        [JsonIgnore]
         public virtual User User { get; set; }
+
+        /// <summary>
+        /// Mã giáo viên hướng dẫn, có thể có hoặc không
+        /// </summary>
+        public int? InstructorId { get; set; }
+
+        [ForeignKey(nameof(InstructorId))]
+        [JsonIgnore]
+        public virtual User? Instructor { get; set; }
     }
 }

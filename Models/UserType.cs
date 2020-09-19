@@ -8,6 +8,7 @@ namespace TCU.English.Models
     {
         #region Default Role
         public const string ROLE_NORMAL_USER = nameof(ROLE_NORMAL_USER);
+        public const string ROLE_INSTRUCTOR_USER = nameof(ROLE_INSTRUCTOR_USER);
         public const string ROLE_MANAGER_USER = nameof(ROLE_MANAGER_USER);
         public const string ROLE_ALL = nameof(ROLE_ALL);
         public const string ROLE_MANAGER_LIBRARY = nameof(ROLE_MANAGER_LIBRARY);
@@ -68,6 +69,12 @@ namespace TCU.English.Models
             Description = "Learner",
             Priority = 0
         };
+        public static UserType InstructorUser = new UserType
+        {
+            UserTypeName = nameof(ROLE_INSTRUCTOR_USER),
+            Description = "Instructor",
+            Priority = 1
+        };
 
         [JsonIgnore]
         public static UserType ManagerUser = new UserType
@@ -98,6 +105,7 @@ namespace TCU.English.Models
         public static UserType[] Roles = new UserType[]
         {
             NormalUser,
+            InstructorUser,
             ManagerUser,
             ManagerLibrary,
             All
