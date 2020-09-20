@@ -17,7 +17,7 @@ namespace TCU.English
         /// </summary>
         public static long MAX_COOKIE_LIFE_MINUTES = 1 * 365 * 24 * 60;
 
-        public static long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+        public static long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
         public static int MAX_READING_PART_1_QUESTION = 4;
         public static int MAX_READING_PART_2_QUESTION = 3;

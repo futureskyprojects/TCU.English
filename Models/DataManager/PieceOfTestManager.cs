@@ -26,6 +26,10 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.PieceOfTests.Count();
         }
+        public long CountOfInstructor(int instructorId)
+        {
+            return instantce.PieceOfTests.Where(x => x.InstructorId != null && x.InstructorId == instructorId).Count();
+        }
 
         #region FOR HOME INDEX
         public long CompletedTestsCount(long userId)
