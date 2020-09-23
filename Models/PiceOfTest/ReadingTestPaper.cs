@@ -32,7 +32,7 @@ namespace TCU.English.Models.PiceOfTest
             public List<ReadingPartTwo> ReadingPart { get; set; }
         }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public int PiceOfTestId { get; set; }
         public ReadingPartOneDTO ReadingPartOnes { get; set; }
         public ReadingPartTwoDTO ReadingPartTwos { get; set; }

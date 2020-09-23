@@ -18,7 +18,7 @@ namespace TCU.English.Models.PiceOfTest
         [JsonIgnore]
         const int MAX_CATEGORY_LISTENING_PART_2 = 1;
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public int PiceOfTestId { get; set; }
         public List<ListeningBaseCombined> ListeningPartOnes { get; set; }
         public List<ListeningBaseCombined> ListeningPartTwos { get; set; }

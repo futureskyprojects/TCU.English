@@ -81,7 +81,7 @@
                 @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].TestCategoryId)
                 @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].UpdatedTime)
                 string uuid = Guid.NewGuid().ToString();
-                <div class="pt-3">@(qIndex++). @Model.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="$('#transcript-content').load(@(Model.ListeningPartOnes[i].ListeningMedia.Id));"></i></div>
+                <div class="pt-3">@(qIndex++). @Model.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartOnes[i].ListeningMedia.Id);"></i></div>
                 @* Khu vực dành cho phát *@
                 <div class="p-2 text-center alert alert-warning align-self-center my-2">
                     @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.Active)
@@ -190,7 +190,7 @@
                 string uuid = Guid.NewGuid().ToString();
                 <div class="row pb-3">
                     <div class="col-md-12">
-                        <div>@(qIndex++). <span class="">@Model.ListeningPartTwos[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="$('#transcript-content').load(@(Model.ListeningPartTwos[i].ListeningMedia.Id));"></i></span></div>
+                        <div>@(qIndex++). <span class="">@Model.ListeningPartTwos[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartOnes[i].ListeningMedia.Id);"></i></span></div>
 
                         @if (Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList == null || Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList.Count <= 0)
                         {
@@ -250,6 +250,19 @@
 
 @section Scripts {
     <script>
+        function LoadTranscript(id) {
+            $('#transcript-content-loading').show();
+            $('#transcript-content').html('');
+            $('#transcript-content').hide();
+            $('#transcript-content')
+                .load(`@Url.Action(nameof(TestPaperController.LoadTranscript),NameUtils.ControllerName<TestPaperController>())?id=@Model.PiceOfTestId&mediaId=${id}`, function () {
+                    $('#transcript-content-loading').hide();
+                    $('#transcript-content').show();
+                    if ($('#transcript-content').html().length <= 0) {
+                        $('#transcript-content').html('No have any Transcripts!')
+                    }
+                });
+        }
         $(document).ready(function () {
             // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
             $('.resize-image').each(function () {
