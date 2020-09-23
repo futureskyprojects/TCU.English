@@ -52,7 +52,6 @@ namespace TCU.English.Controllers
             return RedirectToAction(nameof(TestController.NewTest), NameUtils.ControllerName<TestController>());
         }
 
-        //[HttpPost]
         public IActionResult Result(int id)
         {
             if (id <= 0)
@@ -221,6 +220,49 @@ namespace TCU.English.Controllers
         #endregion
 
         #region LISTENING
+        /// <summary>
+        /// Phương thức để gọi Ajax load transcript cho bài thi
+        /// </summary>
+        /// <param name="id">Đây là mã của Listening Meida</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult LoadTranscript(int id)
+        {
+            if (id <= 0)
+                return Content(string.Empty);
+
+            // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
+            PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            // Nếu tìm không thấy bài Test
+            if (piece == null)
+                return Content(string.Empty);
+
+            // Lấy trang giấy thi
+            ListeningTestPaper paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson);
+
+            // Nếu trang giấy rỗng
+            if (paper == null)
+                return Content(string.Empty);
+
+            // Cố gắng tìm kiếm transcript ở part 1
+            if (paper.ListeningPartOnes != null && paper.ListeningPartOnes.Any(x => x.ListeningMedia.Id == id))
+                return Content(paper.ListeningPartOnes.Where(x => x.ListeningMedia.Id == id).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
+
+            // Cố gắng tìm kiếm transcript ở part 2
+            if (paper.ListeningPartTwos != null && paper.ListeningPartTwos.Any(x => x.ListeningMedia.Id == id))
+                return Content(paper.ListeningPartTwos.Where(x => x.ListeningMedia.Id == id).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
+
+            // Nếu cũng không có thì trả về rỗng
+            return Content(string.Empty);
+
+        }
+
+        /// <summary>
+        /// Phương thức tạo dữ liệu thi cho bài thi Listening
+        /// </summary>
+        /// <param name="id">Đây là mã của đối tượng thuộc kiểu PiecOfTest</param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Listening(int id)
         {
