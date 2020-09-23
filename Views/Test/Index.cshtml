@@ -133,7 +133,7 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
         function review(pieceOfTestId) {
-            window.location.href = `@Url.Action(nameof(TCU.English.Controllers.TestPaperController.ReadingReview), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>())/${pieceOfTestId}`;
+            window.location.href = `@Url.Action(nameof(TCU.English.Controllers.TestPaperController.ReviewHandler), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>())/${pieceOfTestId}`;
         }
         function deleteConfirm(pieceOfTestId) {
             swal({

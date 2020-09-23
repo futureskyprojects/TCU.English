@@ -11,6 +11,7 @@ namespace TCU.English.Models
         [DisplayName("Questions")]
         [Required]
         public string Questions { get; set; }
+        public string Hint { get; set; }
         public int CreatorId { get; set; }
 
         [ForeignKey(nameof(CreatorId))]

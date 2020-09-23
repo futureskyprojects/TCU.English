@@ -159,6 +159,11 @@ namespace TCU.English.Models.DataManager
             instantce.SaveChanges();
         }
 
+        public string GetTestType(int id)
+        {
+            return instantce.PieceOfTests.Where(x => x.Id == id).Select(x => x.TypeCode).FirstOrDefault();
+        }
+
         public PieceOfTest Get(long id)
         {
             return instantce.PieceOfTests.FirstOrDefault(it => it.Id == id);

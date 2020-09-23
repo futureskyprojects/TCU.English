@@ -474,7 +474,7 @@ namespace TCU.English.Controllers
         {
             var view = View($"{partName}/{partAction}", readingCombined);
             // Nếu không hợp lệ
-            if (!IsValidate(readingCombined))
+            if (!IsValidate(readingCombined, isCheckQuestionText))
                 return view;
 
             // Tiến hành thêm danh mục vào CSDL và lấy ID

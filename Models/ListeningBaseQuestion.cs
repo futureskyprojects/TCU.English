@@ -29,7 +29,6 @@ namespace TCU.English.Models
         public virtual TestCategory TestCategory { get; set; }
 
         [NotMapped]
-        [JsonIgnore]
         public List<BaseAnswer> AnswerList { get; set; }
 
         public static List<ListeningBaseQuestion> Generate(int size, int answerSize = 1)

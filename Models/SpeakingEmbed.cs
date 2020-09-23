@@ -12,6 +12,7 @@ namespace TCU.English.Models
         [Required]
         [Url]
         public string YoutubeVideo { get; set; }
+        public string Hint { get; set; }
         public int CreatorId { get; set; }
 
         [ForeignKey(nameof(CreatorId))]

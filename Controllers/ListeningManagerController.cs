@@ -274,7 +274,7 @@ namespace TCU.English.Controllers
                     if (string.IsNullOrEmpty(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent))
                         listeningBaseCombined.ListeningBaseQuestions[i].AnswerList[j].AnswerContent = uploadImgePaths[imgPathIndex++];
                 }
-                listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
+                //listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
             }
 
             return true;
@@ -316,7 +316,10 @@ namespace TCU.English.Controllers
             // Cập nhật người tạo câu hỏi, đồng thời thêm vào CSDL
             for (int i = 0; i < listeningBaseCombined.ListeningBaseQuestions.Count; i++)
             {
-                if (listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId <= 0)
+                // Chuyển danh sách câu trả lời thành JSON để lưu trữ
+                listeningBaseCombined.ListeningBaseQuestions[i].Answers = JsonConvert.SerializeObject(listeningBaseCombined.ListeningBaseQuestions[i].AnswerList);
+
+                if (listeningBaseCombined.ListeningBaseQuestions[i].Id <= 0)
                 {
                     listeningBaseCombined.ListeningBaseQuestions[i].TestCategoryId = listeningBaseCombined.TestCategory.Id;
                     _ListeningBaseQuestionManager.Add(listeningBaseCombined.ListeningBaseQuestions[i]);
@@ -391,7 +394,8 @@ namespace TCU.English.Controllers
             for (int i = 0; i < listeningBaseQuestions.Count(); i++)
                 if (listeningBaseQuestions[i].Answers != null && listeningBaseQuestions[i].Answers.Length > 0)
                     listeningBaseQuestions[i].AnswerList = JsonConvert.DeserializeObject<List<BaseAnswer>>(listeningBaseQuestions[i].Answers);
-
+                else
+                    listeningBaseQuestions[i].AnswerList = BaseAnswer.Generate(3);
             // Lấy danh sách MEDIA
             var listeningMedia = _ListeningMediaManager.GetByCategory(testCategory.Id);
 

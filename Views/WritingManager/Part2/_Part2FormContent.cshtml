@@ -44,6 +44,11 @@
                     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwo.Questions)</small>
                     @Html.TextAreaFor(x => x.WritingPartTwo.Questions, new { id = $"Questions_{Model.WritingPartTwo?.Id ?? 0}" })
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.WritingPartTwo.Hint)
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwo.Hint)</small>
+                    @Html.TextAreaFor(x => x.WritingPartTwo.Hint, new { id = $"Hint_{Model.WritingPartTwo?.Id ?? 0}" })
+                </div>
                 @* END OF QUESTIONS *@
 
                 @*<div class="line"></div>*@
@@ -63,10 +68,24 @@
 
 <script>
     CKEDITOR.replace('WYSIWYGContent');
+    // Dành cho question
     if (CKEDITOR.instances["Questions_@(Model.WritingPartTwo?.Id ?? 0)"]) {
             CKEDITOR.instances["Questions_@(Model.WritingPartTwo?.Id ?? 0)"].destroy();
         }
     CKEDITOR.replace("Questions_@(Model.WritingPartTwo?.Id ?? 0)", {
+        toolbar:
+            [
+                { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                { name: 'tools', items: ['Maximize', '-', 'About'] }
+            ]
+    });
+
+    // Dành cho hint
+    if (CKEDITOR.instances["Hint_@(Model.WritingPartTwo?.Id ?? 0)"]) {
+        CKEDITOR.instances["Hint_@(Model.WritingPartTwo?.Id ?? 0)"].destroy();
+    }
+    CKEDITOR.replace("Hint_@(Model.WritingPartTwo?.Id ?? 0)", {
         toolbar:
             [
                 { name: 'basicstyles', items: ['Bold', 'Italic'] },

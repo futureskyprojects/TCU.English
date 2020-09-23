@@ -1,0 +1,215 @@
+﻿@model TCU.English.Models.ListeningBaseCombined
+<div class="row">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <h2 class="h6 text-uppercase my-auto">Listen part 2 - Question</h2>
+                </div>
+            </div>
+            <div class="card-body p-3">
+                @Html.HiddenFor(x => x.TestCategory.Id)
+                @Html.HiddenFor(x => x.TestCategory.CreatorId)
+                @Html.HiddenFor(x => x.TestCategory.Active)
+                @Html.HiddenFor(x => x.TestCategory.CreatedTime)
+                @Html.HiddenFor(x => x.TestCategory.UpdatedTime)
+
+                @Html.HiddenFor(x => x.ListeningMedia.Audio)
+                @Html.HiddenFor(x => x.ListeningMedia.Id)
+                @Html.HiddenFor(x => x.ListeningMedia.TestCategoryId)
+                @Html.HiddenFor(x => x.ListeningMedia.Active)
+                @Html.HiddenFor(x => x.ListeningMedia.CreatedTime)
+                @Html.HiddenFor(x => x.ListeningMedia.UpdatedTime)
+
+                @Html.HiddenFor(x => x.TestCategory.TypeCode)
+                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.TypeCode)</small>
+                @Html.HiddenFor(x => x.TestCategory.PartId)
+                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.PartId)</small>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.TestCategory.Name)
+                    @Html.TextBoxFor(x => x.TestCategory.Name, new { @placeholder = "Name", @class = "form-control" })
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.Name)</small>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.TestCategory.Description)
+                    @Html.TextBoxFor(x => x.TestCategory.Description, new { @placeholder = "Description", @class = "form-control" })
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TestCategory.Description)</small>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.ListeningMedia.Audio)
+                    <div id="selected-audio" class="text-center p-3">
+                        @if (Model.ListeningMedia != null && Model.ListeningMedia.Audio != null && Model.ListeningMedia.Audio.Length > 0)
+                        {
+                        <audio controls>
+                            <source src="@Html.Raw(Model.ListeningMedia.Audio)">
+                        </audio>
+                        }
+                        else
+                        {
+                        <small class="form-text text-danger mt-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Audio)</small>
+                        <small class="form-text text-info mr-3">Select and play audio test here.</small>
+                        }
+                    </div>
+                    <div class="text-center">
+                        <input id="audio-upload" name="audio" type="file" onchange="changeHandler(this)" hidden />
+                        <button type="button" class="btn btn-info" onclick="$('#audio-upload').click();">Select Audio</button>
+                        <button id="set-default-audio" type="button" class="btn btn-danger" onclick="loadAudio()" style="display: none;">Default</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.ListeningMedia.Transcript)
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Transcript)</small>
+                    @Html.TextAreaFor(x => x.ListeningMedia.Transcript, new { id = "Transcript" })
+                </div>
+            </div>
+        </div>
+        <div class="py-5 text-center">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+    <div class="col-md-5">
+        @if (ViewContext.ViewData.ModelState.Where(x => x.Key == "").Any())
+        {
+        <small class="form-text text-danger mr-3">@Html.ValidationSummary()</small>
+        }
+        <div id="accordion">
+            @for (int i = 0; i < Model.ListeningBaseQuestions.Count; i++)
+            {
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Id)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatorId)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Active)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Answers)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatedTime)
+            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].UpdatedTime)
+            <div class="card mb-2">
+                <div class="card-header" id="headingOne_@i">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Questions @(i+1)</h2>
+                        <i class="fa fa-minus ml-auto" aria-hidden="true" data-toggle="collapse" data-target="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i"></i>
+                    </div>
+                </div>
+                <div id="collapseOne_@i" class="collapse" aria-labelledby="headingOne_@i" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ListeningBaseQuestions[i].QuestionText)
+                            @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].QuestionText, new { @placeholder = "Your question", @class = "form-control" })
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].QuestionText)</small>
+                        </div>
+                        <div class="line"></div>
+                        @* REGION FOR CREATE ANSWERS *@
+                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList)</small>
+                        @for (int j = 0; j < Model.ListeningBaseQuestions[i].AnswerList.Count; j++)
+                            {
+                                string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                        <div class="form-group">
+                            <label>@Html.Raw($"Answer {answerAlphapet}")</label>
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
+                                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
+                                    </div>
+                                    <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
+                                </div>
+                                <div class="col-1 d-flex align-items-center">
+                                    @Html.CheckBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].IsCorrect, new { @groupname = $"group_{i}", @value = Model.ListeningBaseQuestions[i].AnswerList[j].IsCorrect.ToString().ToLower() })
+                                </div>
+                            </div>
+                        </div>
+                            }
+                        @* END REGION FOR CREATE ANSWERS *@
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
+                            @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = $"HintForAnswer_{i}" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    var defaultAudioPath = "@Html.Raw(Model.ListeningMedia.Audio.Replace("\\","/"))";
+    function loadAudio(path = defaultAudioPath) {
+        if (path == null || path == defaultAudioPath) {
+            $('#audio-upload').val(null);
+        }
+        if (path != null && path != undefined && path.length > 0) {
+            const audio = document.createElement("audio");
+
+            // Clean up the URL Object after we are done with it
+            audio.addEventListener("load", () => {
+                URL.revokeObjectURL(path);
+            });
+
+            // Thay thế cho thông báo
+            $('#selected-audio').html(audio);
+
+            // Allow us to control the audio
+            audio.controls = "true";
+
+            // Set the src and start loading the audio from the file
+            audio.src = path;
+
+            if (path === defaultAudioPath) {
+                // Ẩn nút reset
+                $("#set-default-audio").hide();
+            } else {
+                // Hiển thị nút reset
+                $("#set-default-audio").show();
+            }
+        } else {
+            // Ẩn nút reset
+            $("#set-default-audio").hide();
+
+            // Thay thế cho thông báo
+            $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>' +
+                '<small class="form-text text-info mr-3">Select and play audio test here.</small>');
+        }
+    }
+        //==========================================//
+        CKEDITOR.replace('Transcript');
+        $("[id^=HintForAnswer_]").filter(function (index, value) {
+            CKEDITOR.replace($(value).attr('id'), {
+                toolbar:
+                    [
+                        { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                        { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                        { name: 'tools', items: ['Maximize', '-', 'About'] }
+                    ]
+            });
+        });
+        //==========================================//
+
+
+        //==========================================//
+    function changeHandler(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const fileType = file['type'];
+            const validImageTypes = ['audio/basic', 'audio/mid', 'audio/mpeg', 'audio/ogg'];
+            if (!validImageTypes.includes(fileType)) {
+                // invalid file type code goes here.
+                toastr["error"]("Please only select audio type!");
+                $(input).val(null);
+                $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>');
+            } else {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(`#answer-image-preview-${i}-${j}`).attr('src', e.target.result);
+                }
+                // Create a blob that we can use as an src for our audio element
+                const urlObj = URL.createObjectURL(input.files[0]);
+                // Create an audio element
+                loadAudio(urlObj);
+            }
+        } else {
+            loadAudio();
+        }
+    }
+</script>
