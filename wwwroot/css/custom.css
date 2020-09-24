@@ -42,3 +42,10 @@
         width: 100%;
         height: 100%;
     }
+
+.top-avatar {
+    object-fit: fill; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */
+    width: 2.5rem;
+    height: 2.5rem;
+}

@@ -27,6 +27,7 @@ namespace TCU.English.Controllers
         private readonly ListeningBaseQuestionManager _ListeningBaseQuestionManager;
         private readonly WritingPartOneManager _WritingPartOneManager;
         private readonly PieceOfTestManager _PieceOfTestManager;
+        private readonly UserManager _UserManager;
 
         public TestPaperController(
           IHostEnvironment _host,
@@ -36,7 +37,8 @@ namespace TCU.English.Controllers
           IDataRepository<ListeningMedia> _ListeningMediaManager,
           IDataRepository<ListeningBaseQuestion> _ListeningBaseQuestionManager,
           IDataRepository<WritingPartOne> _WritingPartOneManager,
-          IDataRepository<PieceOfTest> _PieceOfTestManager)
+          IDataRepository<PieceOfTest> _PieceOfTestManager,
+          IDataRepository<User> _UserManager)
         {
             host = _host;
             this._TestCategoryManager = (TestCategoryManager)_TestCategoryManager;
@@ -46,6 +48,7 @@ namespace TCU.English.Controllers
             this._ListeningBaseQuestionManager = (ListeningBaseQuestionManager)_ListeningBaseQuestionManager;
             this._WritingPartOneManager = (WritingPartOneManager)_WritingPartOneManager;
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
+            this._UserManager = (UserManager)_UserManager;
         }
         public IActionResult Index()
         {
@@ -106,6 +109,15 @@ namespace TCU.English.Controllers
             if (piece == null)
                 return NotFound();
 
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
+
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {
@@ -136,6 +148,18 @@ namespace TCU.English.Controllers
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
+
+            if (piece == null)
+                return NotFound();
+
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
 
             // Tránh timer bị reset
             if (piece.CreatedTime != null)
@@ -185,6 +209,18 @@ namespace TCU.English.Controllers
             ViewBag.IsReviewMode = true;
             // Sau khi hoàn tất lọc các lỗi, tiến hành lấy
             PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            if (piece == null)
+                return NotFound();
+
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
 
             // Thời gian làm bài
             if (piece.CreatedTime != null)
@@ -273,6 +309,15 @@ namespace TCU.English.Controllers
             if (piece == null)
                 return NotFound();
 
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
+
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {
@@ -325,6 +370,18 @@ namespace TCU.English.Controllers
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
+            if (piece == null)
+                return NotFound();
+
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
+
             // Tránh timer bị reset
             if (piece.CreatedTime != null)
             {
@@ -372,6 +429,18 @@ namespace TCU.English.Controllers
             ViewBag.IsReviewMode = true;
             // Sau khi hoàn tất lọc các lỗi, tiến hành lấy
             PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            if (piece == null)
+                return NotFound();
+
+            // Lấy chủ sở hữu của bài kiểm tra
+            User owner = _UserManager.Get(piece.UserId);
+            ViewData["Owner"] = new User
+            {
+                Avatar = owner.Avatar,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName
+            };
 
             // Thời gian làm bài
             if (piece.CreatedTime != null)

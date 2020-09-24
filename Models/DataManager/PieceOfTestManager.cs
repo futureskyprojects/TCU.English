@@ -113,8 +113,47 @@ namespace TCU.English.Models.DataManager
             }
             return query;
         }
+        private IQueryable<PieceOfTest> QueryableOfTestsForInstructor(long instructorId, string typeCode)
+        {
+            IQueryable<PieceOfTest> query = null;
+            if (typeCode.ToUpper() == "ALL".ToUpper())
+            {
+                query = instantce.PieceOfTests.Where(x => x.InstructorId == instructorId);
+            }
+            else if (typeCode.ToUpper() == "CRASH".ToUpper())
+            {
+                query = instantce.PieceOfTests.Where(x =>
+                            x.InstructorId == instructorId &&
+                            (x.ResultOfUserJson == null ||
+                            x.ResultOfUserJson.Length <= 0));
+            }
+            else
+            {
+                query = instantce.PieceOfTests
+                    .Where(x =>
+                            x.InstructorId == instructorId &&
+                            x.ResultOfUserJson != null &&
+                            x.ResultOfUserJson.Length > 0 &&
+                            x.TypeCode.ToUpper().Trim() == typeCode.ToUpper().Trim());
+            }
+            return query;
+        }
 
         #region FOR TEST HISTORY
+        public long StudentTestCountOfType(long instructorId, string typeCode, string searchKey = "", long studentId = -1)
+        {
+            try
+            {
+                return QueryableOfTestsForInstructor(instructorId, typeCode)
+                        .Where(x => x.ResultOfTestJson.Contains(searchKey) &&
+                            (studentId <= 0 || x.UserId == studentId))
+                        .Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
         public long UserTestCountOfType(long userId, string typeCode, string searchKey = "")
         {
             try
@@ -148,7 +187,25 @@ namespace TCU.English.Models.DataManager
                 CreatedTime = x.CreatedTime,
                 TypeCode = x.TypeCode,
                 Scores = x.Scores,
-                ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : ""
+                ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
+                UserId = x.UserId,
+                InstructorId = x.InstructorId
+            }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+        }
+        public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1)
+        {
+            var query = QueryableOfTestsForInstructor(instructorId, typeCode);
+            if (query == null)
+                return new List<PieceOfTest>();
+            return query.Where(x => x.ResultOfTestJson.Contains(searchKey) && (studentId <= 0 || studentId == x.UserId)).Select(x => new PieceOfTest
+            {
+                Id = x.Id,
+                CreatedTime = x.CreatedTime,
+                TypeCode = x.TypeCode,
+                Scores = x.Scores,
+                ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
+                UserId = x.UserId,
+                InstructorId = x.InstructorId
             }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         #endregion

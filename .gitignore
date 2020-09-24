@@ -341,3 +341,6 @@ healthchecksdb
 
 # Bỏ qua app settings
 appsettings.json
+
+# Bỏ qua mục tạo CSDL
+Migrations

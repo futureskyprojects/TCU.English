@@ -4,6 +4,9 @@
 @{
     string firstName = User.ExtractValue(System.Security.Claims.ClaimTypes.GivenName);
     string lastName = User.ExtractValue(System.Security.Claims.ClaimTypes.Surname);
+
+    // Khai báo chủ nhân của bài kiểm tra
+    User ownerOfTest = ViewData["Owner"] as User;
 }
 <!DOCTYPE html>
 <html>
@@ -59,18 +62,26 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="row align-items-center">
-                                <span class=" pl-3">
-                                    <span class="text-primary">@Html.Raw($"{firstName} {lastName}")</span>'s
+                                <div class="pl-3 d-inline-block">
+                                    @if (ownerOfTest != null)
+                                    {
+                                        <img src="@Html.Raw(ownerOfTest.Avatar)" class="img-fluid rounded-circle shadow top-avatar mr-2" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                                        <span class="text-primary">@Html.Raw($"{ownerOfTest.FirstName} {ownerOfTest.LastName}")</span>@Html.Raw("'s")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-primary">@Html.Raw($"{firstName} {lastName}")</span>@Html.Raw("'s")
+                                    }
                                     <br />
                                     <span class="h6 text-uppercase my-auto">@ViewData["Title"]</span>
-                                </span>
-                                <span class="ml-auto">
+                                </div>
+                                <div class="ml-auto d-inline-block">
                                     @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
                                     {
                                         <button class="btn btn-lg btn-outline-green px-3 mr-2" data-toggle="tooltip" data-placement="top" title="Your working timer"><span class="mr-1" id="time-counter-top">00:00:00</span></button>
                                     }
                                     @RenderSection("FinishButton", required: true)
-                                </span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">

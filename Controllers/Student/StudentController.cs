@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -15,14 +16,14 @@ using TCU.English.Utils;
 
 namespace TCU.English.Controllers
 {
-    [AuthorizeRoles(UserType.ROLE_ALL, UserType.ROLE_INSTRUCTOR_USER)]
-    public class InstructorController : Controller
+    [Authorize]
+    public class StudentController : Controller
     {
         private readonly IHostEnvironment host;
         private readonly UserManager _UserManager;
         private readonly PieceOfTestManager _PieceOfTestManager;
 
-        public InstructorController(
+        public StudentController(
             IHostEnvironment _host,
             IDataRepository<User> _UserManager,
             IDataRepository<PieceOfTest> _PieceOfTestManager)
@@ -38,8 +39,11 @@ namespace TCU.English.Controllers
             return NotFound();
         }
 
+        /// <summary>
+        /// Danh sách giáo viên hướng dẫn đã chọn
+        /// </summary>
         [HttpGet]
-        public IActionResult YourOwnStudents(int page = 1, string searchKey = "")
+        public IActionResult YourOwnInstructor(int page = 1, string searchKey = "")
         {
             int limit = 20;
             int start = (page - 1) * limit;
@@ -57,8 +61,11 @@ namespace TCU.English.Controllers
             return View(users);
         }
 
+        /// <summary>
+        /// Danh sách các cuộc thảo luận
+        /// </summary>
         [HttpGet]
-        public IActionResult Marks(int page = 1, string searchKey = "")
+        public IActionResult Discuss(int page = 1, string searchKey = "")
         {
             return View();
         }

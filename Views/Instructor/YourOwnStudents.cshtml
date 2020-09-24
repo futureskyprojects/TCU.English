@@ -48,8 +48,7 @@
                                 </div>*@
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <a href="@Url.Action(nameof(InstructorController.YourOwnStudents), NameUtils.ControllerName<InstructorController>(), new { id = user.Id })" class="btn btn-info float-lg-right ml-lg-auto text-white">View Tests</a>
-                            @*<button type="button" class="btn btn-red float-lg-right ml-2" onclick="deleteConfirm(@user.Id, '@Html.Raw($"{user.FirstName} {user.LastName}")')">Delete</button>*@
+                            <a href="@Url.Action(nameof(InstructorController.StudentTest), NameUtils.ControllerName<InstructorController>(), new { id = user.Id })" class="btn btn-info float-lg-right ml-lg-auto text-white">View Tests</a>
                         </div>
                     </div>
                 </div>
