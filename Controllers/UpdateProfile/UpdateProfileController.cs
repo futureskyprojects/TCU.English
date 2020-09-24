@@ -43,7 +43,7 @@ namespace TCU.English.Controllers
                     return View(user);
                 }
             }
-            return NotFound();
+            return NotFoundUser();
         }
 
         [HttpPost]
@@ -72,9 +72,17 @@ namespace TCU.English.Controllers
                     }
                     // Save user
                     _UserManager.Update(user);
+
+                    this.NotifySuccess("Update success");
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        private IActionResult NotFoundUser()
+        {
+            this.NotifyError("Can't find this user");
+            return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
         }
     }
 }

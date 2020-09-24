@@ -175,6 +175,7 @@ namespace TCU.English.Controllers
             {
                 return View(user);
             }
+            this.NotifySuccess($"Account {user.Username} created");
             return RedirectToAction(nameof(UpdateUser), new { id = user.Id });
         }
 
@@ -241,6 +242,7 @@ namespace TCU.English.Controllers
                     }
                 }
             }
+            this.NotifySuccess($"Account {user.Username} updated");
             return RedirectToAction(nameof(UpdateUser), new { id = user.Id });
         }
 

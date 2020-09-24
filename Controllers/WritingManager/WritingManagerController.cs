@@ -359,6 +359,7 @@ namespace TCU.English.Controllers
             else
                 _WritingPartTwoManager.Update(WritingCombined.WritingPartTwo);
 
+            this.NotifySuccess("Update completed!");
             // Trả về
             return RedirectToAction(partName);
         }
