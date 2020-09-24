@@ -21,6 +21,33 @@ namespace TCU.English.Controllers
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
         }
 
+        /// <summary>
+        /// Load nội dung đánh giá của GV cho bài thi này
+        /// </summary>
+        /// <param name="id">Mã bài thi của HV</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult LoadInstructorComments(int id)
+        {
+            if (id <= 0)
+                return Content(string.Empty);
+
+            // Lấy bài thi theo mã
+            PieceOfTest piece = _PieceOfTestManager.Get(id);
+
+            // Nếu không có, trả về
+            if (piece == null)
+                return Content(string.Empty);
+
+            // Nếu không có nội dung đánh giá
+            if (string.IsNullOrEmpty(piece.InstructorComments))
+                return Content(string.Empty);
+
+            // Trả về nội dung đánh giá
+            return Content(piece.InstructorComments);
+
+        }
+
         [HttpDelete]
         public IActionResult Delete(long id)
         {

@@ -73,6 +73,12 @@ namespace TCU.English
             AddNotification(controller, Notification.Success(message));
             return controller;
         }
+        public static HtmlString NotifySuccess(this IHtmlHelper<dynamic> helper, string message)
+        {
+            return new HtmlString("<script>\r\n" +
+                string.Join("\r\n", Notification.Success(message)) +
+                "\r\n</script>");
+        }
 
         /// <summary>
         /// Tạo một thông báo kiểu WARNING
@@ -81,6 +87,12 @@ namespace TCU.English
         {
             AddNotification(controller, Notification.Warning(message));
             return controller;
+        }
+        public static HtmlString NotifyWarning(this IHtmlHelper<dynamic> helper, string message)
+        {
+            return new HtmlString("<script>\r\n" +
+                string.Join("\r\n", Notification.Warning(message)) +
+                "\r\n</script>");
         }
 
         /// <summary>
@@ -91,6 +103,12 @@ namespace TCU.English
             AddNotification(controller, Notification.Error(message));
             return controller;
         }
+        public static HtmlString NotifyError(this IHtmlHelper<dynamic> helper, string message)
+        {
+            return new HtmlString("<script>\r\n" +
+                string.Join("\r\n", Notification.Error(message)) +
+                "\r\n</script>");
+        }
 
         /// <summary>
         /// Tạo một thông báo kiểu INFO
@@ -99,6 +117,12 @@ namespace TCU.English
         {
             AddNotification(controller, Notification.Info(message));
             return controller;
+        }
+        public static HtmlString NotifyInfo(this IHtmlHelper<dynamic> helper, string message)
+        {
+            return new HtmlString("<script>\r\n" +
+                string.Join("\r\n", Notification.Info(message)) +
+                "\r\n</script>");
         }
     }
 }

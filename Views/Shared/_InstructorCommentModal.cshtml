@@ -1,0 +1,39 @@
+﻿<div class="modal fade" id="instructor_comment_model" tabindex="-1" role="dialog" aria-labelledby="instructor_comment_model" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructor_comment_model_title">Instructor Comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="instructor_comment-content"></div>
+            <div class="modal-body" id="instructor_comment-content-loading">
+                <partial name="__Loading" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadInstructorCommentContent(instructorId, pieceOfTestId, isEdit = false) {
+        if (instructorId <= 0) {
+            @Html.Raw(Notification.Error("You have not chosen an instructor for this test before."))
+            return;
+        }
+        $('#instructor_comment-content-loading').show();
+        $('#instructor_comment-content').html('');
+        $('#instructor_comment-content').hide();
+        $('#instructor_comment-content')
+            .load(`@Url.Action(nameof(PieceOfTestController.LoadInstructorComments),NameUtils.ControllerName<PieceOfTestController>())/${pieceOfTestId}`, function () {
+                $('#instructor_comment-content-loading').hide();
+                $('#instructor_comment-content').show();
+                if ($('#instructor_comment-content').html().length <= 0) {
+                    $('#instructor_comment-content').html('<i>No have any comment of instructor about this test!</i>')
+                }
+            });
+    }
+</script>

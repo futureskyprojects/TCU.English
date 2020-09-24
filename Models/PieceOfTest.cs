@@ -20,6 +20,10 @@ namespace TCU.English.Models
         public string ResultOfTestJson { get; set; } = "";
         public float Scores { get; set; } = 0;
         public float TimeToFinished { get; set; } = -1;
+        /// <summary>
+        /// Đánh giá của giáo viên hướng dẫn
+        /// </summary>
+        public string InstructorComments { get; set; }
         public int UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
@@ -33,6 +37,6 @@ namespace TCU.English.Models
 
         [ForeignKey(nameof(InstructorId))]
         [JsonIgnore]
-        public virtual User? Instructor { get; set; }
+        public virtual User Instructor { get; set; }
     }
 }

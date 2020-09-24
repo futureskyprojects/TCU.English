@@ -114,7 +114,14 @@
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto">@Model.ElementAt(i).Scores.ToScores()/@Config.MAX_SCORE_POINT</button>
+                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto @Html.Raw((Model.ElementAt(i).InstructorId >= 0)?"pr-2":"")"
+                                            data-toggle="modal" data-target="#instructor_comment_model" onclick="loadInstructorCommentContent(@Model.ElementAt(i).InstructorId,@Model.ElementAt(i).Id);">
+                                        @Model.ElementAt(i).Scores.ToScores()/@Config.MAX_SCORE_POINT
+                                        @if (Model.ElementAt(i).InstructorId >= 0)
+                                        {
+                                            <i class="fas fa-check-circle pl-3 @Html.Raw(string.IsNullOrEmpty(Model.ElementAt(i).InstructorComments)?"text-gray":"")text-gray"></i>
+                                        }
+                                    </button>
                                     <button type="button" class="btn btn-info float-lg-right ml-2" onclick="review(@Model.ElementAt(i).Id)">Review</button>
                                 }
                             </div>
@@ -126,6 +133,9 @@
         </div>
     </div>
 </section>
+
+<partial name="_InstructorCommentModal" />
+
 @* KẾT THÚC RENDER PHẦN HIỂN THỊ CHI TIẾT *@
 @section Scripts {
     <script>

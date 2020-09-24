@@ -157,7 +157,7 @@ namespace TCU.English.Models.DataManager
             }
         }
 
-        public IEnumerable<User> GetAllStudentsOfInstructor(int id, int start, int limit)
+        public IEnumerable<User> GetAllStudentsOfInstructor(int id, int start, int limit, string studentName = "")
         {
             try
             {
@@ -167,7 +167,14 @@ namespace TCU.English.Models.DataManager
                          user => user.Id,
                          piceOfTest => piceOfTest.UserId,
                          (u, pot) => new { u, pot })
-                         .Where(full => full.pot.InstructorId != null && full.pot.InstructorId == id)
+                         .Where(full => full.pot.InstructorId != null && full.pot.InstructorId == id &&
+                                (string.IsNullOrEmpty(studentName) ||
+                                studentName.Contains(full.u.Username) ||
+                                studentName.Contains(full.u.FirstName) ||
+                                studentName.Contains(full.u.LastName) ||
+                                full.u.Username.Contains(studentName) ||
+                                full.u.FirstName.Contains(studentName) ||
+                                full.u.LastName.Contains(studentName)))
                          .Select(full => full.u)
                          .OrderByDescending(x => x.Id)
                          .Skip(start)

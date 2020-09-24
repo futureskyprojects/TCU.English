@@ -103,6 +103,9 @@ namespace TCU.English.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("InstructorComments")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<int?>("InstructorId")
                         .HasColumnType("int");
 
