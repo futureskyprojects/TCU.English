@@ -30,6 +30,7 @@ namespace TCU.English.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                this.NotifySuccess("Welcome back");
                 if (string.IsNullOrEmpty(RequestPath))
                     return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
                 else
@@ -41,10 +42,12 @@ namespace TCU.English.Controllers
         {
             await HttpContext.SignOutAsync(
             scheme: CookieAuthenticationDefaults.AuthenticationScheme);
-
+            this.NotifySuccess("See you again!");
             return RedirectToAction(nameof(LogIn));
         }
 
+
+        [HttpPost]
         // https://viblo.asia/p/su-dung-cookie-authentication-trong-aspnet-core-djeZ1VG8lWz
         public async Task<IActionResult> LogIn(UserLogin userLogin)
         {

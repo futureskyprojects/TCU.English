@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using TCU.English.Models;
@@ -59,11 +56,22 @@ namespace TCU.English.Controllers
         {
             if (id <= 0)
                 return BadRequest();
+
             var piece = _PieceOfTestManager.Get(id);
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
+
             ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
             ViewBag.Scores = piece.Scores;
+
+            this.NotifySuccess("Your test is completed!");
+
             return View(piece);
         }
 
@@ -74,7 +82,7 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(ReadingReview), new { id });
             if (type == TestCategory.LISTENING)
                 return RedirectToAction(nameof(ListeningReview), new { id });
-            return NotFound();
+            return NotFoundTest();
         }
 
 
@@ -100,14 +108,20 @@ namespace TCU.English.Controllers
         {
             ViewBag.Title = "READING TESTING";
             if (id <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
             // Nếu tìm không thấy bài Test
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -133,6 +147,9 @@ namespace TCU.English.Controllers
             ReadingTestPaper paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson)
                 .RemoveCorrectAnswers();
             paper.PiceOfTestId = piece.Id;
+
+            this.NotifySuccess("Try your best, Good Luck!");
+
             return View(paper);
         }
 
@@ -140,9 +157,10 @@ namespace TCU.English.Controllers
         public IActionResult Reading(ReadingTestPaper paper)
         {
             if (paper == null)
-                return NotFound();
+                return NotFoundTest();
+
             if (paper.PiceOfTestId <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             ViewBag.Title = "READING TESTING";
 
@@ -150,7 +168,13 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -202,7 +226,7 @@ namespace TCU.English.Controllers
         public IActionResult ReadingReview(int id)
         {
             if (id <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             ViewBag.Title = "READING TESTING";
 
@@ -211,7 +235,13 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -300,14 +330,20 @@ namespace TCU.English.Controllers
         {
             ViewBag.Title = "LISTENING TESTING";
             if (id <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
             // Nếu tìm không thấy bài Test
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -333,6 +369,9 @@ namespace TCU.English.Controllers
             ListeningTestPaper paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson)
                 .RemoveCorrectAnswers();
             paper.PiceOfTestId = piece.Id;
+
+            this.NotifySuccess("Try your best, Good Luck!");
+
             return View(paper);
         }
         public IActionResult ListeningNewTest(int? id)
@@ -361,9 +400,10 @@ namespace TCU.English.Controllers
         public IActionResult Listening(ListeningTestPaper paper)
         {
             if (paper == null)
-                return NotFound();
+                return NotFoundTest();
+
             if (paper.PiceOfTestId <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             ViewBag.Title = "READING TESTING";
 
@@ -371,7 +411,13 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -422,7 +468,7 @@ namespace TCU.English.Controllers
         public IActionResult ListeningReview(int id)
         {
             if (id <= 0)
-                return NotFound();
+                return NotFoundTest();
 
             ViewBag.Title = "LISTENING TESTING";
 
@@ -431,7 +477,13 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
             if (piece == null)
-                return NotFound();
+                return NotFoundTest();
+
+            if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
+            {
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+            }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
@@ -474,5 +526,11 @@ namespace TCU.English.Controllers
             return View(nameof(Listening), userPaper);
         }
         #endregion
+
+        private IActionResult NotFoundTest()
+        {
+            this.NotifyError("Can't find this test");
+            return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+        }
     }
 }

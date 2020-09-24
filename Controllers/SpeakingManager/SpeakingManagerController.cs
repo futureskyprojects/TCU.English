@@ -162,6 +162,8 @@ namespace TCU.English.Controllers
             else
                 _SpeakingEmbedManager.Update(SpeakingEmbedCombined.SpeakingEmbed);
 
+            this.NotifySuccess("Update completed!");
+
             // Trả về
             return RedirectToAction(partName);
         }

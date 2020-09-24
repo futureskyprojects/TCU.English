@@ -499,6 +499,9 @@ namespace TCU.English.Controllers
                 else
                     _ReadingPartTwoManager.Update(readingCombined.ReadingPartTwos[i]);
             }
+
+            this.NotifySuccess("Update completed!");
+
             // Trả về
             return RedirectToAction(partName);
         }

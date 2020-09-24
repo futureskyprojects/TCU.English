@@ -1,13 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;

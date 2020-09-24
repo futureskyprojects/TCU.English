@@ -330,6 +330,8 @@ namespace TCU.English.Controllers
                 }
             }
 
+            this.NotifySuccess("Update completed!");
+
             // Chuyển hướng đến hiển thị danh sách
             return RedirectToAction(partName);
         }
