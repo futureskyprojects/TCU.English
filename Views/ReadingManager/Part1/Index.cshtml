@@ -1,8 +1,7 @@
-﻿@using TCU.English.Utils
-@{
+﻿@{
     ViewData["Title"] = "Reading Part 1 Manager";
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
-    IEnumerable<TCU.English.Models.ReadingPartOne> readingPartOnes = ViewBag.Questions;
+    IEnumerable<TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<ReadingPartOne> readingPartOnes = ViewBag.Questions;
 
     string questionType = ViewBag.QuestionType ?? "";
 }
@@ -13,7 +12,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <h2 class="h6 text-uppercase my-auto">Grammars</h2>
-                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.TestCategory)_Create" class="btn btn-primary ml-auto">Add</button>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TestCategory)_Create" class="btn btn-primary ml-auto">Add</button>
                     </div>
                 </div>
                 <div class="card-body p-3">
@@ -25,7 +24,7 @@
                                  data-toggle="tooltip" data-placement="bottom" title="@Html.Raw(testCategories.ElementAt(i).Description)">
                                 <div class="card-body p-3">
                                     <div class="row align-items-center flex-row">
-                                        <div class="col-10" onclick="window.location.href='@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>(), new { category = testCategories.ElementAt(i).Id })'">
+                                        <div class="col-10" onclick="window.location.href='@Url.Action(nameof(ReadingManagerController.Part1), NameUtils.ControllerName<ReadingManagerController>(), new { category = testCategories.ElementAt(i).Id })'">
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i + 1). @Html.Raw(testCategories.ElementAt(i).Name.TrimMax()) <sup class="smaller text-gray font-weight-normal">(@Html.Raw(testCategories.ElementAt(i).ReadingPartOnes.Count))</sup></span></p>
                                             <small class="text-muted">@Html.Raw(testCategories.ElementAt(i).Description.TrimMax())</small>
                                         </div>
@@ -36,7 +35,7 @@
                                 </div>
                             </div>
                         }
-                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.CategoryPagination);
+                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.CategoryPagination);
                     }
                     else
                     {
@@ -50,7 +49,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <h2 class="h6 text-uppercase my-auto">Questions: @Html.Raw(questionType)</h2>
-                        <button type="button" data-toggle="modal" data-target="#@nameof(TCU.English.Models.ReadingPartOne)_Create" class="btn btn-primary ml-auto">Add</button>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(ReadingPartOne)_Create" class="btn btn-primary ml-auto">Add</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -71,7 +70,7 @@
                                 </div>
                             </div>
                         }
-                        @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.QuestionPagination);
+                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.QuestionPagination);
                     }
                     else
                     {
@@ -97,10 +96,10 @@
 @section Scripts {
     <script>
         window.onload = function () {
-            $("#modal-create-test-category").load("@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())", {
-                "testCategory": @Html.Raw((Newtonsoft.Json.JsonConvert.SerializeObject(TCU.English.Models.TestCategory.ReadingCategory(1))))
+            $("#modal-create-test-category").load("@Url.Action(nameof(TestCategoryController.Create), NameUtils.ControllerName<TestCategoryController>())", {
+                "testCategory": @Html.Raw((JsonConvert.SerializeObject(TestCategory.ReadingCategory(1))))
             });
-            $("#modal-create-reading-part-1-question").load("@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())");
+            $("#modal-create-reading-part-1-question").load("@Url.Action(nameof(ReadingManagerController.Part1Create), NameUtils.ControllerName<ReadingManagerController>())");
         };
         function testCategoryPopupOptions(id) {
             $("#modal-update-test-category").empty();
@@ -120,7 +119,7 @@
                     switch (value) {
 
                         case "edit":
-                            $("#modal-update-test-category").load(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`);
+                            $("#modal-update-test-category").load(`@Url.Action(nameof(TestCategoryController.Update), NameUtils.ControllerName<TestCategoryController>())/${id}`);
                             break;
 
                         case "remove":
@@ -143,7 +142,7 @@
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        fetch(`@Url.Action(nameof(TCU.English.Controllers.TestCategoryController.Delete), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>())/${id}`, {
+                        fetch(`@Url.Action(nameof(TestCategoryController.Delete), NameUtils.ControllerName<TestCategoryController>())/${id}`, {
                             method: 'DELETE'
                         }).then(function (response) {
                             response.json().then(function (data) {
@@ -193,7 +192,7 @@
                     switch (value) {
 
                         case "edit":
-                            $("#modal-update-reading-part-1-question").load(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1Update), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`);
+                            $("#modal-update-reading-part-1-question").load(`@Url.Action(nameof(ReadingManagerController.Part1Update), NameUtils.ControllerName<ReadingManagerController>())/${id}`);
                             break;
 
                         case "remove":
@@ -216,7 +215,7 @@
             })
                 .then((willDelete) => {
                     if (willDelete) {
-                        fetch(`@Url.Action(nameof(TCU.English.Controllers.ReadingManagerController.Part1DeleteAjax), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ReadingManagerController>())/${id}`, {
+                        fetch(`@Url.Action(nameof(ReadingManagerController.Part1DeleteAjax), NameUtils.ControllerName<ReadingManagerController>())/${id}`, {
                             method: 'DELETE'
                         }).then(function (response) {
                             response.json().then(function (data) {

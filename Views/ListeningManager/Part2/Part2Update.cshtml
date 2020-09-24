@@ -1,10 +1,10 @@
-﻿@model TCU.English.Models.ListeningBaseCombined
+﻿@model ListeningBaseCombined
 @{
     ViewData["Title"] = $"Update '{Model.TestCategory.Name ?? "Listening Part 2 Question"}'";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>();
-    string actionName = nameof(TCU.English.Controllers.ListeningManagerController.Part2Update);
+    string controller = NameUtils.ControllerName<ListeningManagerController>();
+    string actionName = nameof(ListeningManagerController.Part2Update);
 
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TestCategory> testCategories = ViewBag.TestCategories;
 }
 @* ============================ *@
 

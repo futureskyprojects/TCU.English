@@ -1,9 +1,7 @@
-﻿@using TCU.English.Controllers
-@using TCU.English.Utils
-@model IEnumerable<TCU.English.Models.User>
+﻿@model IEnumerable<User>
 @{
     ViewData["Title"] = "Your own students";
-    string controllerName = TCU.English.Utils.NameUtils.ControllerName<InstructorController>();
+    string controllerName = NameUtils.ControllerName<InstructorController>();
 
     string tableName = "Your own students";
     string tableDescription = "List of students who choose you to be the instructor";
@@ -56,7 +54,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.Pagination);
+            @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.Pagination);
         }
     </div>
 </div>

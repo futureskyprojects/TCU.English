@@ -1,16 +1,15 @@
-﻿@using TCU.English.Utils
-@model TCU.English.Models.ReadingPartTwo
+﻿@model ReadingPartTwo
 @{
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TestCategory> testCategories = ViewBag.TestCategories;
     string groupName = "";
     if (Model.Answers != null && Model.Answers.Length > 0)
     {
-        Model.AnswerList = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers);
+        Model.AnswerList = BaseAnswer.GetAnswers(Model.Answers);
         groupName = $"update_reading_part_2";
     }
     else
     {
-        Model.AnswerList = TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
+        Model.AnswerList = BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
         groupName = $"create_reading_part_2";
     }
 }
@@ -29,7 +28,7 @@
         <img id="@groupName-img-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
     </div>
     <div class="text-center">
-        <input type="file" name="@(nameof(TCU.English.Models.ReadingPartTwo.QuestionImage).ToCamelCase())" id="@groupName-img-picker" onchange="ImagePicked(this)" hidden />
+        <input type="file" name="@(nameof(ReadingPartTwo.QuestionImage).ToCamelCase())" id="@groupName-img-picker" onchange="ImagePicked(this)" hidden />
         <button type="button" class="btn btn-info" onclick="$('#@groupName-img-picker').click();">Select Image</button>
         <button type="button" class="btn btn-danger" id="@groupName-img-remove-picker-btn">Remove Picked</button>
     </div>
@@ -50,7 +49,7 @@
     <label>Select question category</label>
     <div class="select">
         @Html.DropDownListFor(x => x.TestCategoryId,
-       new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
+       new SelectList(testCategories, nameof(TestCategory.Id), nameof(TestCategory.Name)),
        new { @class = "form-control" })
     </div>
 </div>

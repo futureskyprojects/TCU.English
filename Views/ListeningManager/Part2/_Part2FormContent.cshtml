@@ -1,4 +1,4 @@
-﻿@model TCU.English.Models.ListeningBaseCombined
+﻿@model ListeningBaseCombined
 <div class="row">
     <div class="col-md-7">
         <div class="card">
@@ -40,14 +40,14 @@
                     <div id="selected-audio" class="text-center p-3">
                         @if (Model.ListeningMedia != null && Model.ListeningMedia.Audio != null && Model.ListeningMedia.Audio.Length > 0)
                         {
-                        <audio controls>
-                            <source src="@Html.Raw(Model.ListeningMedia.Audio)">
-                        </audio>
+                            <audio controls>
+                                <source src="@Html.Raw(Model.ListeningMedia.Audio)">
+                            </audio>
                         }
                         else
                         {
-                        <small class="form-text text-danger mt-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Audio)</small>
-                        <small class="form-text text-info mr-3">Select and play audio test here.</small>
+                            <small class="form-text text-danger mt-3">@Html.ValidationMessageFor(x => x.ListeningMedia.Audio)</small>
+                            <small class="form-text text-info mr-3">Select and play audio test here.</small>
                         }
                     </div>
                     <div class="text-center">
@@ -70,64 +70,64 @@
     <div class="col-md-5">
         @if (ViewContext.ViewData.ModelState.Where(x => x.Key == "").Any())
         {
-        <small class="form-text text-danger mr-3">@Html.ValidationSummary()</small>
+            <small class="form-text text-danger mr-3">@Html.ValidationSummary()</small>
         }
         <div id="accordion">
             @for (int i = 0; i < Model.ListeningBaseQuestions.Count; i++)
             {
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Id)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].TestCategoryId)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatorId)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Active)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Answers)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatedTime)
-            @Html.HiddenFor(x => x.ListeningBaseQuestions[i].UpdatedTime)
-            <div class="card mb-2">
-                <div class="card-header" id="headingOne_@i">
-                    <div class="row align-items-center">
-                        <h2 class="h6 text-uppercase my-auto">Questions @(i+1)</h2>
-                        <i class="fa fa-minus ml-auto" aria-hidden="true" data-toggle="collapse" data-target="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i"></i>
-                    </div>
-                </div>
-                <div id="collapseOne_@i" class="collapse" aria-labelledby="headingOne_@i" data-parent="#accordion">
-                    <div class="card-body">
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ListeningBaseQuestions[i].QuestionText)
-                            @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].QuestionText, new { @placeholder = "Your question", @class = "form-control" })
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].QuestionText)</small>
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Id)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].TestCategoryId)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatorId)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Active)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].Answers)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].CreatedTime)
+                @Html.HiddenFor(x => x.ListeningBaseQuestions[i].UpdatedTime)
+                <div class="card mb-2">
+                    <div class="card-header" id="headingOne_@i">
+                        <div class="row align-items-center">
+                            <h2 class="h6 text-uppercase my-auto">Questions @(i+1)</h2>
+                            <i class="fa fa-minus ml-auto" aria-hidden="true" data-toggle="collapse" data-target="#collapseOne_@i" aria-expanded="true" aria-controls="collapseOne_@i"></i>
                         </div>
-                        <div class="line"></div>
-                        @* REGION FOR CREATE ANSWERS *@
-                        <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList)</small>
-                        @for (int j = 0; j < Model.ListeningBaseQuestions[i].AnswerList.Count; j++)
+                    </div>
+                    <div id="collapseOne_@i" class="collapse" aria-labelledby="headingOne_@i" data-parent="#accordion">
+                        <div class="card-body">
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ListeningBaseQuestions[i].QuestionText)
+                                @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].QuestionText, new { @placeholder = "Your question", @class = "form-control" })
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].QuestionText)</small>
+                            </div>
+                            <div class="line"></div>
+                            @* REGION FOR CREATE ANSWERS *@
+                            <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList)</small>
+                            @for (int j = 0; j < Model.ListeningBaseQuestions[i].AnswerList.Count; j++)
                             {
                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                        <div class="form-group">
-                            <label>@Html.Raw($"Answer {answerAlphapet}")</label>
-                            <div class="row">
-                                <div class="col-11">
-                                    <div class="form-group">
-                                        @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
-                                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
+                                <div class="form-group">
+                                    <label>@Html.Raw($"Answer {answerAlphapet}")</label>
+                                    <div class="row">
+                                        <div class="col-11">
+                                            <div class="form-group">
+                                                @Html.TextBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent, new { @placeholder = "Enter your answer.", @class = "form-control" })
+                                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
+                                            </div>
+                                            <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
+                                        </div>
+                                        <div class="col-1 d-flex align-items-center">
+                                            @Html.CheckBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].IsCorrect, new { @groupname = $"group_{i}", @value = Model.ListeningBaseQuestions[i].AnswerList[j].IsCorrect.ToString().ToLower() })
+                                        </div>
                                     </div>
-                                    <small class="form-text text-danger text-center">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].AnswerList[j].AnswerContent)</small>
                                 </div>
-                                <div class="col-1 d-flex align-items-center">
-                                    @Html.CheckBoxFor(x => x.ListeningBaseQuestions[i].AnswerList[j].IsCorrect, new { @groupname = $"group_{i}", @value = Model.ListeningBaseQuestions[i].AnswerList[j].IsCorrect.ToString().ToLower() })
-                                </div>
-                            </div>
-                        </div>
                             }
-                        @* END REGION FOR CREATE ANSWERS *@
-                        <div class="form-group">
-                            @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
-                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
-                            @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = $"HintForAnswer_{i}" })
+                            @* END REGION FOR CREATE ANSWERS *@
+                            <div class="form-group">
+                                @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
+                                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
+                                @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = $"HintForAnswer_{i}" })
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             }
         </div>
     </div>

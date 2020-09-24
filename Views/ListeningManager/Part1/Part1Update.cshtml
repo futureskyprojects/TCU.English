@@ -1,8 +1,8 @@
-﻿@model TCU.English.Models.ListeningBaseCombined
+﻿@model ListeningBaseCombined
 @{
     ViewData["Title"] = $"Update '{Model.TestCategory.Name ?? "Listening Part 1 Question"}'";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>();
-    string actionName = nameof(TCU.English.Controllers.ListeningManagerController.Part1Update);
+    string controller = NameUtils.ControllerName<ListeningManagerController>();
+    string actionName = nameof(ListeningManagerController.Part1Update);
 
     IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
 }
@@ -138,7 +138,7 @@
                                         @Html.LabelFor(x => x.ListeningBaseQuestions[i].Hint)
                                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ListeningBaseQuestions[i].Hint)</small>
                                         @Html.TextAreaFor(x => x.ListeningBaseQuestions[i].Hint, new { id = "HintForAnswer" })
-                                        
+
                                     </div>
                                 </div>
                             </div>

@@ -1,10 +1,10 @@
-﻿@model TCU.English.Models.ListeningBaseCombined
+﻿@model ListeningBaseCombined
 @{
     ViewData["Title"] = "Create Listening Part 2 Question";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.ListeningManagerController>();
-    string actionName = nameof(TCU.English.Controllers.ListeningManagerController.Part2Create);
+    string controller = NameUtils.ControllerName<ListeningManagerController>();
+    string actionName = nameof(ListeningManagerController.Part2Create);
 
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TestCategory> testCategories = ViewBag.TestCategories;
     //IEnumerable<TCU.English.Models.BaseAnswer> testAnswers = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers) ?? TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_2_QUESTION);
 }
 @* ============================ *@

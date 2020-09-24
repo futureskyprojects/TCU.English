@@ -1,15 +1,15 @@
-﻿@model TCU.English.Models.ReadingPartOne
+﻿@model ReadingPartOne
 @{
-    IEnumerable<TCU.English.Models.TestCategory> testCategories = ViewBag.TestCategories;
+    IEnumerable<TestCategory> testCategories = ViewBag.TestCategories;
     string groupName = "";
     if (Model.Answers != null && Model.Answers.Length > 0)
     {
-        Model.AnswerList = TCU.English.Models.BaseAnswer.GetAnswers(Model.Answers);
+        Model.AnswerList = BaseAnswer.GetAnswers(Model.Answers);
         groupName = $"update_reading_part_1";
     }
     else
     {
-        Model.AnswerList = TCU.English.Models.BaseAnswer.Generate(Config.MAX_READING_PART_1_QUESTION);
+        Model.AnswerList = BaseAnswer.Generate(Config.MAX_READING_PART_1_QUESTION);
         groupName = $"create_reading_part_1";
     }
 }
@@ -40,7 +40,7 @@
     <label>Select a grammar category</label>
     <div class="select">
         @Html.DropDownListFor(x => x.TestCategoryId,
-       new SelectList(testCategories, nameof(TCU.English.Models.TestCategory.Id), nameof(TCU.English.Models.TestCategory.Name)),
+       new SelectList(testCategories, nameof(TestCategory.Id), nameof(TestCategory.Name)),
        new { @class = "form-control" })
     </div>
 </div>
