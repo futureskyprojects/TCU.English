@@ -98,15 +98,14 @@
                     <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
                         <div class="row">
                             <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                                <h6 class="mb-0" style="font-family: Tahoma">@(((TCU.English.Models.Pagination)ViewBag.Pagination).CalIndex(i + 1)). Test code @Model.ElementAt(i).Id at @Model.ElementAt(i).CreatedTime?.ToString("HH:mm dd/MM/yyyy")</h6>
+                                <h6 class="mb-0" style="font-family: Tahoma">@(((TCU.English.Models.Pagination)ViewBag.Pagination).CalIndex(i + 1)). Test code @Model.ElementAt(i).Id at @Model.ElementAt(i).CreatedTime?.ToString("HH:mm dd/MM/yyyy") of "@Html.Raw($"{Model.ElementAt(i).User.FirstName} {Model.ElementAt(i).User.LastName}")"</h6>
                             </div>
                             <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
                                 <div class="roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-white exclode float-lg-left @getTypeColor(Model.ElementAt(i).TypeCode)">
                                     @Html.Raw(Model.ElementAt(i).TypeCode)
                                 </div>
-                                <div class="btn btn-outline-blue disabled overflow-hidden w-100">
+                                <div class="w-100">
                                     <img src="@Html.Raw(Model.ElementAt(i).User.Avatar)" class="img-fluid rounded-circle shadow top-avatar mx-2" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
-                                    <span class="text-dark">@Html.Raw($"{Model.ElementAt(i).User.FirstName} {Model.ElementAt(i).User.LastName}")</span>
                                 </div>
                             </div>
                             <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
