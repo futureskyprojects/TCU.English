@@ -1,5 +1,8 @@
 ﻿@model ReadingTestPaper
 @{
+    // Truyền ID Sang cho Layout
+    ViewData["potID"] = Model.PiceOfTestId;
+
     bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
     ReadingTestPaper resultPaper = null;
     ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";

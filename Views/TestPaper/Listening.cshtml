@@ -1,8 +1,8 @@
-﻿@using TCU.English.Controllers
-@using TCU.English.Models
-@using TCU.English.Utils
-@model TCU.English.Models.PiceOfTest.ListeningTestPaper
+﻿@model ListeningTestPaper
 @{
+    // Truyền ID sang cho Layout
+    ViewData["potID"] = Model.PiceOfTestId;
+
     bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
     TCU.English.Models.PiceOfTest.ListeningTestPaper resultPaper = null;
     ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";

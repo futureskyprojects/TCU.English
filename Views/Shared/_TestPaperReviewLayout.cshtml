@@ -91,11 +91,11 @@
                     <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
                 </div>
                 <div class="float-bl">
-                    <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
+                    @await Component.InvokeAsync(nameof(InstructorTools), new { piceOfTestId = ViewData["potID"] })
                 </div>
             </div>
             <footer class="footer bg-white shadow align-self-end py-3 px-xl-5 w-100">
-                @await Component.InvokeAsync(nameof(TCU.English.Components.Footer))
+                @await Component.InvokeAsync(nameof(Footer))
             </footer>
         </div>
     </div>

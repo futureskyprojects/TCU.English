@@ -228,6 +228,17 @@ namespace TCU.English.Models.DataManager
             return instantce.PieceOfTests.FirstOrDefault(it => it.Id == id);
         }
 
+        public PieceOfTest GetForInstructorTool(long id)
+        {
+            return instantce.PieceOfTests.Where(it => it.Id == id)
+                .Select(x => new PieceOfTest
+                {
+                    UserId = x.UserId,
+                    InstructorId = x.InstructorId,
+                    TypeCode = x.TypeCode
+                }).FirstOrDefault();
+        }
+
         public IEnumerable<PieceOfTest> GetAll()
         {
             return instantce.PieceOfTests.ToList();
