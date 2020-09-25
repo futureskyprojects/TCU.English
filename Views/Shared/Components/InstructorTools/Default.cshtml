@@ -5,10 +5,10 @@
 
 @if (Model.UserId == User.Id())
 { // Nếu là chủ bài thi
-
+    <partial name="~/Views/Shared/Components/InstructorTools/__YourInstructorRating.cshtml" />
 }
 
 @if (Model.InstructorId == User.Id())
 { // Nếu là GVHD cho bài thi này
-
+    <partial name="~/Views/Shared/Components/InstructorTools/__Tools.cshtml" />
 }    

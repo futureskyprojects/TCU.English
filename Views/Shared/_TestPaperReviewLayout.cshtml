@@ -1,6 +1,4 @@
-﻿@using TCU.English
-@using TCU.English.Utils
-@using TCU.English.Controllers
+﻿@using TCU.English.Components
 @{
     string firstName = User.ExtractValue(System.Security.Claims.ClaimTypes.GivenName);
     string lastName = User.ExtractValue(System.Security.Claims.ClaimTypes.Surname);
@@ -49,6 +47,7 @@
     <script src="~/js/moment.min.js"></script>
     @* https://www.learnrazorpages.com/razor-pages/ajax/unobtrusive-ajax *@
     <script src="~/lib/jquery.unobtrusive-ajax.js"></script>
+    <script src="https://cdn.ckeditor.com/4.14.1/full/ckeditor.js"></script>
 </head>
 <body>
     <!-- navbar-->

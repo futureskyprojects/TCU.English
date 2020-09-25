@@ -235,7 +235,8 @@ namespace TCU.English.Models.DataManager
                 {
                     UserId = x.UserId,
                     InstructorId = x.InstructorId,
-                    TypeCode = x.TypeCode
+                    TypeCode = x.TypeCode,
+                    InstructorComments = x.InstructorComments
                 }).FirstOrDefault();
         }
 
