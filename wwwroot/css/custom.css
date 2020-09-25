@@ -6,24 +6,21 @@
         text-decoration: none;
     }
 
-.float-br-hidden, .float-br {
+.float-br-hidden, .float-br, .float-bl-hidden, .float-bl {
     position: fixed;
     bottom: 20px;
-    right: 30px;
-    z-index: 1005;
+    z-index: 1050;
     border: none;
     outline: none;
     padding: 15px;
 }
 
+.float-br-hidden, .float-br {
+    right: 30px;
+}
+
 .float-bl-hidden, .float-bl {
-    position: fixed;
-    bottom: 20px;
     left: 30px;
-    z-index: 99;
-    border: none;
-    outline: none;
-    padding: 15px;
 }
 
 .float-bl-hidden, .float-br-hidden {

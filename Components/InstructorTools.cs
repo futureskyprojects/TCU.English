@@ -8,9 +8,14 @@ namespace TCU.English.Components
     public class InstructorTools : ViewComponent
     {
         private readonly PieceOfTestManager _PieceOfTestManager;
-        public InstructorTools(IDataRepository<PieceOfTest> _PieceOfTestManager)
+        private readonly UserManager _UserManager;
+        public InstructorTools(
+            IDataRepository<PieceOfTest> _PieceOfTestManager,
+            IDataRepository<User> _UserManager
+            )
         {
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
+            this._UserManager = (UserManager)_UserManager;
         }
         public IViewComponentResult Invoke(int piceOfTestId)
         {
@@ -18,7 +23,7 @@ namespace TCU.English.Components
             if (piceOfTestId <= 0)
                 return View();
 
-            // Tiến hành lấy mã bài thi
+            // Tiến hành lấy bài thi
             var pot = _PieceOfTestManager.GetForInstructorTool(piceOfTestId);
 
             return View(pot);

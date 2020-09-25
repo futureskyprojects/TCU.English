@@ -3,4 +3,49 @@
 @if (Model == null)
     return;
 
-Đánh giá
+@if (Model.InstructorId <= 0)
+    return;
+
+@* Nút hiển thị hộp thoại đánh giá và nhận xét *@
+<button type="button"
+        class="btn btn-info rounded-circle p-0"
+        data-toggle="modal"
+        data-target="#instructor_tools_model">
+    <img src="@Html.Raw(Model.Instructor.Avatar)" class="img-fluid rounded-circle shadow top-avatar m-2" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+</button>
+@* Kết thúc nút hiển thị hộp thoại *@
+
+@* Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@
+<div class="modal fade" id="instructor_tools_model" tabindex="-1" role="dialog" aria-labelledby="instructor_tools_model" aria-hidden="true" style="z-index: 1041;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructor_tools_model_title">Instructor's comments</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (Model.InstructorId <= 0)
+                {
+                    <i>You have not chosen an instructor for this test before.</i>
+                }
+                else if (string.IsNullOrEmpty(Model.InstructorComments))
+                {
+                    <i>The instructor still has no comments or feedback on your test.</i>
+                }
+                else
+                {
+                    @Html.Raw(Model.InstructorComments)
+                }
+            </div>
+            @*<div class="modal-body" id="instructor_tools-content-loading">
+                    <partial name="__Loading" />
+                </div>*@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@

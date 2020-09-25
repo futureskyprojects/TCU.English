@@ -230,13 +230,19 @@ namespace TCU.English.Models.DataManager
 
         public PieceOfTest GetForInstructorTool(long id)
         {
-            return instantce.PieceOfTests.Where(it => it.Id == id)
+            return instantce.PieceOfTests
+                .Where(it => it.Id == id)
+                .Join(instantce.User,
+                    pot => pot.InstructorId,
+                    u => u.Id,
+                    (pot, u) => new { PiceOfTest = pot, Instructor = u })
                 .Select(x => new PieceOfTest
                 {
-                    UserId = x.UserId,
-                    InstructorId = x.InstructorId,
-                    TypeCode = x.TypeCode,
-                    InstructorComments = x.InstructorComments
+                    UserId = x.PiceOfTest.UserId,
+                    InstructorId = x.PiceOfTest.InstructorId,
+                    TypeCode = x.PiceOfTest.TypeCode,
+                    InstructorComments = x.PiceOfTest.InstructorComments,
+                    Instructor = x.Instructor
                 }).FirstOrDefault();
         }
 

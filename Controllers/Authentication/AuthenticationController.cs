@@ -43,7 +43,7 @@ namespace TCU.English.Controllers
             await HttpContext.SignOutAsync(
             scheme: CookieAuthenticationDefaults.AuthenticationScheme);
             this.NotifySuccess("See you again!");
-            return RedirectToAction(nameof(LogIn));
+            return RedirectToAction(nameof(Index), new { RequestPath = "/" });
         }
 
 

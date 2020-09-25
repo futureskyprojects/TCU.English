@@ -10,7 +10,7 @@ using TCU.English.Utils;
 namespace TCU.English.Controllers
 {
     [AuthorizeRoles(UserType.ROLE_ALL, UserType.ROLE_INSTRUCTOR_USER)]
-    public class InstructorController : Controller
+    public partial class InstructorController : Controller
     {
         private readonly IHostEnvironment host;
         private readonly UserManager _UserManager;

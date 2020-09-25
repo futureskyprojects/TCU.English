@@ -5,7 +5,7 @@
 
 @* Nút hiển thị hộp thoại đánh giá và nhận xét *@
 <button type="button"
-        class="btn btn-lg btn-green rounded-circle p-0"
+        class="btn btn-lg btn-primary rounded-circle p-0"
         data-toggle="modal"
         data-target="#instructor_tools_model">
     <i class="fas fa-check-circle m-2" style="font-size: 26px;"></i>
@@ -14,7 +14,7 @@
 
 @* Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@
 <div class="modal fade" id="instructor_tools_model" tabindex="-1" role="dialog" aria-labelledby="instructor_tools_model" aria-hidden="true" style="z-index: 1041;">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="instructor_tools_model_title">Instructor Tools</h5>
@@ -22,18 +22,23 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div id="instructor_tools-content"></div>
-                @Html.Label("Your comments")
-                <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.InstructorComments)</small>
-                @Html.TextAreaFor(x => x.InstructorComments, new { id = "instructor-comment" })
-            </div>
-            @*<div class="modal-body" id="instructor_tools-content-loading">
-                    <partial name="__Loading" />
-                </div>*@
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-            </div>
+            @using (Html.BeginForm(nameof(InstructorController.SubmitToolResult), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(x => x.Id)
+                    <div id="instructor_tools-content"></div>
+                    @Html.Label("Your comments")
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.InstructorComments)</small>
+                    @Html.TextAreaFor(x => x.InstructorComments, new { id = "instructor-comment", @required = "required" })
+                </div>
+                @*<div class="modal-body" id="instructor_tools-content-loading">
+                        <partial name="__Loading" />
+                    </div>*@
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -44,13 +49,6 @@
         if (CKEDITOR.instances['instructor-comment']) {
             CKEDITOR.instances['instructor-comment'].destroy();
         }
-        CKEDITOR.replace('instructor-comment', {
-            toolbar:
-                [
-                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
-                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-                    { name: 'tools', items: ['Maximize', '-', 'About'] }
-                ]
-        });
+        CKEDITOR.replace('instructor-comment');
     });
 </script>

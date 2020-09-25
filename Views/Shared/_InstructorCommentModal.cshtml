@@ -19,7 +19,7 @@
 </div>
 
 <script>
-    function loadInstructorCommentContent(instructorId, pieceOfTestId, isEdit = false) {
+    function loadInstructorCommentContent(instructorId, pieceOfTestId) {
         if (instructorId <= 0) {
             @Html.Raw(Notification.Error("You have not chosen an instructor for this test before."))
             return;
@@ -32,9 +32,8 @@
                 $('#instructor_comment-content-loading').hide();
                 $('#instructor_comment-content').show();
                 if ($('#instructor_comment-content').html().length <= 0) {
-                    $('#instructor_comment_model').modal('hide');
                     @Html.Raw(Notification.Error("No have any comment of instructor about this test!"))
-                    //$('#instructor_comment-content').html('<i>No have any comment of instructor about this test!</i>')
+                    $('#instructor_comment_model').modal('hide');
                 }
             });
     }
