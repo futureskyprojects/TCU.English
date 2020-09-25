@@ -1,10 +1,14 @@
-﻿<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6 text-center text-md-left text-primary">
-            <p class="mb-2 mb-md-0">@Html.Raw(Config.CompanyName) &copy; @Html.Raw($"{Config.FromYear}-{Config.ToYear}")</p>
-        </div>
-        <div class="col-md-6 text-center text-md-right text-gray-400">
-            <p class="mb-0">Design by <a href="@Html.Raw(Config.ProjectPortfolioAddress)" class="external text-gray-400">@Html.Raw(Config.ProjectAuthor)</a></p>
-        </div>
-    </div>
-</div>
+﻿@model PieceOfTest
+
+@if (Model == null)
+    return;
+
+@if (Model.UserId == User.Id())
+{ // Nếu là chủ bài thi
+
+}
+
+@if (Model.InstructorId == User.Id())
+{ // Nếu là GVHD cho bài thi này
+
+}    

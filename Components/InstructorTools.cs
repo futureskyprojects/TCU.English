@@ -19,9 +19,9 @@ namespace TCU.English.Components
                 return View();
 
             // Tiến hành lấy mã bài thi
-            var pot = _PieceOfTestManager.Get();
+            var pot = _PieceOfTestManager.GetForInstructorTool(piceOfTestId);
 
-            return View();
+            return View(pot);
         }
     }
 }
