@@ -26,9 +26,53 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.PieceOfTests.Count();
         }
-        public long CountOfInstructor(int instructorId)
+
+        /// <summary>
+        /// Đếm tất cả các học viên chọn giáo viên này
+        /// </summary>
+        /// <param name="instructorId"></param>
+        /// <returns></returns>
+        public long CountAllStudentOfInstructor(int instructorId)
         {
-            return instantce.PieceOfTests.Where(x => x.InstructorId != null && x.InstructorId == instructorId).Count();
+            try
+            {
+                return instantce.User
+                         .Join(
+                         instantce.PieceOfTests,
+                         user => user.Id,
+                         piceOfTest => piceOfTest.UserId,
+                         (u, pot) => new { u, pot })
+                         .Where(full => full.pot.InstructorId == instructorId)
+                         .Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Đếm tất cả các GVHD mà HV này đã chọn
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns></returns>
+        public long CountAllInstructorOfStudent(int studentId)
+        {
+            try
+            {
+                return instantce.User
+                         .Join(
+                         instantce.PieceOfTests,
+                         user => user.Id,
+                         piceOfTest => piceOfTest.InstructorId,
+                         (u, pot) => new { u, pot })
+                         .Where(full => full.pot.UserId == studentId)
+                         .Count();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         #region FOR HOME INDEX

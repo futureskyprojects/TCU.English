@@ -43,7 +43,7 @@ namespace TCU.English.Controllers
 
             ViewBag.SearchKey = searchKey;
 
-            long total = _PieceOfTestManager.CountOfInstructor(User.Id());
+            long total = _PieceOfTestManager.CountAllStudentOfInstructor(User.Id());
             IEnumerable<User> users = _UserManager.GetAllStudentsOfInstructor(User.Id(), start, limit, searchKey);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<UserManagementController>())

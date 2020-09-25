@@ -48,8 +48,8 @@ namespace TCU.English.Controllers
             int limit = 20;
             int start = (page - 1) * limit;
 
-            long total = _PieceOfTestManager.CountOfInstructor(User.Id());
-            IEnumerable<User> users = _UserManager.GetAllStudentsOfInstructor(User.Id(), start, limit);
+            long total = _PieceOfTestManager.CountAllInstructorOfStudent(User.Id());
+            IEnumerable<User> users = _UserManager.GetAllInstructorsOfStudent(User.Id(), start, limit);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<UserManagementController>())
             {

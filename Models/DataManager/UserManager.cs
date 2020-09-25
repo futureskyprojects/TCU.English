@@ -157,6 +157,36 @@ namespace TCU.English.Models.DataManager
             }
         }
 
+        public IEnumerable<User> GetAllInstructorsOfStudent(int id, int start, int limit, string instructorName = "")
+        {
+            try
+            {
+                return instantce.User
+                         .Join(
+                         instantce.PieceOfTests,
+                         user => user.Id,
+                         piceOfTest => piceOfTest.InstructorId,
+                         (u, pot) => new { u, pot })
+                         .Where(full => full.pot.UserId == id &&
+                                (string.IsNullOrEmpty(instructorName) ||
+                                instructorName.Contains(full.u.Username) ||
+                                instructorName.Contains(full.u.FirstName) ||
+                                instructorName.Contains(full.u.LastName) ||
+                                full.u.Username.Contains(instructorName) ||
+                                full.u.FirstName.Contains(instructorName) ||
+                                full.u.LastName.Contains(instructorName)))
+                         .Select(full => full.u)
+                         .OrderByDescending(x => x.Id)
+                         .Skip(start)
+                         .Take(limit)
+                         .ToList();
+            }
+            catch (Exception)
+            {
+                return new List<User>();
+            }
+        }
+
         public IEnumerable<User> GetAllStudentsOfInstructor(int id, int start, int limit, string studentName = "")
         {
             try
