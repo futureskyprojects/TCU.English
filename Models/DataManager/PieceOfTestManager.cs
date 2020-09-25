@@ -189,7 +189,8 @@ namespace TCU.English.Models.DataManager
                 Scores = x.Scores,
                 ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
                 UserId = x.UserId,
-                InstructorId = x.InstructorId
+                InstructorId = x.InstructorId,
+                InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
             }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1)
@@ -205,7 +206,8 @@ namespace TCU.English.Models.DataManager
                 Scores = x.Scores,
                 ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
                 UserId = x.UserId,
-                InstructorId = x.InstructorId
+                InstructorId = x.InstructorId,
+                InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
             }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         #endregion
