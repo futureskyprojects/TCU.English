@@ -31,6 +31,12 @@ namespace TCU.English.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 this.NotifySuccess("Welcome back");
+
+                if (User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
+                { // Nếu là giáo viên hướng dẫn thì chuyển về trang danh sách bài chấm của Học Viên
+                    return RedirectToAction(nameof(InstructorController.StudentTest), NameUtils.ControllerName<InstructorController>());
+                }
+
                 if (string.IsNullOrEmpty(RequestPath))
                     return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
                 else
@@ -91,6 +97,11 @@ namespace TCU.English.Controllers
                                 });
 
                         this.NotifySuccess("Login success");
+
+                        if (User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
+                        { // Nếu là giáo viên hướng dẫn thì chuyển về trang danh sách bài chấm của Học Viên
+                            return RedirectToAction(nameof(InstructorController.StudentTest), NameUtils.ControllerName<InstructorController>());
+                        }
 
                         if (string.IsNullOrEmpty(userLogin.RequestPath))
                             return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());

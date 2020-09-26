@@ -239,7 +239,7 @@ namespace TCU.English.Models.DataManager
                     UserId = x.UserId,
                     InstructorId = x.InstructorId,
                     InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
-                }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+                }).OrderByDescending(x => x.Scores < 0 && string.IsNullOrEmpty(x.InstructorComments) && x.Id > 0).Skip(start).Take(limit).ToList();
         }
         public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1, bool isUnRead = false)
         {
