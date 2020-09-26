@@ -2,13 +2,23 @@
 
 @if (Model == null)
     return;
-
-@if (Model.UserId == User.Id())
-{ // Nếu là chủ bài thi
-    <partial name="~/Views/Shared/Components/InstructorTools/__YourInstructorRating.cshtml" />
-}
-
-@if (Model.InstructorId == User.Id())
-{ // Nếu là GVHD cho bài thi này
-    <partial name="~/Views/Shared/Components/InstructorTools/__Tools.cshtml" />
-}    
+<div class="row">
+    <div class="col-12">
+        <div class="d-inline-block">
+            @if (Model.InstructorId == User.Id())
+            { // Nếu là GVHD cho bài thi này
+                <partial name="~/Views/Shared/Components/InstructorTools/__Tools.cshtml" />
+            }
+        </div>
+        <div class="d-inline-block @Html.Raw(Model.InstructorId == User.Id()?"float-right":"")">
+            @if (Model.UserId == User.Id())
+            { // Nếu là chủ bài thi
+                <partial name="~/Views/Shared/Components/InstructorTools/__YourInstructorRating.cshtml" />
+            }
+        </div>
+        <div>
+            @*Điểm của bài thi*@
+            <partial name="~/Views/Shared/Components/InstructorTools/__TestScores.cshtml" />
+        </div>
+    </div>
+</div>

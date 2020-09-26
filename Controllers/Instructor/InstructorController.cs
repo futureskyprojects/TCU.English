@@ -52,7 +52,6 @@ namespace TCU.English.Controllers
                 NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), limit),
                 Offset = limit
             };
-            // Get data
             return View(users);
         }
 
@@ -116,6 +115,12 @@ namespace TCU.English.Controllers
                     ),
                 Offset = limit
             };
+
+            // Lấy học viên nếu được chọn cụ thể
+            if (studentId > 0)
+                ViewBag.Student = _UserManager.Get(studentId);
+
+
             return View(PieceOfTests);
         }
 

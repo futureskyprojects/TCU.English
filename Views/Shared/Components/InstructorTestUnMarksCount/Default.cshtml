@@ -1,0 +1,12 @@
+﻿@if (!User.IsInRole(UserType.ROLE_INSTRUCTOR_USER) && !User.IsInRole(UserType.ROLE_ALL))
+    return;
+
+<div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4">
+    <div class="flex-grow-1 d-flex align-items-center pr-2" >
+        <div class="dot mr-3 bg-blue"></div>
+        <div class="text">
+            <h6 class="mb-0">Unread test</h6><span class="text-gray">Total 10000 tests</span>
+        </div>
+    </div>
+    <div class="icon bg-blue text-white"><i class="o-survey-1"></i></div>
+</div>

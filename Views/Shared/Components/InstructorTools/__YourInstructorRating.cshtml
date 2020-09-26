@@ -10,17 +10,17 @@
 <button type="button"
         class="btn btn-info rounded-circle p-0"
         data-toggle="modal"
-        data-target="#instructor_tools_model">
+        data-target="#instructor_comments_model">
     <img src="@Html.Raw(Model.Instructor.Avatar)" class="img-fluid rounded-circle shadow top-avatar m-2" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
 </button>
 @* Kết thúc nút hiển thị hộp thoại *@
 
 @* Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@
-<div class="modal fade" id="instructor_tools_model" tabindex="-1" role="dialog" aria-labelledby="instructor_tools_model" aria-hidden="true" style="z-index: 1041;">
+<div class="modal fade" id="instructor_comments_model" tabindex="-1" role="dialog" aria-labelledby="instructor_comments_model" aria-hidden="true" style="z-index: 1041;">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="instructor_tools_model_title">Instructor's comments</h5>
+                <h5 class="modal-title" id="instructor_comments_model_title">Instructor's comments</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -39,7 +39,7 @@
                     @Html.Raw(Model.InstructorComments)
                 }
             </div>
-            @*<div class="modal-body" id="instructor_tools-content-loading">
+            @*<div class="modal-body" id="instructor_comments-content-loading">
                     <partial name="__Loading" />
                 </div>*@
             <div class="modal-footer">

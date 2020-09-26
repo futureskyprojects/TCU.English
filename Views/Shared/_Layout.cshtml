@@ -62,6 +62,13 @@
         <button onclick="topFunction()" class="btn btn-lg btn-green pr-3 pl-3" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1">Back to top</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
     </div>
     @* END BACK TOP TOP *@
+
+    @* Dành cho giáo viên hướng dẫn *@
+    <div class="float-br mb-5">
+        @await Component.InvokeAsync(nameof(TCU.English.Components.InstructorTestUnMarksCount))
+    </div>
+    @* End dành cho GVHD *@
+
     <!-- Javascript for make menu item active -->
     <script>
         $('a.sidebar-link').each(function (i, obj) {

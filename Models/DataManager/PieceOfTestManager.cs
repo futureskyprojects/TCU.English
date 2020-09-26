@@ -287,7 +287,8 @@ namespace TCU.English.Models.DataManager
                     InstructorId = x.PiceOfTest.InstructorId,
                     TypeCode = x.PiceOfTest.TypeCode,
                     InstructorComments = x.PiceOfTest.InstructorComments,
-                    Instructor = x.Instructor
+                    Instructor = x.Instructor,
+                    Scores = x.PiceOfTest.Scores
                 }).FirstOrDefault();
         }
 

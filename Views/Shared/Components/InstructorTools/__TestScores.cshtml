@@ -1,0 +1,22 @@
+﻿@model PieceOfTest
+
+@if (Model == null)
+    return;
+
+@* Nút hiển thị hộp thoại đánh giá và nhận xét *@
+<div class="pt-2">
+    <button type="button"
+            class="btn btn-lg btn-primary rounded p-2">
+        <span class="" style="font-size: 1.5rem">
+            @if (Model.Scores < 0)
+            { // Nếu chưa được chấm điểm
+                <i>No points</i>
+            }
+            else
+            { // Nếu đã được chấm điểm rồi -> Hiển thị điểm lên
+                @Html.Raw($"Scores: {Model.Scores.ToScores()}/{@Config.MAX_SCORE_POINT}")
+            }
+        </span>
+    </button>
+</div>
+@* Kết thúc nút hiển thị hộp thoại *@
