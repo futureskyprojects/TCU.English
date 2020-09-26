@@ -56,7 +56,7 @@
                                 }
                             </div>
                             <div class="text-center">
-                                <input id="audio-upload" name="audio" type="file" onchange="changeHandler(this)" hidden />
+                                <input id="audio-upload" name="audio" type="file" onchange="changeHandler(this)" accept="audio/*" hidden />
                                 <button type="button" class="btn btn-info" onclick="$('#audio-upload').click();">Select Audio</button>
                                 <button id="set-default-audio" type="button" class="btn btn-danger" onclick="loadAudio()" style="display: none;">Default</button>
                             </div>
@@ -121,7 +121,7 @@
                                                             <small class="form-text text-info text-center pt-3">Click on the photo above to change it.</small>
                                                         </div>
                                                         <div class="text-center">
-                                                            <input type="file" name="images" id="answer-image-picker-@i-@j" onchange="ansImagePicked(this, @i, @j)" hidden />
+                                                            <input type="file" name="images" id="answer-image-picker-@i-@j" onchange="ansImagePicked(this, @i, @j)" accept="image/*" hidden />
                                                         </div>
                                                     </div>
                                                     @* End Answer Image uploader *@

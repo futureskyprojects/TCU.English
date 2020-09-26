@@ -28,7 +28,7 @@
         <img id="@groupName-img-preview" src="/img/no-image-box.png" alt="Question Image" class="img-fluid shadow" style="width:320px;">
     </div>
     <div class="text-center">
-        <input type="file" name="@(nameof(ReadingPartTwo.QuestionImage).ToCamelCase())" id="@groupName-img-picker" onchange="ImagePicked(this)" hidden />
+        <input type="file" name="@(nameof(ReadingPartTwo.QuestionImage).ToCamelCase())" id="@groupName-img-picker" onchange="ImagePicked(this)" accept="image/*" hidden />
         <button type="button" class="btn btn-info" onclick="$('#@groupName-img-picker').click();">Select Image</button>
         <button type="button" class="btn btn-danger" id="@groupName-img-remove-picker-btn">Remove Picked</button>
     </div>
