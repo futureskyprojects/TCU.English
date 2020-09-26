@@ -2,6 +2,7 @@
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Components
 {
@@ -17,10 +18,10 @@ namespace TCU.English.Components
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
             this._UserManager = (UserManager)_UserManager;
         }
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(int instructorId)
         {
-
-            return View();
+            long unreadTests = _PieceOfTestManager.StudentTestCountOfType(instructorId, "ALL", string.Empty, -1, true, true);
+            return View(unreadTests);
         }
     }
 }

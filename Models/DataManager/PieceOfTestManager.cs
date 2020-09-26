@@ -184,13 +184,16 @@ namespace TCU.English.Models.DataManager
         }
 
         #region FOR TEST HISTORY
-        public long StudentTestCountOfType(long instructorId, string typeCode, string searchKey = "", long studentId = -1)
+        public long StudentTestCountOfType(long instructorId, string typeCode, string searchKey = "", long studentId = -1, bool isUnRead = false, bool isNotFailTest = false)
         {
             try
             {
                 return QueryableOfTestsForInstructor(instructorId, typeCode)
                         .Where(x => x.ResultOfTestJson.Contains(searchKey) &&
-                            (studentId <= 0 || x.UserId == studentId))
+                            (studentId <= 0 || x.UserId == studentId) &&
+                            (!isUnRead || (x.Scores < 0 || string.IsNullOrEmpty(x.InstructorComments))) &&
+                            (!isNotFailTest || string.IsNullOrEmpty(x.ResultOfUserJson))
+                            )
                         .Count();
             }
             catch (Exception)
@@ -238,22 +241,25 @@ namespace TCU.English.Models.DataManager
                     InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
                 }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
-        public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1)
+        public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1, bool isUnRead = false)
         {
             var query = QueryableOfTestsForInstructor(instructorId, typeCode);
             if (query == null)
                 return new List<PieceOfTest>();
-            return query.Where(x => x.ResultOfTestJson.Contains(searchKey) && (studentId <= 0 || studentId == x.UserId)).Select(x => new PieceOfTest
-            {
-                Id = x.Id,
-                CreatedTime = x.CreatedTime,
-                TypeCode = x.TypeCode,
-                Scores = x.Scores,
-                ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
-                UserId = x.UserId,
-                InstructorId = x.InstructorId,
-                InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
-            }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+            return query.Where(x => x.ResultOfTestJson.Contains(searchKey) &&
+            (studentId <= 0 || studentId == x.UserId) &&
+            (!isUnRead || (x.Scores < 0 || string.IsNullOrEmpty(x.InstructorComments))))
+                .Select(x => new PieceOfTest
+                {
+                    Id = x.Id,
+                    CreatedTime = x.CreatedTime,
+                    TypeCode = x.TypeCode,
+                    Scores = x.Scores,
+                    ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
+                    UserId = x.UserId,
+                    InstructorId = x.InstructorId,
+                    InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
+                }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         #endregion
 

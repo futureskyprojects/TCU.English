@@ -1,12 +1,25 @@
-﻿@if (!User.IsInRole(UserType.ROLE_INSTRUCTOR_USER) && !User.IsInRole(UserType.ROLE_ALL))
+﻿@model long
+@if (!User.IsInRole(UserType.ROLE_INSTRUCTOR_USER) && !User.IsInRole(UserType.ROLE_ALL))
     return;
 
-<div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4">
-    <div class="flex-grow-1 d-flex align-items-center pr-2" >
+<div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4 bg-hover-gradient-success"
+     onclick="gotoTestStorage(@Model)"
+     style="cursor: pointer">
+    <div class="flex-grow-1 d-flex align-items-center pr-2">
         <div class="dot mr-3 bg-blue"></div>
         <div class="text">
-            <h6 class="mb-0">Unread test</h6><span class="text-gray">Total 10000 tests</span>
+            <h6 class="mb-0">Unread test</h6><span class="text-gray">Total <span class="text-danger font-weight-bold">@Model</span> tests</span>
         </div>
     </div>
     <div class="icon bg-blue text-white"><i class="o-survey-1"></i></div>
 </div>
+
+<script>
+    function gotoTestStorage(count) {
+        if (count <= 0) { // Khi đã hoàn thành hết rồi thì thông báo
+            @Html.Raw(Notification.Success("You have completed all the tests submitted by the students"))
+        } else { // Nếu chưa thì chuyển dến hiển thị để GVHD xem xét
+            window.location.href='@Url.Action(nameof(InstructorController.StudentTest), NameUtils.ControllerName<InstructorController>(), new { isUnRead = true})'
+        }
+    }
+</script>
