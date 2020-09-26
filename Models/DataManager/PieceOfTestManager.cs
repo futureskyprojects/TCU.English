@@ -198,12 +198,12 @@ namespace TCU.English.Models.DataManager
                 return 0;
             }
         }
-        public long UserTestCountOfType(long userId, string typeCode, string searchKey = "")
+        public long UserTestCountOfType(long userId, string typeCode, string searchKey = "", int instructorId = -1)
         {
             try
             {
                 var x = QueryableOfUserTest(userId, typeCode)
-                    .Where(x => x.ResultOfTestJson.Contains(searchKey))
+                    .Where(x => x.ResultOfTestJson.Contains(searchKey) && (instructorId <= 0 || x.InstructorId == instructorId))
                     .Count();
                 return x;
             }
@@ -220,22 +220,23 @@ namespace TCU.English.Models.DataManager
                 return new List<PieceOfTest>();
             return query.Where(x => x.ResultOfTestJson.Contains(searchKey)).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
-        public IEnumerable<PieceOfTest> GetByPaginationSimple(long userId, string typeCode, int start, int limit, string searchKey = "")
+        public IEnumerable<PieceOfTest> GetByPaginationSimple(long userId, string typeCode, int start, int limit, string searchKey = "", int instructorId = -1)
         {
             var query = QueryableOfUserTest(userId, typeCode);
             if (query == null)
                 return new List<PieceOfTest>();
-            return query.Where(x => x.ResultOfTestJson.Contains(searchKey)).Select(x => new PieceOfTest
-            {
-                Id = x.Id,
-                CreatedTime = x.CreatedTime,
-                TypeCode = x.TypeCode,
-                Scores = x.Scores,
-                ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
-                UserId = x.UserId,
-                InstructorId = x.InstructorId,
-                InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
-            }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+            return query.Where(x => x.ResultOfTestJson.Contains(searchKey) && (instructorId <= 0 || x.InstructorId == instructorId))
+                .Select(x => new PieceOfTest
+                {
+                    Id = x.Id,
+                    CreatedTime = x.CreatedTime,
+                    TypeCode = x.TypeCode,
+                    Scores = x.Scores,
+                    ResultOfUserJson = (x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0) ? "OK" : "",
+                    UserId = x.UserId,
+                    InstructorId = x.InstructorId,
+                    InstructorComments = !string.IsNullOrEmpty(x.InstructorComments) ? "Have" : ""
+                }).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         public IEnumerable<PieceOfTest> GetByPaginationSimpleForInstructor(long instructorId, string typeCode, int start, int limit, string searchKey = "", int studentId = -1)
         {

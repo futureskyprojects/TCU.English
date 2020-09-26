@@ -44,24 +44,24 @@ namespace TCU.English.Controllers
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
         }
 
-        public IActionResult Index(string type = "ALL", int page = 1, string searchKey = "")
+        public IActionResult Index(string type = "ALL", int page = 1, string searchKey = "", int instructorId = -1)
         {
             // Truyền gửi tên bảng
             ViewBag.TableName = type.ToUpper();
             ViewBag.SearchKey = searchKey;
             // Lấy các đếm chuẩn
-            ViewBag.UserTestCountOfAll = _PieceOfTestManager.UserTestCountOfType(User.Id(), "ALL");
-            ViewBag.UserTestCountOfListening = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.LISTENING);
-            ViewBag.UserTestCountOfReading = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.READING);
-            ViewBag.UserTestCountOfSpeaking = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.SPEAKING);
-            ViewBag.UserTestCountOfWriting = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.WRITING);
-            ViewBag.UserTestCountOfCrash = _PieceOfTestManager.UserTestCountOfType(User.Id(), "CRASH");
+            ViewBag.UserTestCountOfAll = _PieceOfTestManager.UserTestCountOfType(User.Id(), "ALL", string.Empty, instructorId);
+            ViewBag.UserTestCountOfListening = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.LISTENING, string.Empty, instructorId);
+            ViewBag.UserTestCountOfReading = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.READING, string.Empty, instructorId);
+            ViewBag.UserTestCountOfSpeaking = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.SPEAKING, string.Empty, instructorId);
+            ViewBag.UserTestCountOfWriting = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.WRITING, string.Empty, instructorId);
+            ViewBag.UserTestCountOfCrash = _PieceOfTestManager.UserTestCountOfType(User.Id(), "CRASH", string.Empty, instructorId);
 
             // Tiến hành cấu hình phân trang
             int limit = 20;
             int start = (page - 1) * limit;
             // Lấy danh sách
-            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimple(User.Id(), type, start, limit, searchKey);
+            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimple(User.Id(), type, start, limit, searchKey, instructorId);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<TestController>())
             {
@@ -71,12 +71,18 @@ namespace TCU.English.Controllers
                     _PieceOfTestManager.UserTestCountOfType(
                         User.Id(),
                         type.ToUpper().Trim(),
-                        searchKey
+                        searchKey,
+                        instructorId
                     ).ToInt(),
                     limit
                     ),
                 Offset = limit
             };
+
+            // Lấy GVHD nếu có
+            if (instructorId > 0)
+                ViewBag.Instructor = _UserManager.Get(instructorId);
+
             return View(PieceOfTests);
         }
 

@@ -89,6 +89,9 @@ namespace TCU.English.Controllers
                                     IsPersistent = userLogin.IsRemember, // for 'remember me' feature
                                     ExpiresUtc = DateTime.UtcNow.AddMinutes(Config.MAX_COOKIE_LIFE_MINUTES)
                                 });
+
+                        this.NotifySuccess("Login success");
+
                         if (string.IsNullOrEmpty(userLogin.RequestPath))
                             return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
                         else
@@ -96,17 +99,21 @@ namespace TCU.English.Controllers
                     }
                     else
                     {
+                        this.NotifyError("Account or password is incorrect");
                         ModelState.AddModelError(string.Empty, "Account or password is incorrect");
                     }
                 }
                 else
                 {
+                    this.NotifyError("Account or password is incorrect");
                     ModelState.AddModelError(string.Empty, "Account or password is incorrect");
                 }
             }
             else
             {
+                this.NotifyError("Please check your input again!");
             }
+
             return View(nameof(Index), userLogin);
         }
     }

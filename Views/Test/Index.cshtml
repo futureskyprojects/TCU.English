@@ -3,17 +3,25 @@
     // Code dữ liệu để render phần thống kê
     List<(string, string, string, string, string, long)> statisticals = new List<(string, string, string, string, string, long)>
 {
-        ("bg-hover-gradient-info","Total tests you have performed.","bg-info","fas fa-server","All",ViewBag.UserTestCountOfAll),
-        ("bg-hover-gradient-violet","Total listening tests that you have taken.","bg-violet","fas fa-headphones-alt","Listening",ViewBag.UserTestCountOfListening),
-        ("bg-hover-gradient-green","Total reading tests that you have taken.","bg-green","fas fa-book-reader","Reading",ViewBag.UserTestCountOfReading),
-        ("bg-hover-gradient-blue","Total speaking tests that you have taken.","bg-blue","fas fa-headset","Speaking",ViewBag.UserTestCountOfSpeaking),
-        ("bg-hover-gradient-red","Total writing tests that you have taken.","bg-red","fas fa-feather-alt","Writing",ViewBag.UserTestCountOfWriting),
-        ("bg-hover-gradient-warning","Total your broken or incomplete exams.","bg-warning","fa fa-exclamation-triangle","Crash",ViewBag.UserTestCountOfCrash),
+        ("bg-hover-gradient-info","Total tests you have performed","bg-info","fas fa-server","All",ViewBag.UserTestCountOfAll),
+        ("bg-hover-gradient-violet","Total listening tests that you have taken","bg-violet","fas fa-headphones-alt","Listening",ViewBag.UserTestCountOfListening),
+        ("bg-hover-gradient-green","Total reading tests that you have taken","bg-green","fas fa-book-reader","Reading",ViewBag.UserTestCountOfReading),
+        ("bg-hover-gradient-blue","Total speaking tests that you have taken","bg-blue","fas fa-headset","Speaking",ViewBag.UserTestCountOfSpeaking),
+        ("bg-hover-gradient-red","Total writing tests that you have taken","bg-red","fas fa-feather-alt","Writing",ViewBag.UserTestCountOfWriting),
+        ("bg-hover-gradient-warning","Total your broken or incomplete exams","bg-warning","fa fa-exclamation-triangle","Crash",ViewBag.UserTestCountOfCrash),
     };
 
     // Biến lưu trữ thông số bảng
     string TableName = ViewBag.TableName ?? "<span class=\"text-danger\">ERROR</span>";
     string TableDescription = statisticals.First(x => x.Item5.ToUpper() == TableName).Item2 ?? "<span class=\"text-danger\">Cannot proceed to get description of current table.</span>";
+
+    // Phần thông tin giáo viên hướng dẫn
+    User instructor = ViewBag.Instructor as User;
+    if (instructor != null)
+    {
+        TableName += $" tests have been sent to the Instructor";
+        TableDescription += $" and sent to instructor \"{instructor.FirstName} {instructor.LastName}\"";
+    }
 
     string ActionName = nameof(TCU.English.Controllers.TestController.Index);
     string ControllerName = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestController>();
@@ -62,14 +70,22 @@
         <div class="card-header">
             <div class="row">
                 <div class="col-md-6">
-                    <h6 class="text-uppercase">
-                        @Html.Raw(TableName)
-                        @if (ViewBag.SearchKey != null && ((string)ViewBag.SearchKey).Length > 0)
-                        {
-                            <span>@Html.Raw($" of keyword \"{ViewBag.SearchKey}\"")</span>
-                        }
-                    </h6>
-                    <p class="text-gray mb-md-0">@Html.Raw(TableDescription)</p>
+                    @if (instructor != null)
+                    {
+                        <div class="float-left">
+                            <img src="@Html.Raw(instructor.Avatar)" alt="@Html.Raw($"{instructor.FirstName} {instructor.LastName}")" style="max-width: 3rem" class="rounded-circle mr-3 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                        </div>
+                    }
+                    <div class="d-inline-block">
+                        <h6 class="text-uppercase">
+                            @Html.Raw(TableName)
+                            @if (ViewBag.SearchKey != null && ((string)ViewBag.SearchKey).Length > 0)
+                            {
+                                <span>@Html.Raw($" of keyword \"{ViewBag.SearchKey}\"")</span>
+                            }
+                        </h6>
+                        <p class="text-gray mb-md-0">@Html.Raw(TableDescription)</p>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     @using (Html.BeginForm(ActionName, ControllerName, FormMethod.Get, new { @class = "form-inline float-md-right" }))
