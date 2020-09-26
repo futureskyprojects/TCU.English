@@ -30,6 +30,21 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Controllers\TestPaper\TestPaperController - Copy - Copy.Reading.cs">
+      <DependentUpon>TestPaperController - Copy.Reading.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Controllers\TestPaper\TestPaperController - Copy.Reading.cs">
+      <DependentUpon>TestPaperController.Reading.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Utils\TestCategoryUtils - Copy - Copy.Reading.cs">
+      <DependentUpon>TestCategoryUtils - Copy.Reading.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Utils\TestCategoryUtils - Copy.Reading.cs">
+      <DependentUpon>TestCategoryUtils.Reading.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\lib\" />
