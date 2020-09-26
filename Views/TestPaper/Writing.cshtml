@@ -1,13 +1,13 @@
-﻿@model ListeningTestPaper
+﻿@model WritingTestPaper
 @{
-    // Truyền ID sang cho Layout
+    // Truyền ID Sang cho Layout
     ViewData["potID"] = Model.PiceOfTestId;
 
     bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
-    TCU.English.Models.PiceOfTest.ListeningTestPaper resultPaper = null;
+    WritingTestPaper resultPaper = null;
     ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";
     ViewData["Timer"] = ViewBag.Timer ?? 0;
-    ViewData["Action"] = nameof(TestPaperController.Listening);
+    ViewData["Action"] = nameof(TestPaperController.Writing);
     ViewData["Controller"] = NameUtils.ControllerName<TestPaperController>();
     if (!isReviewMode)
     {
@@ -20,7 +20,7 @@
     }
 
     // Phương thức tạo hiển thị cho câu trả lời ở chế độ xem lại
-    void renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns, bool isShowContentImage = false)
+    void renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
     {
         string answerAlphapet = ((char)((int)'A' + index)).ToString();
         if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
@@ -29,206 +29,128 @@
         }
         else if (userAns[index].IsCorrect)
         {
-            <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
+            <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
         }
         else
         {
             <span>@answerAlphapet.</span> @testAns[index].AnswerContent
-        }
-        if (isShowContentImage)
-        {
-            <br />
-            <img class="mt-2 w-100 resize-image rounded" src="@testAns[index].AnswerContent" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
         }
     }
     int qIndex = 1;
 }
 
 @Html.HiddenFor(x => x.PiceOfTestId)
-<div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@*@Html.Raw(Model.ListeningPartOnes.Where(x => x != null && x.TestCategory.Description != null && x.TestCategory.Description.Length > 0).FirstOrDefault()?.TestCategory.Name ?? "")*@</span></div>
-<div class="my-2">@Html.Raw(Model.ListeningPartOnes.Where(x => x != null && x.TestCategory.Description != null && x.TestCategory.Description.Length > 0).FirstOrDefault()?.TestCategory.Description ?? "")</div>
 @* PART 1 *@
-@for (int i = 0; i < Model.ListeningPartOnes.Count; i++)
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Id, new { @value = Model.WritingPartOnes.TestCategory.Id })
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.TypeCode, new { @value = Model.WritingPartOnes.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.PartId, new { @value = Model.WritingPartOnes.TestCategory.PartId })
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Name, new { @value = Model.WritingPartOnes.TestCategory.Name })
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Description, new { @value = Model.WritingPartOnes.TestCategory.Description })
+@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.WritingPartOnes.TestCategory.WYSIWYGContent })
+@if (Model.WritingPartOnes.TestCategory == null || Model.WritingPartOnes.WritingPart == null || Model.WritingPartOnes.WritingPart.Count <= 0)
 {
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.Id, new { @value = Model.ListeningPartOnes[i].TestCategory.Id })
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.TypeCode, new { @value = Model.ListeningPartOnes[i].TestCategory.TypeCode })
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.PartId, new { @value = Model.ListeningPartOnes[i].TestCategory.PartId })
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.Name, new { @value = Model.ListeningPartOnes[i].TestCategory.Name })
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.Description, new { @value = Model.ListeningPartOnes[i].TestCategory.Description })
-    @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.WYSIWYGContent, new { @value = Model.ListeningPartOnes[i].TestCategory.WYSIWYGContent })
-    @if (Model.ListeningPartOnes[i].TestCategory == null || Model.ListeningPartOnes[i].ListeningBaseQuestions == null || Model.ListeningPartOnes[i].ListeningBaseQuestions.Count <= 0)
-    {
-        <div class="h6 font-weight-bold my-auto">Part 1</div>
-        <div class="alert alert-danger mt-2" role="alert">
-            <div class="text-center">
-                Could not create the right question for this section. Maybe due to lack of data in question library.
-            </div>
+    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
         </div>
-    }
-    else
-    {
-        <div>
-            @for (int j = 0; j < Model.ListeningPartOnes[i].ListeningBaseQuestions.Count(); j++)
-            {
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].Active)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].Answers)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].CreatedTime)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].CreatorId)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].ExplainLink)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].Id)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].TestCategoryId)
-                @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].UpdatedTime)
-                string uuid = Guid.NewGuid().ToString();
-                <div class="pt-3">@(qIndex++). @Model.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartOnes[i].ListeningMedia.Id);"></i></div>
-                @* Khu vực dành cho phát *@
-                <div class="p-2 text-center alert alert-warning align-self-center my-2">
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.Active)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.Audio)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.CreatedTime)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.Id)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.TestCategoryId)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.Transcript)
-                    @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningMedia.UpdatedTime)
-                    <audio controls>
-                        <source src="@Html.Raw(Model.ListeningPartOnes[i].ListeningMedia.Audio)">
-                    </audio>
-                </div>
-                @* KẾT THÚC KHU VỰC PHÁT *@
-                if (Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList == null || Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList.Count <= 0)
-                {
-                    <div class="alert alert-danger mt-2" role="alert">
-                        <div class="text-center">
-                            This question has not been answered. Please contact the administrator to report the error.
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="pt-1 row">
-                        @for (int k = 0; k < Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList.Count; k++)
-                        {
-                            @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent, new { @value = Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent })
-                            string answerAlphapet = ((char)((int)'A' + k)).ToString();
-                            <div class="col-md-4">
-                                <div id="@($"answer_group_{uuid}")">
-                                    @if (!isReviewMode)
-                                    {
-                                        <span class="@Html.Raw(Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span>@Html.Raw($" Picture {answerAlphapet}")
-                                        <br />
-                                        <img class="mt-2 w-100 resize-image rounded" src="@Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
-                                        @Html.HiddenFor(x => x.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect, new { @value = Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect })
-                                    }
-                                    else
-                                    {
-                                        renderAnswerReviewMode(k, Model.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList, resultPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].AnswerList, true);
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-            }
-        </div>
-    }
-    @* END PART 1 *@
-
-    <div class="my-3"></div>
+    </div>
 }
-
-@for (int i = 0; i < Model.ListeningPartTwos.Count; i++)
+else
 {
-    @* PART 2 *@
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.Id, new { @value = Model.ListeningPartTwos[i].TestCategory.Id })
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.TypeCode, new { @value = Model.ListeningPartTwos[i].TestCategory.TypeCode })
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.PartId, new { @value = Model.ListeningPartTwos[i].TestCategory.PartId })
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.Name, new { @value = Model.ListeningPartTwos[i].TestCategory.Name })
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.Description, new { @value = Model.ListeningPartTwos[i].TestCategory.Description })
-    @Html.HiddenFor(x => x.ListeningPartTwos[i].TestCategory.WYSIWYGContent, new { @value = Model.ListeningPartTwos[i].TestCategory.WYSIWYGContent })
-    @if (Model.ListeningPartTwos[i].TestCategory == null || Model.ListeningPartTwos[i].ListeningBaseQuestions == null || Model.ListeningPartTwos[i].ListeningBaseQuestions.Count <= 0)
-    {
-        <div class="h6 font-weight-bold my-auto">Part 2</div>
-        <div class="alert alert-danger mt-2" role="alert">
-            <div class="text-center">
-                Could not create the right question for this section. Maybe due to lack of data in question library.
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ListeningPartTwos[i].TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartTwos[i].ListeningMedia.Id);"></i></div>
-        <div class="my-2">@Html.Raw(Model.ListeningPartTwos[i].TestCategory.Description)</div>
-        @* Khu vực dành cho phát *@
-        <div class="p-2 text-center alert alert-warning align-self-center my-2">
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.Active)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.Audio)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.CreatedTime)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.Id)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.TestCategoryId)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.Transcript)
-            @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningMedia.UpdatedTime)
-            <audio controls>
-                <source src="@Html.Raw(Model.ListeningPartTwos[i].ListeningMedia.Audio)">
-            </audio>
-        </div>
-        @* KẾT THÚC KHU VỰC PHÁT *@
-        <div>
-            @for (int j = 0; j < Model.ListeningPartTwos[i].ListeningBaseQuestions.Count(); j++)
+    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.WritingPartOnes.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.WritingPartOnes.TestCategory.Description)</div>
+    <div>
+        @for (int i = 0; i < Model.WritingPartOnes.WritingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Active)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Answers)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Hint)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Id)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].DefaultSentence)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].SecondSentence)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].UpdatedTime)
+            string uuid = Guid.NewGuid().ToString();
+            <div class="pt-3">@(qIndex++). @Model.WritingPartOnes.WritingPart[i].DefaultSentence</div>
+            <div class="pt-3">@Model.WritingPartOnes.WritingPart[i].SecondSentence</div>
+            if (Model.WritingPartOnes.WritingPart[i].BaseAnswers == null || Model.WritingPartOnes.WritingPart[i].BaseAnswers.Count <= 0)
             {
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].Active)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].Answers)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].CreatedTime)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].CreatorId)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].ExplainLink)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].Hint)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].Id)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].QuestionText)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].TestCategoryId)
-                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].UpdatedTime)
-
-                string uuid = Guid.NewGuid().ToString();
-                <div class="row pb-3">
-                    <div class="col-md-12">
-                        <div>@(qIndex++). <span class="">@Model.ListeningPartTwos[i].ListeningBaseQuestions[j].QuestionText</span></div>
-
-                        @if (Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList == null || Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList.Count <= 0)
-                        {
-                            <div class="alert alert-danger mt-2" role="alert">
-                                <div class="text-center">
-                                    This question has not been answered. Please contact the administrator to report the error.
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            @for (int k = 0; k < Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList.Count; k++)
-                            {
-                                @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent, new { @value = Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent })
-                                string answerAlphapet = ((char)((int)'A' + k)).ToString();
-                                <div id="@($"answer_group_{uuid}")" class="pb-1">
-                                    @if (!isReviewMode)
-                                    {
-                                        <span class="@Html.Raw(Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].AnswerContent
-                                        @Html.HiddenFor(x => x.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect, new { @value = Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect })
-                                    }
-                                    else
-                                    {
-                                        renderAnswerReviewMode(k, Model.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList, resultPaper.ListeningPartTwos[i].ListeningBaseQuestions[j].AnswerList);
-                                    }
-                                </div>
-                            }
-                        }
+                <div class="alert alert-danger mt-2" role="alert">
+                    <div class="text-center">
+                        This question has not been answered. Please contact the administrator to report the error.
                     </div>
-
                 </div>
             }
-        </div>
-    }
-    @* END PART 2 *@
+            else
+            {
+                <div>
+                    @Html.TextBoxFor(x => x.WritingPartOnes.WritingPart[i].Answers)
+                    @Html.ValidationMessageFor(x => x.WritingPartOnes.WritingPart[i].Answers)
+                </div>
+            }
+        }
+    </div>
 }
+@* END PART 1 *@
 
-<partial name="_TranscriptModal" />
+<div class="my-3"></div>
+
+@* PART 2 *@
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Id, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Id })
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.TypeCode, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.PartId, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.PartId })
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Name, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Name })
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Description, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Description })
+@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent })
+@if (Model.WritingPartTwos.WritingPart2.TestCategory == null || Model.WritingPartTwos.WritingPart2.WritingPartTwo == null || string.IsNullOrEmpty(Model.WritingPartTwos.WritingPart2.WritingPartTwo.Questions) || string.IsNullOrEmpty(Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent))
+{
+    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.WritingPartTwos.WritingPart2.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.WritingPartTwos.WritingPart2.TestCategory.Description)</div>
+    <div>
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Active)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.CreatedTime)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.CreatorId)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Hint)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Id)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.TestCategoryId)
+        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.UpdatedTime)
+
+        @Html.Raw(Model.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
+
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent)
+        </div>
+
+        @Html.Label("Your paragraph")
+        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwos.UserParagraph)</small>
+        @Html.TextAreaFor(x => x.WritingPartTwos.UserParagraph, new { id = "user-paragraph", @required = "required" })
+        <script>
+            $(document).ready(function () {
+                if (CKEDITOR.instances['user-paragraph']) {
+                    CKEDITOR.instances['user-paragraph'].destroy();
+                }
+                CKEDITOR.replace('user-paragraph');
+            });
+        </script>
+    </div>
+}
+@* END PART 2 *@
+
+<div class="my-3"></div>
 
 @if (!isReviewMode)
 {
@@ -250,22 +172,9 @@
 
 @section Scripts {
     <script>
-        function LoadTranscript(id) {
-            $('#transcript-content-loading').show();
-            $('#transcript-content').html('');
-            $('#transcript-content').hide();
-            $('#transcript-content')
-                .load(`@Url.Action(nameof(TestPaperController.LoadTranscript),NameUtils.ControllerName<TestPaperController>())?id=@Model.PiceOfTestId&mediaId=${id}`, function () {
-                    $('#transcript-content-loading').hide();
-                    $('#transcript-content').show();
-                    if ($('#transcript-content').html().length <= 0) {
-                        $('#transcript-content').html('No have any Transcripts!')
-                    }
-                });
-        }
         $(document).ready(function () {
             // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
-            $('.resize-image').each(function () {
+            $('.reading-part-2-image').each(function () {
                 if ($(this).height() > $(this).width()) {
                     //$(this).addClass('landscape');
                     $(this).height($(this).width());
@@ -283,7 +192,7 @@
 }
 
 <style>
-    .listening-part-2-image {
+    .reading-part-2-image {
         border: 1px solid #000;
         max-width: 320px;
     }

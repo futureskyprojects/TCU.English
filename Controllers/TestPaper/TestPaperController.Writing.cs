@@ -31,9 +31,11 @@ namespace TCU.English.Controllers
         {
             ViewBag.Title = "WRITING TESTING";
             if (id <= 0)
+            {
                 return NotFoundTest();
+            }
 
-            // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
+
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
             // Nếu tìm không thấy bài Test
@@ -58,7 +60,7 @@ namespace TCU.English.Controllers
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {
-                return RedirectToAction(nameof(WritingReview), new { id = id });
+                return RedirectToAction(nameof(WritingReview), new { id });
             }
 
             // Tránh timer bị reset
@@ -68,6 +70,12 @@ namespace TCU.English.Controllers
             }
 
             WritingTestPaper paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
+
+            // Xóa answers 
+            for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
+            {
+                paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
+            }
 
             paper.PiceOfTestId = piece.Id;
 
@@ -119,7 +127,23 @@ namespace TCU.English.Controllers
             {
                 ViewBag.Error = "Please complete all questions.";
 
+                // Lưu trữ các câu trã lời trước đó của HV
+                var tempPart1Answered = paper.WritingPartOnes.WritingPart;
+
+                // Lưu trữ đoạn văn đã nhập của HV
+                var paragraph = paper.WritingPartTwos.UserParagraph;
+
+                // Load lại trang giấy thi
                 paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
+
+                // Gắn câu trả lời trước đã nhập của HV vào
+                for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
+                {
+                    paper.WritingPartOnes.WritingPart[i].Answers = tempPart1Answered[i].Answers;
+                }
+
+                // Gắn lại đoạn văn
+                paper.WritingPartTwos.UserParagraph = paragraph;
 
                 return View(paper);
             }
