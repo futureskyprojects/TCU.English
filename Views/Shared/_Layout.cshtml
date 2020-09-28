@@ -43,7 +43,9 @@
     <script src="~/js/sweetalert.min.js"></script>
 
     <script src="~/vendor/ckeditor/ckeditor.js"></script>
-
+    <!-- CORE IMPORT -->
+    <link href="./core/components/notify/noty.min.css" rel="stylesheet">
+    <script src="./core/components/notify/noty.min.js"></script>
     @RenderSection("headers", false)
 </head>
 <body>
@@ -117,6 +119,7 @@
     </script>
 
     <script src="~/js/custom.js"></script>
+
     <partial name="_ValidationScriptsPartial" />
     @RenderSection("Scripts", required: false)
 </body>

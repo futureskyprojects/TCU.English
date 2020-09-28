@@ -1,0 +1,60 @@
+﻿@model IEnumerable<TCU.English.Components.VideoLibraryTable.LibraryVideo>
+<div class="table-responsive pt-md-4 pr-md-2">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var libVideo in Model)
+            {
+                <tr>
+                    <td class="text-center" data-toggle="tooltip" data-placement="bottom" title="Click/Double-click to play">
+                        <video width="80" controls preload="metadata">
+                            <source src="@libVideo.DownloadPath">
+                            Your browser does not support the video tag.
+                        </video>
+                    </td>
+                    <td id="vl-name-@libVideo.Id">
+                        @libVideo.Name
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-success p-2 d-block mx-auto" value="@libVideo.DownloadPath" id="vl-btn-@libVideo.Id">SELECT</button>
+                    </td>
+                </tr>
+            }
+            @*@for (int i = 0; i < 1000; i++)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <img style="width:80px;" src="https://cnet2.cbsistatic.com/img/-e95qclc6pwSnGE2YccC2oLDW_8=/1200x675/2020/04/16/7d6d8ed2-e10c-4f91-b2dd-74fae951c6d8/bazaart-edit-app.jpg" />
+                        </td>
+                        <td>Một video nào đó với cái tên thật là dài, dài ơi là dài, dài cực kỳ dài...............................</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-success p-2">SELECT</button>
+                        </td>
+                    </tr>
+                }*@
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Custom styles for this page -->
+<link rel="stylesheet" href="~/vendor/datatables/dataTables.bootstrap4.min.css">
+<!-- Page level plugins -->
+<script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script>
+    $('#dataTable').DataTable();
+</script>

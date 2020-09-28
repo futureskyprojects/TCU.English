@@ -1,5 +1,15 @@
 ﻿@model TCU.English.Models.SpeakingEmbedCombined
 
+@{
+    string videoName = "";
+    string source = "";
+    if (Model != null && Model.SpeakingEmbed != null && !string.IsNullOrEmpty(Model.SpeakingEmbed.YoutubeVideo))
+    {
+        videoName = System.IO.Path.GetFileNameWithoutExtension(Model.SpeakingEmbed.YoutubeVideo);
+        source = Model.SpeakingEmbed.YoutubeVideo;
+    }
+}
+
 <div class="row">
     <small class="form-text text-danger mr-3">@Html.ValidationSummary()</small>
     <div class="col-12">
@@ -39,16 +49,24 @@
                 @Html.HiddenFor(x => x.SpeakingEmbed.UpdatedTime)
                 @Html.HiddenFor(x => x.SpeakingEmbed.TestCategoryId)
                 @Html.HiddenFor(x => x.SpeakingEmbed.Active)
-                <div class="form-group">
-                    @Html.LabelFor(x => x.SpeakingEmbed.YoutubeVideo)
-                    @Html.TextBoxFor(x => x.SpeakingEmbed.YoutubeVideo, new { id = "YoutubeEmbedAddress", @placeholder = "https://youtube.com/XJyaYUa...", @class = "form-control" })
-                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.SpeakingEmbed.YoutubeVideo)</small>
-                    <div class="card video-container mt-3">
-                        <iframe id="video-embed-player"
-                                src="https://www.youtube.com/embed/PR_yVho1Txc?controls=0"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-                        </iframe>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Label("Your selected video")
+                            <input type="text" class="form-control" id="selectedVideoName" placeholder="You not select any video" disabled
+                                   value="@videoName" />
+                            @Html.HiddenFor(x => x.SpeakingEmbed.YoutubeVideo, new { id = "YoutubeEmbedAddress" })
+                            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.SpeakingEmbed.YoutubeVideo)</small>
+                            <div class="pt-3">
+                                <video controls preload="metadata" style="width:100%" id="video-embed-player">
+                                    <source src="@source">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @await Component.InvokeAsync(nameof(TCU.English.Components.VideoLibraryTable))
                     </div>
                 </div>
                 @* END OF QUESTIONS *@
@@ -71,31 +89,51 @@
 <script>
     CKEDITOR.replace('WYSIWYGContent');
 
-    function getYoutubeVideoId(address) {
-        const idIndext = 5;
-        const regex = /https:\/\/((www\.youtube\.com\/watch\?v=)|(youtu\.be\/)|(www\.youtube\.com\/embed\/))(.*?)($|(&))/gm;
-        let m = regex.exec(address);
-        if (m.length < idIndext) {
-            toastr['error']("Invalid video address. The ID of the embedded video cannot be found.");
-            return '';
+    var selectedIndex = 0;
+
+    function getVideoFromNearList(id, isInit = false) {
+
+        if (id == selectedIndex) {
+            @Html.Raw(Notification.Error("This video was selected before"))
+            return;
+        }
+        let downloadPath = $(`#vl-btn-${id}`).val();
+        let videoName = $(`#vl-name-${id}`).html();
+
+        if (downloadPath == undefined || videoName == undefined) {
+            @Html.Raw(Notification.Error("Video not found"))
+            return;
         }
 
-        return m[idIndext];
+        $('#selectedVideoName').val(videoName.trim());
+        $('#YoutubeEmbedAddress').val(downloadPath.trim());
+        $('#video-embed-player source').attr('src', downloadPath.trim());
+        $('#video-embed-player')[0].load();
+
+        selectedIndex = id;
+
+        if (!isInit)
+            @Html.Raw(Notification.Success("Change video success"))
+        else
+            @Html.Raw(Notification.Success("Set first video for view success"))
+
     }
 
-    $('#YoutubeEmbedAddress').on('change', function () {
-        let address = $(this).val();
-        if (address.indexOf('https://www.youtube.com') != 0 && address.indexOf('https://youtu.be') != 0) {
-            toastr['error']("You have to embed video from youtube");
-        }
-
-        let videoId = getYoutubeVideoId(address);
-        $('#video-embed-player').attr('src', `https://www.youtube.com/embed/${videoId}`);
-        setTimeout(function () {
-            console.clear();
-        }, 2000);
-    });
-    setTimeout(function () {
-        console.clear();
-    }, 2000);
+    // Chêm sự kiện vào các nút
+    $('button[id^="vl-btn-"]').filter(
+        function () {
+            return this.id.match(/\d+$/);
+        }).click(function () {
+            let indexString = $(this).attr('id').replace('vl-btn-', '');
+            try {
+                let index = parseInt(indexString);
+                getVideoFromNearList(index);
+            } catch (e) {
+                @Html.Raw(Notification.Error("Your select is invalid"))
+            }
+        });
+    @if (string.IsNullOrEmpty(source))
+    {
+        @Html.Raw("getVideoFromNearList(1, true);");
+    }
 </script>
