@@ -4,7 +4,8 @@
 
 <div class="bg-white shadow roundy px-4 py-3 d-flex align-items-center justify-content-between mb-4 bg-hover-gradient-success"
      onclick="gotoTestStorage(@Model)"
-     style="cursor: pointer">
+     style="cursor: pointer;@Html.Raw(Model <= 0?"display: none !important;":"")"
+     id="instructor-test-unmarks-couter">
     <div class="flex-grow-1 d-flex align-items-center pr-2">
         <div class="dot mr-3 bg-blue"></div>
         <div class="text">
@@ -15,6 +16,7 @@
 </div>
 
 <script>
+
     function gotoTestStorage(count) {
         if (count <= 0) { // Khi đã hoàn thành hết rồi thì thông báo
             @Html.Raw(Notification.Success("You have completed all the tests submitted by the students"))

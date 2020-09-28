@@ -17,7 +17,7 @@ namespace TCU.English.Models
         public string Hint { get; set; }
         public string Answers { get; set; }
         [NotMapped]
-        public List<BaseAnswer> BaseAnswers { get; set; } = BaseAnswer.Generate(Config.MAX_WRITING_PART_1_QUESTION);
+        public List<BaseAnswer> BaseAnswers { get; set; } = BaseAnswer.Generate(3);
         [DisplayName("Explain Link")]
         public string ExplainLink { get; set; }
         public int CreatorId { get; set; }

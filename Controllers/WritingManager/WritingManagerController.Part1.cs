@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using TCU.English.Models;
-using TCU.English.Models.DataManager;
-using TCU.English.Models.Repository;
 using TCU.English.Utils;
 
 namespace TCU.English.Controllers
@@ -92,41 +84,7 @@ namespace TCU.English.Controllers
             return Part1Processing(writingPartOne);
         }
 
-        private IActionResult Part1Processing(WritingPartOne writingPartOne)
-        {
-            // Nếu chưa có câu trả lời
-            if (writingPartOne.BaseAnswers == null || writingPartOne.BaseAnswers.Count <= 0)
-                return Json(new { status = false, message = "Please provide atleast one of answers" });
-
-            // Nếu dữ liệu nhập vào không hợp lệ
-            if (ModelState.IsValid)
-                return Json(new { status = false, message = "Data invalid" });
-
-            // Nếu chưa chọn mục cha
-            if (writingPartOne.TestCategoryId <= 0)
-                return Json(new { status = false, message = "Please choose a category for this question" });
-
-            // Chuyển dữ liệu thành JSON và lưu vào
-            writingPartOne.Answers = JsonConvert.SerializeObject(writingPartOne.BaseAnswers);
-
-            // Nếu không có bất kỳ câu trả lời nào
-            if (string.IsNullOrEmpty(writingPartOne.Answers))
-                return Json(new { status = false, message = "Unable to determine the answer to this question" });
-
-            // Cập nhật mã người tạo nếu chưa có
-            if (writingPartOne.CreatorId <= 0)
-                writingPartOne.CreatorId = User.Id();
-
-            // Đầy đủ thì thêm vào CSDL
-            if (writingPartOne.Id <= 0)
-                _WritingPartOneManager.Add(writingPartOne);
-            else
-                _WritingPartOneManager.Update(writingPartOne);
-
-            // Trả về kết quả
-            return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
-        }
-
+        
         [HttpGet]
         public IActionResult Part1Update(long id)
         {
@@ -169,5 +127,40 @@ namespace TCU.English.Controllers
 
         #endregion
 
+
+        private IActionResult Part1Processing(WritingPartOne writingPartOne)
+        {
+            // Nếu chưa có câu trả lời
+            if (writingPartOne.BaseAnswers == null || writingPartOne.BaseAnswers.Count <= 0)
+                return Json(new { status = false, message = "Please provide atleast one of answers" });
+
+            // Nếu dữ liệu nhập vào không hợp lệ
+            if (!ModelState.IsValid)
+                return Json(new { status = false, message = "Data invalid" });
+
+            // Nếu chưa chọn mục cha
+            if (writingPartOne.TestCategoryId <= 0)
+                return Json(new { status = false, message = "Please choose a category for this question" });
+
+            // Chuyển dữ liệu thành JSON và lưu vào
+            writingPartOne.Answers = JsonConvert.SerializeObject(writingPartOne.BaseAnswers);
+
+            // Nếu không có bất kỳ câu trả lời nào
+            if (string.IsNullOrEmpty(writingPartOne.Answers))
+                return Json(new { status = false, message = "Unable to determine the answer to this question" });
+
+            // Cập nhật mã người tạo nếu chưa có
+            if (writingPartOne.CreatorId <= 0)
+                writingPartOne.CreatorId = User.Id();
+
+            // Đầy đủ thì thêm vào CSDL
+            if (writingPartOne.Id <= 0)
+                _WritingPartOneManager.Add(writingPartOne);
+            else
+                _WritingPartOneManager.Update(writingPartOne);
+
+            // Trả về kết quả
+            return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
+        }
     }
 }
