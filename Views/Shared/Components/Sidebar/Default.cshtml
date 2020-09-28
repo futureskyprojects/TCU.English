@@ -25,3 +25,13 @@ User.IsInRole(UserType.ROLE_NORMAL_USER)
 @{await Html.RenderPartialAsync("./_InstructorMenu.cshtml");}
 @{await Html.RenderPartialAsync("./_ManagerUserMenu.cshtml");}
 @{await Html.RenderPartialAsync("./_ManagerQuestionLibraryMenu.cshtml");}
+@if (
+User.IsInRole(UserType.ROLE_ALL) ||
+User.IsInRole(UserType.ROLE_MANAGER_LIBRARY)
+)
+{
+    <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">FILE MANAGER</div>
+    <ul class="sidebar-menu list-unstyled">
+        <li class="sidebar-list-item"><a href="/file-manager" class="sidebar-link text-muted"><i class="o-archive-1 mr-3 text-gray"></i><span>File manager</span></a></li>
+    </ul>
+}

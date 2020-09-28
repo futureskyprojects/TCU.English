@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using TCU.English.Models;
 using TCU.English.Utils;
 
 namespace TCU.English.Controllers
@@ -18,6 +19,7 @@ namespace TCU.English.Controllers
 
         // Refs https://docs.gleamtech.com/fileultimate/html/using-fileultimate-in-an-asp-net-core-project.htm
         [HttpGet("file-manager")]
+        [AuthorizeRoles(UserType.ROLE_ALL, UserType.ROLE_MANAGER_LIBRARY)]
         public IActionResult FileManager()
         {
             string root = host.GetContentPathRootForUploadUtils();
