@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using GleamTech.AspNet.Core;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +69,11 @@ namespace TCU.English
             // https://viblo.asia/p/su-dung-cookie-authentication-trong-aspnet-core-djeZ1VG8lWz
             services.CustomCookieAuthentication();
             #endregion
+
+            //Add GleamTech to the ASP.NET Core services container.
+            //----------------------
+            services.AddGleamTech();
+            //----------------------
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +90,12 @@ namespace TCU.English
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //Register GleamTech to the ASP.NET Core HTTP request pipeline.
+            //----------------------
+            app.UseGleamTech();
+            //----------------------
+
             //app.UseSession();
             app.UseCookiePolicy();
             app.UseHttpsRedirection();

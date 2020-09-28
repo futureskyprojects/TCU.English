@@ -16,6 +16,29 @@ namespace TCU.English.Controllers
             host = _host;
         }
 
+        // Refs https://docs.gleamtech.com/fileultimate/html/using-fileultimate-in-an-asp-net-core-project.htm
+        [HttpGet("file-manager")]
+        public IActionResult FileManager()
+        {
+            string root = host.GetContentPathRootForUploadUtils();
+
+            // Tránh băm source
+            root = Path.Combine(root,"FileManagerByVistark");
+
+            // Nếu không thể tạo được thư mục root
+            if (!Directory.Exists(root) && !Directory.CreateDirectory(root).Exists)
+            {
+                this.NotifyError("Can not create or access to root file manager");
+                return Redirect("/");
+            }
+
+            // Gán giá trị đường dẫn mặc định
+            ViewBag.RootPath = root;
+
+            // Nếu được thì trả về view
+            return View();
+        }
+
         [HttpGet("[controller]/{prefix}")]
         public IActionResult Index()
         {

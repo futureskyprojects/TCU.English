@@ -1,0 +1,42 @@
+﻿@using GleamTech.AspNet.Core
+@using GleamTech.FileUltimate.AspNet.UI
+
+@{
+    var fileManager = new FileManager
+    {
+        Width = 600,
+        Height = 600,
+        Resizable = true,
+        MaxFileSizeToUpload = ByteSizeValue.Parse("100MB"),
+        VideoThumbnailsEnabled = true
+    };
+
+    var rootFolder = new FileManagerRootFolder
+    {
+        Name = "TCU.English",
+        Location = ViewBag.RootPath
+    };
+
+    rootFolder.AccessControls.Add(new FileManagerAccessControl
+    {
+        Path = @"\",
+        AllowedPermissions = FileManagerPermissions.Full
+    });
+
+    fileManager.RootFolders.Add(rootFolder);
+}
+
+@section headers {
+    @this.RenderHead(fileManager)
+}
+
+
+<section class="py-5">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-inline-block mx-auto">
+                @this.RenderBody(fileManager)
+            </div>
+        </div>
+    </div>
+</section>
