@@ -166,7 +166,7 @@
         function disableF5(e) {
             if ((e.which || e.keyCode) == 116) {
                 e.preventDefault();
-                toastr["error"]("Please do not refresh the page while the test is in progress.");
+                @Html.Raw(Notification.Warning("Please do not refresh the page while the test is in progress"))
             }
         };
         $(document).on("keydown", disableF5);

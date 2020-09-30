@@ -76,7 +76,7 @@ else
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].UpdatedTime)
             string uuid = Guid.NewGuid().ToString();
             <div class="pt-3">@(qIndex++). @Model.WritingPartOnes.WritingPart[i].DefaultSentence</div>
-            <div class="pt-3">@Model.WritingPartOnes.WritingPart[i].SecondSentence</div>
+            <div class="pt-3"><span class="font-weight-light" style="text-decoration: underline;">Rewrite:</span> @Model.WritingPartOnes.WritingPart[i].SecondSentence</div>
             if (Model.WritingPartOnes.WritingPart[i].BaseAnswers == null || Model.WritingPartOnes.WritingPart[i].BaseAnswers.Count <= 0)
             {
                 <div class="alert alert-danger mt-2" role="alert">
@@ -87,9 +87,11 @@ else
             }
             else
             {
-                <div>
-                    @Html.TextBoxFor(x => x.WritingPartOnes.WritingPart[i].Answers)
-                    @Html.ValidationMessageFor(x => x.WritingPartOnes.WritingPart[i].Answers)
+                <div class="col-md-8">
+                    <div class="row mt-2">
+                        @Html.TextBoxFor(x => x.WritingPartOnes.WritingPart[i].Answers, new { @placeholder = "Input your answer ...", @class = "form-control", @style = "width: unset;" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartOnes.WritingPart[i].Answers)</small>
+                    </div>
                 </div>
             }
         }
@@ -143,7 +145,14 @@ else
                 if (CKEDITOR.instances['user-paragraph']) {
                     CKEDITOR.instances['user-paragraph'].destroy();
                 }
-                CKEDITOR.replace('user-paragraph');
+                CKEDITOR.replace('user-paragraph', {
+                    toolbar:
+                        [
+                            { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                            { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                            { name: 'tools', items: ['Maximize', '-', 'About'] }
+                        ]
+                });
             });
         </script>
     </div>
@@ -182,13 +191,6 @@ else
             });
         });
     </script>
-
-    @if (ViewBag.Error != null && ((string)ViewBag.Error).Length > 0)
-    {
-        <script>
-            toastr['error']("@Html.Raw(ViewBag.Error)");
-        </script>
-    }
 }
 
 <style>

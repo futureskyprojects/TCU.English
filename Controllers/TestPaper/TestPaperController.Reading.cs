@@ -117,7 +117,7 @@ namespace TCU.English.Controllers
             // Kiểm tra check full
             if (!paper.IsPaperFullSelection())
             {
-                ViewBag.Error = "Please complete all questions.";
+                this.NotifyError("Please complete all questions");
 
                 paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
                     .CopySelectedAnswers(paper);
@@ -127,7 +127,7 @@ namespace TCU.English.Controllers
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
             {
-                ViewBag.Error = "The test does not have any questions.";
+                this.NotifyError("The test does not have any questions");
 
                 paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
                     .CopySelectedAnswers(paper);

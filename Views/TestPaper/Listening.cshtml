@@ -273,13 +273,6 @@
             });
         });
     </script>
-
-    @if (ViewBag.Error != null && ((string)ViewBag.Error).Length > 0)
-    {
-        <script>
-            toastr['error']("@Html.Raw(ViewBag.Error)");
-        </script>
-    }
 }
 
 <style>
