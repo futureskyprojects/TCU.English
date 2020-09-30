@@ -6,14 +6,29 @@
     ViewData["Title"] = ViewBag.Title ?? "TEST RESULT";
     Layout = "~/Views/Shared/_TestPaperLayout.cshtml";
     ViewData["HideTimer"] = true;
+
+    bool isWriting = ViewBag.IsWriting ?? false;
+    string msg = ViewBag.Msg ?? "Congratulations, you finished the test with a score of";
+    string customScores = ViewBag.CustomScore ?? "";
 }
 
 <section>
     <div class="text-center">
         <img src="~/img/success.gif" alt="Success" class="w-50" />
-        <p>Congratulations, you finished the test with a score of</p>
+        <p>@Html.Raw(msg)</p>
         <p style="font-size: 50px;" class="font-weight-bold p-4 text-red">
-            @(((float)ViewBag.Scores).ToScores())/@Config.MAX_SCORE_POINT
+            @if (string.IsNullOrEmpty(customScores))
+            {
+                @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{Config.MAX_SCORE_POINT}")
+            }
+            else
+            {
+                @Html.Raw(customScores)
+            }
+            @if (isWriting)
+            {
+                <div class="text-danger font-italic mb-3">Part 2 will be reviewed by the teacher you choose to see and evaluate later.</div>
+            }
         </p>
         <button type="button" class="btn btn-lg btn-info" onclick="review(@Model.Id)">Detail</button>
     </div>

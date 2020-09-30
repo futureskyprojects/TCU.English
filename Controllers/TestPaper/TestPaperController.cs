@@ -51,7 +51,7 @@ namespace TCU.English.Controllers
             return RedirectToAction(nameof(TestController.NewTest), NameUtils.ControllerName<TestController>());
         }
 
-        public IActionResult Result(int id)
+        public IActionResult Result(int id, params float[] scoresPart)
         {
             if (id <= 0)
                 return BadRequest();
@@ -69,6 +69,20 @@ namespace TCU.English.Controllers
             ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
             ViewBag.Scores = piece.Scores;
 
+            // Nếu đây là bài thi viết
+            if (piece.TypeCode == TestCategory.WRITING)
+            {
+                // Cập nhật điểm mới của phần cho đúng
+                ViewBag.Scores = scoresPart[0];
+
+                // Gắn cờ xác minh
+                ViewBag.IsWriting = true;
+
+                // Đổi tin nhắn thông báo thành công
+                ViewBag.Msg = "Congratulations, you finished the test, with <span class=\"font-weight-bold text-danger\">PART 1</span> score is";
+            }
+
+
             this.NotifySuccess("Your test is completed!");
 
             return View(piece);
@@ -81,6 +95,8 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(ReadingReview), new { id });
             if (type == TestCategory.LISTENING)
                 return RedirectToAction(nameof(ListeningReview), new { id });
+            if (type == TestCategory.WRITING)
+                return RedirectToAction(nameof(WritingReview), new { id });
             return NotFoundTest();
         }
 

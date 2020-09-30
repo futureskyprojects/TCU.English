@@ -49,7 +49,10 @@ namespace TCU.English.Models.PiceOfTest
 
             // Kiến tạo danh sách câu trả lời
             for (int i = 0; i < questions.Count; i++)
+            {
                 questions[i].BaseAnswers = JsonConvert.DeserializeObject<List<BaseAnswer>>(questions[i].Answers);
+                questions[i].Answers = questions[i].BaseAnswers.First().AnswerContent;
+            }    
 
             return new WritingPartOneDTO
             {
@@ -121,10 +124,8 @@ namespace TCU.English.Models.PiceOfTest
 
         public bool IsPaperFullSelection()
         {
-            if (WritingPartOnes.WritingPart != null)
-                return string.IsNullOrEmpty(WritingPartTwos.UserParagraph);
-
-            return !WritingPartOnes.WritingPart.Any(x => string.IsNullOrEmpty(x.Answers));
+            return !WritingPartOnes.WritingPart.Any(x => string.IsNullOrEmpty(x.Answers)) &&
+                !string.IsNullOrEmpty(WritingPartTwos.UserParagraph);
         }
 
         public int TotalQuestions()

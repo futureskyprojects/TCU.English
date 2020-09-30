@@ -75,7 +75,7 @@ namespace TCU.English.Controllers
             // Xóa answers 
             for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
             {
-                paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
+                //paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
             }
 
             paper.PiceOfTestId = piece.Id;
@@ -156,16 +156,33 @@ namespace TCU.English.Controllers
                 paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
                 return View(paper);
             }
-            int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng
-            float scores = Math.Ceiling(((float)correct / total) * Config.MAX_SCORE_POINT).ToFloat();
+
+            int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng cho phần 1
+            float scoresPart1 = Math.Ceiling(((float)correct / total) * Config.MAX_SCORE_POINT).ToFloat();
+
+            // Thời gian hoàn tất
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
+
+            // Cập nhật điểm vào cho part 1
+            paper.WritingPartOnes.Scores = scoresPart1;
+
+            // Chưa có điểm part 2
+            paper.WritingPartTwos.Scores = -1;
+
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
-            piece.Scores = scores;
+
+            // Chưa có điểm tổng
+            piece.Scores = -1;
+
+            // Cập nhật thời gian kết thúc
             piece.TimeToFinished = timeToFinished;
+
+            // Cập nhật vào CSDL
             _PieceOfTestManager.Update(piece);
+
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), new { id = piece.Id });
+            return RedirectToAction(nameof(Result), new { id = piece.Id, scoresPart = new float[] { scoresPart1 } });
         }
 
         [HttpGet]

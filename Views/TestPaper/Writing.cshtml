@@ -19,23 +19,17 @@
         resultPaper = ViewBag.ResultPaper;
     }
 
-    // Phương thức tạo hiển thị cho câu trả lời ở chế độ xem lại
-    void renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
+    bool checkCorrectPart1(int index)
     {
-        string answerAlphapet = ((char)((int)'A' + index)).ToString();
-        if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
-        {
-            <span class="border border-success rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
-        }
-        else if (userAns[index].IsCorrect)
-        {
-            <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
-        }
-        else
-        {
-            <span>@answerAlphapet.</span> @testAns[index].AnswerContent
-        }
+        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => x.AnswerContent.ToLower().Trim()
+        .Equals(Model.WritingPartOnes.WritingPart[index].Answers));
     }
+
+    string visibleAnswer(int index)
+    {
+        return string.Join(" / ", resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers);
+    }
+
     int qIndex = 1;
 }
 
@@ -64,7 +58,6 @@ else
         @for (int i = 0; i < Model.WritingPartOnes.WritingPart.Count(); i++)
         {
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Active)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Answers)
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatedTime)
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatorId)
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].ExplainLink)
@@ -85,12 +78,26 @@ else
                     </div>
                 </div>
             }
-            else
+            else if (!isReviewMode)
             {
                 <div class="col-md-8">
                     <div class="row mt-2">
                         @Html.TextBoxFor(x => x.WritingPartOnes.WritingPart[i].Answers, new { @placeholder = "Input your answer ...", @class = "form-control", @style = "width: unset;" })
                         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartOnes.WritingPart[i].Answers)</small>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-8">
+                    <div class="row mt-2">
+                        <span class="font-weight-light" style="text-decoration: underline;">Your answer:</span> <span class="font-weight-bold">
+                            @if (checkCorrectPart1(1))
+                                @Model.WritingPartOnes.WritingPart[i].Answers
+                        </span>
+                        <span>
+                            @visibleAnswer(i)
+                        </span>
                     </div>
                 </div>
             }
@@ -138,23 +145,32 @@ else
         </div>
 
         @Html.Label("Your paragraph")
-        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwos.UserParagraph)</small>
-        @Html.TextAreaFor(x => x.WritingPartTwos.UserParagraph, new { id = "user-paragraph", @required = "required" })
-        <script>
-            $(document).ready(function () {
-                if (CKEDITOR.instances['user-paragraph']) {
-                    CKEDITOR.instances['user-paragraph'].destroy();
-                }
-                CKEDITOR.replace('user-paragraph', {
-                    toolbar:
-                        [
-                            { name: 'basicstyles', items: ['Bold', 'Italic'] },
-                            { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-                            { name: 'tools', items: ['Maximize', '-', 'About'] }
-                        ]
+        @if (!isReviewMode)
+        {
+            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwos.UserParagraph)</small>
+            @Html.TextAreaFor(x => x.WritingPartTwos.UserParagraph, new { id = "user-paragraph", @required = "required" })
+            <script>
+                $(document).ready(function () {
+                    if (CKEDITOR.instances['user-paragraph']) {
+                        CKEDITOR.instances['user-paragraph'].destroy();
+                    }
+                    CKEDITOR.replace('user-paragraph', {
+                        toolbar:
+                            [
+                                { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                                { name: 'tools', items: ['Maximize', '-', 'About'] }
+                            ]
+                    });
                 });
-            });
-        </script>
+            </script>
+        }
+        else
+        {
+            <div class="p-3 border border-info mb-4">
+                @Html.Raw(Model.WritingPartTwos.UserParagraph)
+            </div>
+        }
     </div>
 }
 @* END PART 2 *@
@@ -179,7 +195,7 @@ else
     }
 }
 
-@section Scripts {
+@section FinishButton {
     <script>
         $(document).ready(function () {
             // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
