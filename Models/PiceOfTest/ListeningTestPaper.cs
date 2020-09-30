@@ -48,9 +48,7 @@ namespace TCU.English.Models.PiceOfTest
                                 listening[i].ListeningBaseQuestions[j].AnswerList.Count > 0)
                             {
                                 for (int k = 0; k < listening[i].ListeningBaseQuestions[j].AnswerList.Count; k++)
-                                {
                                     listening[i].ListeningBaseQuestions[j].AnswerList[k].IsCorrect = false;
-                                }
                             }
                         }
                     }
@@ -159,8 +157,12 @@ namespace TCU.English.Models.PiceOfTest
                 currentCombined = ListeningPartTwos;
                 destCombined = paper.ListeningPartTwos;
             }
+
+            // Biến chứa giá trị đếm số câu đúng
+            int count = 0;
+
             // vì chắc chắn 2 cặp dữ liệu trên có size bằng nhau, nên ta tiến hành cho lặp kép
-            for (int i = 0; i < currentCombined.Count && i < destCombined.Count; i++)
+            for (int i = 0; i < currentCombined.Count; i++)
             {
                 // Lấy danh sách câu hỏi hiện tại
                 List<ListeningBaseQuestion> current = currentCombined[i].ListeningBaseQuestions;
@@ -172,7 +174,6 @@ namespace TCU.English.Models.PiceOfTest
                     dest != null &&
                     current.Count == dest.Count)
                 {
-                    int count = 0;
                     for (int j = 0; j < current.Count; j++)
                     {
                         try
@@ -189,12 +190,10 @@ namespace TCU.English.Models.PiceOfTest
                             // Bỏ qua
                         }
                     }
-                    return count;
                 }
             }
 
-            // Có lỗi gì đó thì trả về là -1
-            return -1;
+            return count;
         }
 
         /// <summary>

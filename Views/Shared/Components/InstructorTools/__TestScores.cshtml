@@ -1,6 +1,8 @@
-﻿@model PieceOfTest
+﻿@{
+    var POT = (PieceOfTest)ViewBag.POT;
+}
 
-@if (Model == null)
+@if (POT == null)
     return;
 
 @* Nút hiển thị hộp thoại đánh giá và nhận xét *@
@@ -8,13 +10,13 @@
     <button type="button"
             class="btn btn-lg btn-primary rounded p-2">
         <span class="" style="font-size: 1.5rem">
-            @if (Model.Scores < 0)
+            @if (POT.Scores < 0)
             { // Nếu chưa được chấm điểm
                 <i>No points</i>
             }
             else
             { // Nếu đã được chấm điểm rồi -> Hiển thị điểm lên
-                @Html.Raw($"Scores: {Model.Scores.ToScores()}/{@Config.MAX_SCORE_POINT}")
+                @Html.Raw($"Scores: {POT.Scores.ToScores()}/{@Config.MAX_SCORE_POINT}")
             }
         </span>
     </button>

@@ -1,6 +1,7 @@
-﻿@model PieceOfTest
-
-@if (Model == null)
+﻿@{
+    var POT = (PieceOfTest)ViewBag.POT;
+}
+@if (POT == null)
     return;
 
 @* Nút hiển thị hộp thoại đánh giá và nhận xét *@
@@ -27,11 +28,11 @@
             @using (Html.BeginForm(nameof(InstructorController.SubmitToolResult), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
             {
                 <div class="modal-body">
-                    @Html.HiddenFor(x => x.Id)
+                    @Html.Hidden(nameof(PieceOfTest.Id), POT.Id)
                     <div id="instructor_tools-content"></div>
                     @Html.Label("Your comments")
-                    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.InstructorComments)</small>
-                    @Html.TextAreaFor(x => x.InstructorComments, new { id = "instructor-comment", @required = "required" })
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments),null)</small>
+                    @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment", @required = "required" })
                 </div>
                 @*<div class="modal-body" id="instructor_tools-content-loading">
                         <partial name="__Loading" />
