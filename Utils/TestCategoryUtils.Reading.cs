@@ -35,6 +35,7 @@ namespace TCU.English.Utils
                 ResultOfTestJson = JsonConvert.SerializeObject(paper),
             };
             // Lưu trữ bài thi vào database trước khi bắt đầu
+            _PieceOfTestManager.Add(piceOfTest);
 
             return piceOfTest.Id;
         }

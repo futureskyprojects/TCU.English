@@ -20,6 +20,7 @@ namespace TCU.English.Controllers
             }
             else
             {
+                this.NotifyError("Generate Reading test fail");
                 // Không thì trả về trang Index
                 return RedirectToAction(nameof(Index));
             }

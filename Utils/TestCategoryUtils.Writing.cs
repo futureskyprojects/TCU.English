@@ -19,7 +19,7 @@ namespace TCU.English.Utils
                 WritingPartTwos = WritingTestPaper.GeneratePart2(_TestCategoryManager, _WritingPartTwoManager),
             };
         }
-        public static int GenerateWritingTestPaper(this TestCategoryManager _TestCategoryManager, WritingPartTwoManager _WritingPartTwoManager, int UserId, int? InstructorId)
+        public static int GenerateWritingTestPaper(this TestCategoryManager _TestCategoryManager, PieceOfTestManager _PieceOfTestManager, WritingPartTwoManager _WritingPartTwoManager, int UserId, int? InstructorId)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
             WritingTestPaper paper = _TestCategoryManager.GenerateWritingTestPaper(_WritingPartTwoManager);
@@ -28,11 +28,13 @@ namespace TCU.English.Utils
             {
                 UserId = UserId,
                 InstructorId = InstructorId,
-                TypeCode = TestCategory.READING,
+                TypeCode = TestCategory.WRITING,
                 PartId = -1,
                 ResultOfTestJson = JsonConvert.SerializeObject(paper),
             };
+
             // Lưu trữ bài thi vào database trước khi bắt đầu
+            _PieceOfTestManager.Add(piceOfTest);
 
             return piceOfTest.Id;
         }

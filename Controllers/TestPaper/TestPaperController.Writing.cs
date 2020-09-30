@@ -13,7 +13,7 @@ namespace TCU.English.Controllers
         public IActionResult WritingNewTest(int? id)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            int PiceOfTestId = _TestCategoryManager.GenerateWritingTestPaper(_WritingPartTwoManager, User.Id(), id);
+            int PiceOfTestId = _TestCategoryManager.GenerateWritingTestPaper(_PieceOfTestManager, _WritingPartTwoManager, User.Id(), id);
             if (PiceOfTestId > 0)
             {
                 // Nếu lưu trữ thành công, thì tiến hành cho thí sinh làm
@@ -21,6 +21,7 @@ namespace TCU.English.Controllers
             }
             else
             {
+                this.NotifyError("Generate Writing test fail");
                 // Không thì trả về trang Index
                 return RedirectToAction(nameof(Index));
             }
