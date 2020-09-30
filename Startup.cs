@@ -54,7 +54,7 @@ namespace TCU.English
             services.AddDataRepositoryScope();
 
             // Thiết lập cho phép mô hình MVC
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             // Thiết lập chữ thường cho URL routing
             services.AddRouting(options => options.LowercaseUrls = true);

@@ -4,12 +4,12 @@
     string listening = nameof(TCU.English.Controllers.TestPaperController.ListeningNewTest);
     string reading = nameof(TCU.English.Controllers.TestPaperController.ReadingNewTest);
     string speaking = "";
-    string writing = "";
+    string writing = nameof(TCU.English.Controllers.TestPaperController.WritingNewTest);
 }
 
 <div class="container-fluid px-xl-5">
     <section class="mt-5 p-3 card">
-        <div class="mb-3 form-control-label font-weight-bold text-lg text-uppercase text-center">Select your Instructor</div>
+        <div class="mb-3 form-control-label font-weight-bold text-lg text-uppercase text-center text-danger">Select your Instructor</div>
         <div class="form-group">
             <div class="select">
                 <select class="form-control rounded" id="instructor-select">
@@ -90,14 +90,14 @@
             if (count > 0) {
                 let slectedInstructorId = $('#instructor-select').children("option:selected").val();
                 if (isRequireInstructor && slectedInstructorId == 'null') {
-                    toastr['error']('You need to select your instructor to be able to start this test.');
+                    @Html.Raw(Notification.Error("You need to select your instructor to be able to start this test."))
                     return;
                 }
                 if (slectedInstructorId != 'null')
                     address = `${address}/${slectedInstructorId}`;
                 window.location.href = address;
             } else {
-                toastr['warning']('Sorry, currently there is not enough data in this section.');
+                @Html.Raw(Notification.Warning("Sorry, currently there is not enough data in this section."))
             }
         }
     </script>
