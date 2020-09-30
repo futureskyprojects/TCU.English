@@ -122,14 +122,9 @@ namespace TCU.English.Models.PiceOfTest
         public bool IsPaperFullSelection()
         {
             if (WritingPartOnes.WritingPart != null)
-                foreach (var answers in WritingPartOnes.WritingPart)
-                {
-                    if (string.IsNullOrEmpty(answers.Answers))
-                    {
-                        return false;
-                    }
-                }
-            return true;
+                return string.IsNullOrEmpty(WritingPartTwos.UserParagraph);
+
+            return !WritingPartOnes.WritingPart.Any(x => string.IsNullOrEmpty(x.Answers));
         }
 
         public int TotalQuestions()
