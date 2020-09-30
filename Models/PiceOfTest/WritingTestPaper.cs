@@ -49,10 +49,7 @@ namespace TCU.English.Models.PiceOfTest
 
             // Kiến tạo danh sách câu trả lời
             for (int i = 0; i < questions.Count; i++)
-            {
                 questions[i].BaseAnswers = JsonConvert.DeserializeObject<List<BaseAnswer>>(questions[i].Answers);
-                questions[i].Answers = questions[i].BaseAnswers.First().AnswerContent;
-            }    
 
             return new WritingPartOneDTO
             {

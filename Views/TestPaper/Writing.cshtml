@@ -27,7 +27,17 @@
 
     string visibleAnswer(int index)
     {
-        return string.Join(" / ", resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers);
+        string trueAnswers = "";
+        foreach (BaseAnswer ba in resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers)
+        {
+            if (!string.IsNullOrEmpty(ba.AnswerContent) && !string.IsNullOrWhiteSpace(ba.AnswerContent))
+            {
+                if (!string.IsNullOrEmpty(trueAnswers))
+                    trueAnswers += " / ";
+                trueAnswers += ba.AnswerContent;
+            }
+        }
+        return trueAnswers;
     }
 
     int qIndex = 1;
@@ -89,15 +99,20 @@ else
             }
             else
             {
-                <div class="col-md-8">
+                <div class="@Html.Raw(isReviewMode?"col-12":"col-md-8")">
                     <div class="row mt-2">
-                        <span class="font-weight-light" style="text-decoration: underline;">Your answer:</span> <span class="font-weight-bold">
-                            @if (checkCorrectPart1(1))
-                                @Model.WritingPartOnes.WritingPart[i].Answers
+                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Your answer:</span>
+                        <span class="font-weight-bold mr-2" style="@Html.Raw(checkCorrectPart1(1)?"":"text-decoration: line-through;")">
+                            @Model.WritingPartOnes.WritingPart[i].Answers
                         </span>
-                        <span>
+
+                    </div>
+                    <div class="row mt-2">
+                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Test answer:</span>
+                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"":"text-decoration: line-through;")">
                             @visibleAnswer(i)
                         </span>
+
                     </div>
                 </div>
             }
@@ -194,24 +209,3 @@ else
         <button type="button" class="btn btn-lg btn-info" onclick="window.location.href='/'">BACK HOME</button>
     }
 }
-
-@section FinishButton {
-    <script>
-        $(document).ready(function () {
-            // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
-            $('.reading-part-2-image').each(function () {
-                if ($(this).height() > $(this).width()) {
-                    //$(this).addClass('landscape');
-                    $(this).height($(this).width());
-                }
-            });
-        });
-    </script>
-}
-
-<style>
-    .reading-part-2-image {
-        border: 1px solid #000;
-        max-width: 320px;
-    }
-</style>

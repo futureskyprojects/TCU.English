@@ -74,9 +74,7 @@ namespace TCU.English.Controllers
 
             // Xóa answers 
             for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
-            {
-                //paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
-            }
+                paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
 
             paper.PiceOfTestId = piece.Id;
 
