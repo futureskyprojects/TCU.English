@@ -21,7 +21,7 @@
 
     bool checkCorrectPart1(int index)
     {
-        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => x.AnswerContent.ToLower().Trim()
+        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
         .Equals(Model.WritingPartOnes.WritingPart[index].Answers));
     }
 
@@ -102,14 +102,14 @@ else
                 <div class="@Html.Raw(isReviewMode?"col-12":"col-md-8")">
                     <div class="row mt-2">
                         <span class="font-weight-light mr-2" style="text-decoration: underline;">Your answer:</span>
-                        <span class="font-weight-bold mr-2" style="@Html.Raw(checkCorrectPart1(1)?"":"text-decoration: line-through;")">
+                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"color:#0F0;":"text-decoration: line-through;color:#F00;")">
                             @Model.WritingPartOnes.WritingPart[i].Answers
                         </span>
 
                     </div>
                     <div class="row mt-2">
                         <span class="font-weight-light mr-2" style="text-decoration: underline;">Test answer:</span>
-                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"":"text-decoration: line-through;")">
+                        <span class="mr-2">
                             @visibleAnswer(i)
                         </span>
 
@@ -169,14 +169,7 @@ else
                     if (CKEDITOR.instances['user-paragraph']) {
                         CKEDITOR.instances['user-paragraph'].destroy();
                     }
-                    CKEDITOR.replace('user-paragraph', {
-                        toolbar:
-                            [
-                                { name: 'basicstyles', items: ['Bold', 'Italic'] },
-                                { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-                                { name: 'tools', items: ['Maximize', '-', 'About'] }
-                            ]
-                    });
+                    CKEDITOR.replace('user-paragraph');
                 });
             </script>
         }
