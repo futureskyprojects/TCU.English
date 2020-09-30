@@ -16,7 +16,7 @@ namespace TCU.English.Models.DataManager
         public void Add(PieceOfTest entity)
         {
             entity.CreatedTime = DateTime.UtcNow;
-            entity.UpdatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = null;
             entity.Active = true;
             instantce.PieceOfTests.Add(entity);
             instantce.SaveChanges();
@@ -319,7 +319,8 @@ namespace TCU.English.Models.DataManager
 
         public void Update(PieceOfTest entity)
         {
-            entity.UpdatedTime = DateTime.UtcNow;
+            if (entity.UpdatedTime == null)
+                entity.UpdatedTime = DateTime.UtcNow;
             instantce.PieceOfTests.Update(entity);
             instantce.SaveChanges();
         }

@@ -178,6 +178,14 @@ else
             <div class="p-3 border border-info mb-4">
                 @Html.Raw(Model.WritingPartTwos.UserParagraph)
             </div>
+
+            if (!string.IsNullOrEmpty(Model.WritingPartTwos.TeacherReviewParagraph) && Model.WritingPartTwos.UserParagraph != Model.WritingPartTwos.TeacherReviewParagraph)
+            {
+                @Html.Label("What teacher edit for your paragraph?")
+                <div class="p-3 border border-success mb-4">
+                    @Html.Raw(Model.WritingPartTwos.TeacherReviewParagraph)
+                </div>
+            }
         }
     </div>
 }

@@ -70,7 +70,7 @@
         @* Dành cho giáo viên hướng dẫn *@
         <div class="float-br">
             <div class="d-inline-block mr-2">
-                @await Component.InvokeAsync(nameof(TCU.English.Components.InstructorTestUnMarksCount), new { unreadTests = User.Id() })
+                @await Component.InvokeAsync(nameof(TCU.English.Components.InstructorTestUnMarksCount), new { instructorId = User.Id() })
             </div>
             @* BACK TOP TOP *@
             <div id="float-br" style="display: none;">

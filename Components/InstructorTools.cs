@@ -22,12 +22,17 @@ namespace TCU.English.Components
         }
         public IViewComponentResult Invoke(int piceOfTestId)
         {
-            // Nếu không tìm thấy bài thi
+            // Nếu biến số truyền vào không đúng
             if (piceOfTestId <= 0)
                 return View();
 
             // Tiến hành lấy bài thi
             var pot = _PieceOfTestManager.GetForInstructorTool(piceOfTestId);
+
+            // Nếu không tìm thấy bài thi
+            if (pot == null)
+                return View();
+
             ViewBag.POT = pot;
 
             // Nếu bài thi là bài viết
