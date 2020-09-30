@@ -16,7 +16,7 @@
                     <option value="null" selected>Don't want to choose the instructor for this test</option>
                     @foreach (TCU.English.Models.User item in ViewBag.Instructors)
                     {
-                        <option value="@item.Id" onclick="showSuccess">@Html.Raw($"{item.FirstName} {item.LastName}")</option>
+                        <option value="@item.Id">@Html.Raw($"{item.FirstName} {item.LastName}")</option>
                     }
                 </select>
             </div>
@@ -87,9 +87,12 @@
 @section Scripts {
     <script>
 
-        function showSuccess() {
-            @Html.Raw(Notification.Success("Having selected your instructor, you can select the exam section you want to take."))
-        }
+        $('#instructor-select').change(function () {
+            let slectedInstructorId = $('#instructor-select').children("option:selected").val();
+            if (slectedInstructorId != 'null') {
+                @Html.Raw(Notification.Success("Having selected your instructor, you can select the exam section you want to take."));
+            }
+        });
         function navigationHref(address, count, isRequireInstructor = false) {
             if (count > 0) {
                 let slectedInstructorId = $('#instructor-select').children("option:selected").val();
