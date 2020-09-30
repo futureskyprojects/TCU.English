@@ -101,6 +101,7 @@ namespace TCU.English.Models.PiceOfTest
                 var questions = _ListeningBaseQuestionManager
                     .GetAll(category.Id)
                     .ToList()
+                    .Where(x => !string.IsNullOrEmpty(x.QuestionText) && !string.IsNullOrEmpty(x.Answers) && x.Answers.Length > 10)
                     //.Shuffle() // Trộn câu hỏi
                     .Take(numberQuestionOfCategory)
                     .ToList();
