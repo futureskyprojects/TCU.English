@@ -23,7 +23,8 @@ namespace TCU.English.Models.PiceOfTest
         {
             public WritingCombined WritingPart2 { get; set; }
             [Required(ErrorMessage = "You must enter the text")]
-            public string UserParagraph { get; set; }
+            public string UserParagraph { get; set; } = "";
+            public string TeacherReviewParagraph { get; set; } = "";
             public float Scores { get; set; } = -1;
         }
         public int PiceOfTestId { get; set; }

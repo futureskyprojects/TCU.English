@@ -279,6 +279,15 @@ namespace TCU.English.Models.DataManager
             return instantce.PieceOfTests.FirstOrDefault(it => it.Id == id);
         }
 
+
+        public string GetUserResult(long potId)
+        {
+            return instantce.PieceOfTests
+                .Where(pot => pot.Id == potId)
+                .Select(x => x.ResultOfUserJson)
+                .FirstOrDefault();
+        }
+
         public PieceOfTest GetForInstructorTool(long id)
         {
             return instantce.PieceOfTests

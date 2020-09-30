@@ -4,7 +4,6 @@
 @if (POT == null)
     return;
 
-
 @* Nút hiển thị hộp thoại đánh giá và nhận xét *@
 <div class="pt-0">
     <button type="button"
@@ -26,23 +25,6 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
-            @using (Html.BeginForm(nameof(InstructorController.SubmitToolResult), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
-            {
-                <div class="modal-body">
-                    @Html.Hidden(nameof(PieceOfTest.Id), POT.Id)
-                    <div id="instructor_tools-content"></div>
-                    @Html.Label("Your comments")
-                    <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments), null)</small>
-                    @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment2", @required = "required" })
-                </div>
-                @*<div class="modal-body" id="instructor_tools-content-loading">
-                        <partial name="__Loading" />
-                    </div>*@
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            }
 
             @if (POT.TypeCode == TestCategory.WRITING)
             {

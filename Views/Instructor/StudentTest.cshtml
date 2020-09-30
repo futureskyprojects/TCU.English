@@ -133,7 +133,7 @@
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto @Html.Raw((Model.ElementAt(i).InstructorId >= 0)?"pr-2":"")"
+                                    <button type="button" class="btn btn-outline-green float-lg-right ml-auto @Html.Raw((Model.ElementAt(i).InstructorId >= 0 && Model.ElementAt(i).Scores >= 0)?"pr-2":"")"
                                             data-toggle="modal" data-target="#instructor_comment_model" onclick="loadInstructorCommentContent(@(Model.ElementAt(i).InstructorId??-1),@Model.ElementAt(i).Id);">
                                         @if (Model.ElementAt(i).Scores < 0)
                                         { // Nếu chưa được chấm điểm

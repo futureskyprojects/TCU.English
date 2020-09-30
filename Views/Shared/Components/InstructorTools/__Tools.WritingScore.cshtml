@@ -1,21 +1,33 @@
 ﻿@{
-    var POT = (PieceOfTest)ViewBag.POT;
+    var WTP = (WritingTestPaper)ViewBag.WTP;
 }
 
-@using (Html.BeginForm(nameof(InstructorController.SubmitToolResult), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
+@if (ViewBag.WTP == null)
+    return;
+
+@using (Html.BeginForm(nameof(InstructorController.SubmitToolResultForWriting), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
 {
     <div class="modal-body">
-        @Html.Hidden(nameof(PieceOfTest.Id), POT.Id)
-        <div id="instructor_tools-content"></div>
-        @Html.Label("Your comments")
-        <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments), null)</small>
-        @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment", @required = "required" })
+        @Html.Hidden(nameof(WritingTestPaper.PiceOfTestId), WTP.PiceOfTestId)
+
+        @Html.Label("Score of WRITING PART 2")
+        @Html.TextBox(nameof(WritingTestPaper.WritingPartTwos.Scores), WTP.WritingPartTwos.Scores, new { @required = "required", @type = "number", @class = "form-control", @style = "width: unset;", @min = "0", @max = Config.SCORES_FULL_WRITING_PART_2 })
+        <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(WritingTestPaper.WritingPartTwos.Scores), $"Student's writing score achieved (0 - {Config.SCORES_FULL_WRITING_PART_2})")</small>
+        <hr />
+        @Html.Label("Your review for student test")
+        <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(WritingTestPaper.WritingPartTwos.TeacherReviewParagraph), "This field cannot be left blank. You can make corrections to make it interesting to students without affecting the original exam.")</small>
+        @Html.TextArea(nameof(WritingTestPaper.WritingPartTwos.TeacherReviewParagraph), WTP.WritingPartTwos.TeacherReviewParagraph, new { id = "teacher-review", @required = "required" })
     </div>
-    @*<div class="modal-body" id="instructor_tools-content-loading">
-            <partial name="__Loading" />
-        </div>*@
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        if (CKEDITOR.instances['teacher-review']) {
+            CKEDITOR.instances['teacher-review'].destroy();
+        }
+        CKEDITOR.replace('teacher-review');
+    });
+</script>
