@@ -19,7 +19,7 @@
         <p style="font-size: 50px;" class="font-weight-bold p-4 text-red">
             @if (string.IsNullOrEmpty(customScores))
             {
-                @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{Config.MAX_SCORE_POINT}")
+                @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{ViewBag.MaxScores}")
             }
             else
             {
