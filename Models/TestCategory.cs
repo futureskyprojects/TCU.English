@@ -18,6 +18,8 @@ namespace TCU.English.Models
         [JsonIgnore]
         public const string SPEAKING = "SPEAKING";
         [JsonIgnore]
+        public const string TEST_ALL = "TEST_ALL";
+        [JsonIgnore]
         public static string[] Types = new string[] { LISTENING, READING, SPEAKING, WRITING };
         #endregion
         [Required]

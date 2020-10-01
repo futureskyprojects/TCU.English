@@ -35,7 +35,7 @@ namespace TCU.English.Utils
         {
             try
             {
-                return float.Parse(number.ToString(), CultureInfo.InvariantCulture.NumberFormat);
+                return float.Parse(number.ToString().Replace(",", "."), CultureInfo.InvariantCulture.NumberFormat);
             }
             catch (Exception)
             {

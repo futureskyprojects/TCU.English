@@ -32,6 +32,10 @@ namespace TCU.English.Utils
             {
                 maxScores = Config.SCORES_FULL_SPEAKING;
             }
+            else if (typeCode.Equals(TestCategory.TEST_ALL))
+            {
+                maxScores = GetMaxScores(TestCategory.LISTENING) + GetMaxScores(TestCategory.READING) + GetMaxScores(TestCategory.WRITING) + GetMaxScores(TestCategory.SPEAKING);
+            }
             else
             {
                 maxScores = -1;

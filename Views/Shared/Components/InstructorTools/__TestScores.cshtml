@@ -16,7 +16,7 @@
             }
             else
             { // Nếu đã được chấm điểm rồi -> Hiển thị điểm lên
-                @Html.Raw($"Scores: {POT.Scores.ToScores()}/{ScoresUtils.GetMaxScores(Model.ElementAt(i).TypeCode)}")
+                @Html.Raw($"Scores: {POT.Scores.ToScores()}/{ScoresUtils.GetMaxScores(POT.TypeCode)}")
             }
         </span>
     </button>
