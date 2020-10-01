@@ -23,6 +23,9 @@ namespace TCU.English.Models
         public virtual DbSet<WritingPartTwo> WritingPartTwos { get; set; }
         public virtual DbSet<SpeakingEmbed> SpeakingEmbeds { get; set; }
         public virtual DbSet<PieceOfTest> PieceOfTests { get; set; }
+        public virtual DbSet<Discussion> Discussions { get; set; }
+        public virtual DbSet<DiscussionUser> DiscussionUsers { get; set; }
+        public virtual DbSet<DiscussionUserMessage> DiscussionUserMessages { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
@@ -91,6 +94,21 @@ namespace TCU.English.Models
             modelBuilder.Entity<PieceOfTest>(entity =>
             {
                 entity.ToTable("piece_of_test");
+            });
+
+            modelBuilder.Entity<Discussion>(entity =>
+            {
+                entity.ToTable("discussion");
+            });
+
+            modelBuilder.Entity<DiscussionUser>(entity =>
+            {
+                entity.ToTable("discussion_user");
+            });
+
+            modelBuilder.Entity<DiscussionUserMessage>(entity =>
+            {
+                entity.ToTable("discussion_user_message");
             });
             #endregion
         }

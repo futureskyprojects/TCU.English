@@ -44,6 +44,12 @@ namespace TCU.English.Models
         public virtual ICollection<WritingPartTwo> WritingPartTwos { get; set; }
         public virtual ICollection<SpeakingEmbed> SpeakingEmbeds { get; set; }
 
+        // Một người có thể tạo nhiều cuộc thảo luận
+        public virtual ICollection<Discussion> Discussions { get; set; }
+
+        // Một người có thể tham dự nhiều cuộc thảo luận
+        public virtual ICollection<DiscussionUser> DiscussionUsers { get; set; }
+
         [JsonIgnore]
         public static (int, string)[] Genders = new (int, string)[]
         {

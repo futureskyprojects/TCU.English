@@ -116,14 +116,5 @@ namespace TCU.English.Controllers
             return View(PieceOfTests);
         }
 
-        /// <summary>
-        /// Danh sách các cuộc thảo luận
-        /// </summary>
-        [HttpGet]
-        public IActionResult Discuss(int page = 1, string searchKey = "")
-        {
-            return View();
-        }
-
     }
 }

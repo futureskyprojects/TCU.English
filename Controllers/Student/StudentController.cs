@@ -54,14 +54,5 @@ namespace TCU.English.Controllers
             return View(users);
         }
 
-        /// <summary>
-        /// Danh sách các cuộc thảo luận
-        /// </summary>
-        [HttpGet]
-        public IActionResult Discuss(int page = 1, string searchKey = "")
-        {
-            return View();
-        }
-
     }
 }

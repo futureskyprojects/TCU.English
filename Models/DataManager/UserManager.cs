@@ -27,6 +27,11 @@ namespace TCU.English.Models.DataManager
             instantce.SaveChanges();
         }
 
+        public bool IsExists(int id)
+        {
+            return instantce.User.Any(user => user.Id == id);
+        }
+
         public long Count()
         {
             try

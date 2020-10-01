@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TCU.English.Data;
+using TCU.English.Hubs;
 using TCU.English.Models;
 using TCU.English.Models.Repository;
 using TCU.English.Utils;
@@ -58,6 +59,9 @@ namespace TCU.English
 
             // Thiết lập chữ thường cho URL routing
             services.AddRouting(options => options.LowercaseUrls = true);
+
+            // Thêm SignalR phục vụ REALTIME
+            services.AddSignalR();
 
             // Bình thướng hóa url
             services.AddRouting(option =>
@@ -111,6 +115,7 @@ namespace TCU.English
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chathub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller:slugify=Home}/{action:slugify=Index}/{id:slugify?}"

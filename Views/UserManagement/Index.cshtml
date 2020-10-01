@@ -1,6 +1,4 @@
-﻿@using TCU.English.Controllers
-@using TCU.English.Utils
-@model IEnumerable<TCU.English.Models.User>
+﻿@model IEnumerable<User>
 @{
     ViewData["Title"] = "All Users";
     long totalUsers = ViewBag.AllUserCount ?? -1;
@@ -9,7 +7,7 @@
     long totalBlocked = ViewBag.AllBlockedCount ?? -1;
 
     string type = ViewBag.Type ?? "all";
-    string controllerName = TCU.English.Utils.NameUtils.ControllerName<UserManagementController>();
+    string controllerName = NameUtils.ControllerName<UserManagementController>();
 
     string tableName = ViewBag.TableName ?? "";
     string tableDescription = ViewBag.TableDescription ?? "";
@@ -110,7 +108,7 @@
                     </div>
                 </div>
             }
-            @await Component.InvokeAsync(nameof(TCU.English.Components.Pagination), (TCU.English.Models.Pagination)ViewBag.Pagination);
+            @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.Pagination);
         }
     </div>
 </div>
