@@ -29,6 +29,7 @@ namespace TCU.English.Controllers
             ViewBag.ListeningGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.LISTENING).ToScores();
             ViewBag.ReadingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.READING).ToScores();
             ViewBag.WritingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.WRITING).ToScores();
+            ViewBag.SpeakingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.SPEAKING).ToScores();
 
             ViewBag.YourGPA = _PieceOfTestManager.CalculateGPA(userId).ToScores();
 

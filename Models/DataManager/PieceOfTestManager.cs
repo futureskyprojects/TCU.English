@@ -116,8 +116,11 @@ namespace TCU.English.Models.DataManager
             float totalScores = 0;
             if (typeCode.ToUpper() == "ALL")
             {
-                totalPiceOfTests = CompletedTestsCount(userId);
-                totalScores = instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0).Sum(x => x.Scores);
+                float gpaAvrg = CalculateGPA(userId, TestCategory.LISTENING) +
+                    CalculateGPA(userId, TestCategory.READING) +
+                    CalculateGPA(userId, TestCategory.WRITING) +
+                    CalculateGPA(userId, TestCategory.SPEAKING);
+                return gpaAvrg;
             }
             else
             {
