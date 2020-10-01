@@ -192,7 +192,7 @@ namespace TCU.English.Models.DataManager
                         .Where(x => x.ResultOfTestJson.Contains(searchKey) &&
                             (studentId <= 0 || x.UserId == studentId) &&
                             (!isUnRead || (x.Scores < 0 || string.IsNullOrEmpty(x.InstructorComments))) &&
-                            (!isNotFailTest || string.IsNullOrEmpty(x.ResultOfUserJson))
+                            (!isNotFailTest || !string.IsNullOrEmpty(x.ResultOfUserJson))
                             )
                         .Count();
             }
