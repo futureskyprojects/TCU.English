@@ -51,10 +51,12 @@ namespace TCU.English.Controllers
             {
                 PageKey = nameof(categoryPage),
                 PageCurrent = categoryPage,
-                NumberPage = PaginationUtils.TotalPageCount(testCategories.Count(), limit),
+                NumberPage = PaginationUtils.TotalPageCount(
+                    _TestCategoryManager.GetAll(TestCategory.WRITING, 1).Count(),
+                    limit),
                 Offset = limit
             };
-
+            var s = _WritingPartOneManager.CountAll(category.ToInt());
             // Tạo đối tượng phân trang cho Reading Part 1
             ViewBag.QuestionPagination = new Pagination(nameof(Part1), NameUtils.ControllerName<WritingManagerController>())
             {
@@ -62,7 +64,9 @@ namespace TCU.English.Controllers
                 PageCurrent = questionPage,
                 TypeKey = nameof(category),
                 Type = "0",
-                NumberPage = PaginationUtils.TotalPageCount(quesitons.Count(), limit),
+                NumberPage = PaginationUtils.TotalPageCount(
+                    _WritingPartOneManager.CountAll(category.ToInt()),
+                    limit),
                 Offset = limit
             };
 
@@ -84,7 +88,7 @@ namespace TCU.English.Controllers
             return Part1Processing(writingPartOne);
         }
 
-        
+
         [HttpGet]
         public IActionResult Part1Update(long id)
         {

@@ -55,6 +55,7 @@ namespace TCU.English.Components
             if (string.IsNullOrEmpty(wtp.WritingPartTwos.TeacherReviewParagraph))
                 wtp.WritingPartTwos.TeacherReviewParagraph = wtp.WritingPartTwos.UserParagraph;
 
+            // Model truyền cho Writing
             ViewBag.WTP = wtp;
         }
     }

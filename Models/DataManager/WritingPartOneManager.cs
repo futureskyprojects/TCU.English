@@ -27,6 +27,19 @@ namespace TCU.English.Models.DataManager
             return instantce.WritingPartOnes.Count();
         }
 
+        public int CountAll(int categoryId)
+        {
+            return instantce.WritingPartOnes
+                .Join(instantce.TestCategories,
+                    wtp1 => wtp1.TestCategoryId,
+                    tc => tc.Id,
+                    (wtp1, tc) => new { wtp1, tc })
+                .Where(
+                    f => f.tc.TypeCode.Equals(TestCategory.WRITING) &&
+                    (categoryId <= 0 || f.tc.Id == categoryId)
+                ).Select(s => s.wtp1).Count();
+        }
+
         public void Delete(WritingPartOne entity)
         {
             instantce.WritingPartOnes.Remove(entity);
