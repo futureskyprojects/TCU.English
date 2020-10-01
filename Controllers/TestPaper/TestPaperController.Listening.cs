@@ -177,14 +177,18 @@ namespace TCU.English.Controllers
                     .CopySelectedAnswers(paper);
                 return View(paper);
             }
-            int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng
-            float scores = Math.Ceiling(((float)correct / total) * Config.MAX_SCORE_POINT).ToFloat();
+            // Tính toán số điểm
+            float scores = paper.ScoreCalculate(piece.ResultOfTestJson);
+
+            // Thời gian kết thúc bài thi
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
+
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
             piece.Scores = scores;
             piece.TimeToFinished = timeToFinished;
             _PieceOfTestManager.Update(piece);
+
             // Chuyển đến trang kết quả
             return RedirectToAction(nameof(Result), new { id = piece.Id });
         }
@@ -197,6 +201,7 @@ namespace TCU.English.Controllers
             ViewBag.Title = "LISTENING TESTING";
 
             ViewBag.IsReviewMode = true;
+
             // Sau khi hoàn tất lọc các lỗi, tiến hành lấy
             PieceOfTest piece = _PieceOfTestManager.Get(id);
 
@@ -219,18 +224,9 @@ namespace TCU.English.Controllers
             };
 
             // Thời gian làm bài
-            if (piece.CreatedTime != null)
-            {
-                if (piece.UpdatedTime == null)
-                {
-                    ViewBag.Timer = 0;
-                    //ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-                }
-                else
-                {
-                    ViewBag.Timer = ((DateTime)piece.UpdatedTime).Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-                }
-            }
+            ViewBag.Timer = piece.TimeToFinished;
+
+            // Điểm của bài thi
             ViewBag.Scores = piece.Scores;
 
             // Bài thi của học viên

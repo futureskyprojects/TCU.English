@@ -154,8 +154,8 @@ namespace TCU.English.Controllers
                 return View(paper);
             }
 
-            int correct = paper.CalculateTrue(piece.ResultOfTestJson); // Tổng số câu đúng cho phần 1
-            float scoresPart1 = Math.Ceiling(((float)correct / total) * Config.MAX_SCORE_POINT).ToFloat();
+            // Tổng số câu đúng cho phần 1
+            float scoresPart1 = paper.ScoreCalculate(piece.ResultOfTestJson);
 
             // Thời gian hoàn tất
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
@@ -213,18 +213,9 @@ namespace TCU.English.Controllers
             };
 
             // Thời gian làm bài
-            if (piece.CreatedTime != null)
-            {
-                if (piece.UpdatedTime == null)
-                {
-                    ViewBag.Timer = 0;
-                    //ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-                }
-                else
-                {
-                    ViewBag.Timer = ((DateTime)piece.UpdatedTime).Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-                }
-            }
+            ViewBag.Timer = piece.TimeToFinished;
+
+            // Điểm số của bài thi
             ViewBag.Scores = piece.Scores;
 
             // Bài thi của học viên

@@ -23,6 +23,9 @@ namespace TCU.English.Models.PiceOfTest
         public List<ListeningBaseCombined> ListeningPartOnes { get; set; }
         public List<ListeningBaseCombined> ListeningPartTwos { get; set; }
 
+        public float Part1Scores { get; set; } = -1;
+        public float Part2Scores { get; set; } = -1;
+
         public ListeningTestPaper RemoveCorrectAnswers()
         {
             ListeningPartOnes = RemoveCorrectAnswers(ListeningPartOnes);
@@ -198,27 +201,33 @@ namespace TCU.English.Models.PiceOfTest
         }
 
         /// <summary>
-        /// Tính toán số câu đúng
+        /// Tính toán số điểm
         /// </summary>
-        public int CalculateTrue(ListeningTestPaper paper)
+        public float ScoreCalculate(ListeningTestPaper paper)
         {
-            int count = 0;
-            for (int i = 0; i < 2; i++)
-            {
-                int res = CalculateTrueOfPart(i + 1, paper);
-                if (res >= 0)
-                    count += res;
-            }
-            return count;
+            // Tính điểm cho part 1
+            var totalTrue = CalculateTrueOfPart(1, paper);
+            if (totalTrue >= 0)
+                Part1Scores = ScoresUtils.ScoresCalculate(totalTrue, ListeningPartOnes.Count, Config.SCORES_FULL_LISTENING_PART_1);
+
+            // Tính điểm cho part 2
+            totalTrue = CalculateTrueOfPart(2, paper);
+            if (totalTrue >= 0)
+                Part2Scores = ScoresUtils.ScoresCalculate(totalTrue, ListeningPartTwos.Count, Config.SCORES_FULL_LISTENING_PART_2);
+
+            if (Part1Scores >= 0 && Part2Scores >= 0)
+                return Part1Scores + Part2Scores;
+            else
+                return -1;
         }
 
         /// <summary>
-        /// Tính toán số câu đúng
+        /// Tính toán số điểm
         /// </summary>
-        public int CalculateTrue(string readingTestPaperJson)
+        public float ScoreCalculate(string readingTestPaperJson)
         {
             ListeningTestPaper paper = JsonConvert.DeserializeObject<ListeningTestPaper>(readingTestPaperJson);
-            return CalculateTrue(paper);
+            return ScoreCalculate(paper);
         }
         #endregion
 

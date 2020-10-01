@@ -25,11 +25,13 @@ namespace TCU.English.Models.PiceOfTest
         {
             public TestCategory TestCategory { get; set; }
             public List<ReadingPartOne> ReadingPart { get; set; }
+            public float Scores { get; set; } = -1;
         }
         public class ReadingPartTwoDTO
         {
             public TestCategory TestCategory { get; set; }
             public List<ReadingPartTwo> ReadingPart { get; set; }
+            public float Scores { get; set; } = -1;
         }
 
         //[JsonIgnore]
@@ -317,22 +319,38 @@ namespace TCU.English.Models.PiceOfTest
                 throw new Exception("Reading không có quá 4 PART!");
             }
         }
-        public int CalculateTrue(ReadingTestPaper paper)
+        public float ScoresCalculate(ReadingTestPaper paper)
         {
-            int count = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                int res = CalculateTrueOfPart(i + 1, paper);
-                if (res >= 0)
-                    count += res;
-            }
-            return count;
+            // Tính điểm cho part 1
+            var totalTrue = CalculateTrueOfPart(1, paper);
+            if (totalTrue >= 0)
+                ReadingPartOnes.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartOnes.ReadingPart.Count, Config.SCORES_FULL_READING_PART_1);
+
+            // Tính điểm cho part 2
+            totalTrue = CalculateTrueOfPart(2, paper);
+            if (totalTrue >= 0)
+                ReadingPartTwos.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartTwos.ReadingPart.Count, Config.SCORES_FULL_READING_PART_2);
+
+            // Tính điểm cho part 3
+            totalTrue = CalculateTrueOfPart(3, paper);
+            if (totalTrue >= 0)
+                ReadingPartThrees.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartThrees.ReadingPart.Count, Config.SCORES_FULL_READING_PART_3);
+
+            // Tính điểm cho part 4
+            totalTrue = CalculateTrueOfPart(4, paper);
+            if (totalTrue >= 0)
+                ReadingPartThrees.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartFours.ReadingPart.Count, Config.SCORES_FULL_READING_PART_4);
+
+            if (ReadingPartOnes.Scores >= 0 && ReadingPartTwos.Scores >= 0 && ReadingPartThrees.Scores >= 0 && ReadingPartFours.Scores >= 0)
+                return ReadingPartOnes.Scores + ReadingPartTwos.Scores + ReadingPartThrees.Scores + ReadingPartFours.Scores;
+            else
+                return -1;
         }
 
-        public int CalculateTrue(string readingTestPaperJson)
+        public float ScoreCalculate(string readingTestPaperJson)
         {
             ReadingTestPaper paper = JsonConvert.DeserializeObject<ReadingTestPaper>(readingTestPaperJson);
-            return CalculateTrue(paper);
+            return ScoresCalculate(paper);
         }
         #endregion
 

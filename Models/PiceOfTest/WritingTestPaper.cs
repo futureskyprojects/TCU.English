@@ -81,13 +81,14 @@ namespace TCU.English.Models.PiceOfTest
         #endregion
 
         #region CALCULATE TRUE
-        private int CalculateTrue(WritingTestPaper resultPaper)
+        private float ScoreCalculate(WritingTestPaper resultPaper)
         {
             if (WritingPartOnes.WritingPart != null &&
                 WritingPartOnes.WritingPart.Count > 0 &&
                 resultPaper.WritingPartOnes.WritingPart != null &&
                 WritingPartOnes.WritingPart.Count == resultPaper.WritingPartOnes.WritingPart.Count)
             {
+                // Tính số câu đúng
                 int count = 0;
                 for (int i = 0; i < WritingPartOnes.WritingPart.Count; i++)
                 {
@@ -105,7 +106,9 @@ namespace TCU.English.Models.PiceOfTest
                         // Bỏ qua
                     }
                 }
-                return count;
+                // Tính điểm luôn cho part 1
+                WritingPartOnes.Scores = ScoresUtils.ScoresCalculate(count, TotalQuestions(), Config.SCORES_FULL_WRITING_PART_1);
+                return WritingPartOnes.Scores;
             }
             else
             {
@@ -113,10 +116,10 @@ namespace TCU.English.Models.PiceOfTest
             }
         }
 
-        public int CalculateTrue(string readingTestPaperJson)
+        public float ScoreCalculate(string readingTestPaperJson)
         {
             WritingTestPaper paper = JsonConvert.DeserializeObject<WritingTestPaper>(readingTestPaperJson);
-            return CalculateTrue(paper);
+            return ScoreCalculate(paper);
         }
         #endregion
 
@@ -128,7 +131,7 @@ namespace TCU.English.Models.PiceOfTest
 
         public int TotalQuestions()
         {
-            return MAX_QUESTION_WRITING_PART_1;
+            return WritingPartOnes.WritingPart.Count;
         }
     }
 }
