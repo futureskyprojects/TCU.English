@@ -69,11 +69,16 @@ namespace TCU.English.Controllers
             ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
             ViewBag.Scores = piece.Scores;
 
+            ViewBag.MaxScores = ScoresUtils.GetMaxScores(piece.TypeCode);
+
             // Nếu đây là bài thi viết
             if (piece.TypeCode == TestCategory.WRITING)
             {
                 // Cập nhật điểm mới của phần cho đúng
                 ViewBag.Scores = scoresPart[0];
+
+                // Cập nhật điểm gới hạn cho đúng
+                ViewBag.MaxScores = Config.SCORES_FULL_WRITING_PART_1;
 
                 // Gắn cờ xác minh
                 ViewBag.IsWriting = true;

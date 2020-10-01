@@ -339,7 +339,7 @@ namespace TCU.English.Models.PiceOfTest
             // Tính điểm cho part 4
             totalTrue = CalculateTrueOfPart(4, paper);
             if (totalTrue >= 0)
-                ReadingPartThrees.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartFours.ReadingPart.Count, Config.SCORES_FULL_READING_PART_4);
+                ReadingPartFours.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartFours.ReadingPart.Count, Config.SCORES_FULL_READING_PART_4);
 
             if (ReadingPartOnes.Scores >= 0 && ReadingPartTwos.Scores >= 0 && ReadingPartThrees.Scores >= 0 && ReadingPartFours.Scores >= 0)
                 return ReadingPartOnes.Scores + ReadingPartTwos.Scores + ReadingPartThrees.Scores + ReadingPartFours.Scores;
