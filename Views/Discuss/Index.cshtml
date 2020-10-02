@@ -1,6 +1,11 @@
 ﻿@model IEnumerable<Discussion>
 @{
-    ViewData["Tille"] = "Discussions";
+    ViewData["Title"] = "Discussions";
+    string discussCreateRedirectUrl = "";
+    if (User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
+        discussCreateRedirectUrl = Url.Action(nameof(InstructorController.YourOwnStudents), NameUtils.ControllerName<InstructorController>());
+    else
+        discussCreateRedirectUrl = Url.Action(nameof(StudentController.YourOwnInstructor), NameUtils.ControllerName<StudentController>());
 }
 
 <div class="card mt-5">
@@ -19,7 +24,10 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <button type="button" class="btn btn-violet ml-2">Create</button>
+                        <button type="button" class="btn btn-violet ml-2"
+                                onclick="window.location.href='@discussCreateRedirectUrl'">
+                            Create
+                        </button>
                     </div>
                 }
             </div>
@@ -34,19 +42,21 @@
         {
             @foreach (var discuss in Model)
             {
+                User chatMember = discuss.DiscussionUsers.FirstOrDefault().User;
+
                 <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
                     <div class="row">
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <img src="/" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
-                            <h6 class="mb-0" style="font-family: Tahoma">Bạn chát</h6>
+                            <img src="@Html.Raw(chatMember.Avatar)" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                            <h6 class="mb-0" style="font-family: Tahoma">@Html.Raw($"{chatMember.FirstName} {chatMember.LastName}")</h6>
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 exclode float-lg-left text-info">
+                            <div class="bg-gray-100 roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 exclode float-lg-left text-info" id="unread-count-@discuss.Id">
                                 You have new message(s)!
                             </div>
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                            <button type="button" class="btn btn-red float-lg-right ml-lg-auto" onclick="deleteConfirm(@discuss.Iddiscuss.Id)">Delete</button>
+                            <button type="button" class="btn btn-red float-lg-right ml-lg-auto" onclick="deleteConfirm(@discuss.Id)">Delete</button>
                             <a href="@Url.Action(nameof(DiscussController.Index), NameUtils.ControllerName<DiscussController>(), new { id = discuss.Id })" class="btn btn-info float-lg-right ml-2 text-white">Discuss</a>
                         </div>
                     </div>
@@ -57,3 +67,7 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <partial name="Index.DeleteConfirm" />
+}

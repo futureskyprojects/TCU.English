@@ -63,6 +63,12 @@ namespace TCU.English.Controllers
             return Redirect("/");
         }
 
+
+        public IActionResult CountUnRead(int id)
+        {
+            throw new System.Exception("Chưa code");
+        }
+
         public IActionResult DeleteAjax(int id)
         {
             throw new System.Exception("Chưa code");
