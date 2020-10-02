@@ -65,7 +65,10 @@ namespace TCU.English.Controllers
 
             // Nếu đã có, chuyển về cuộc hội thoại
             if (discussion.Id > 0)
+            {
+                this.NotifySuccess("Entered the discussion");
                 RedirectToAction(nameof(Messages), discussion);
+            }    
 
             // Nếu nhóm chưa có, tạo nhóm
             discussion.CreatorId = User.Id();
@@ -83,6 +86,7 @@ namespace TCU.English.Controllers
             // Lưu thành viên
             _DiscussionUserManager.Add(discussionUser);
 
+            this.NotifySuccess("Entered the discussion");
             // Chuyển đến màn hình hội thoại
             return RedirectToAction(nameof(Messages), discussion);
         }
