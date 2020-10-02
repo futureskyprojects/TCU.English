@@ -31,8 +31,8 @@ namespace TCU.English
 
         public static int MAX_WRITING_PART_1_QUESTION = 1;
 
-        public static float THRESHOLD_POINT = 5;
-        public static float MAX_SCORE_POINT = 10;
+        // Cấu hình phân trang
+        public static int PAGE_PAGINATION_LIMIT = 20;
 
         // Phần cấu hình số điểm tổng cho mỗi phần
         public static float SCORES_FULL_LISTENING_PART_1 = 14;

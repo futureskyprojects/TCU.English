@@ -58,10 +58,10 @@ namespace TCU.English.Controllers
             ViewBag.UserTestCountOfCrash = _PieceOfTestManager.UserTestCountOfType(User.Id(), "CRASH", string.Empty, instructorId);
 
             // Tiến hành cấu hình phân trang
-            int limit = 20;
-            int start = (page - 1) * limit;
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
             // Lấy danh sách
-            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimple(User.Id(), type, start, limit, searchKey, instructorId);
+            IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimple(User.Id(), type, start, Config.PAGE_PAGINATION_LIMIT, searchKey, instructorId);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<TestController>())
             {
@@ -74,9 +74,9 @@ namespace TCU.English.Controllers
                         searchKey,
                         instructorId
                     ).ToInt(),
-                    limit
+                    Config.PAGE_PAGINATION_LIMIT
                     ),
-                Offset = limit
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
 
             // Lấy GVHD nếu có

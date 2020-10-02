@@ -17,11 +17,11 @@ namespace TCU.English.Controllers
            string categorySearchKey = "",
            string questionSearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
-            int questionStart = (questionPage - 1) * limit;
+            
+            int categoryStart = (categoryPage - 1) * Config.PAGE_PAGINATION_LIMIT;
+            int questionStart = (questionPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
-            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.WRITING, 1, categoryStart, limit);
+            var testCategories = _TestCategoryManager.GetByPagination(TestCategory.WRITING, 1, categoryStart, Config.PAGE_PAGINATION_LIMIT);
             ViewBag.TestCategories = testCategories;
 
             var quesitons = new List<WritingPartOne>();
@@ -36,13 +36,13 @@ namespace TCU.English.Controllers
                 else
                 {
                     ViewBag.QuestionType = testCategory.Name ?? "";
-                    quesitons = _WritingPartOneManager.GetByPagination(category, questionStart, limit).ToList();
+                    quesitons = _WritingPartOneManager.GetByPagination(category, questionStart, Config.PAGE_PAGINATION_LIMIT).ToList();
                 }
             }
             else
             {
                 ViewBag.QuestionType = "ALL";
-                quesitons = _WritingPartOneManager.GetByPagination(questionStart, limit).ToList();
+                quesitons = _WritingPartOneManager.GetByPagination(questionStart, Config.PAGE_PAGINATION_LIMIT).ToList();
             }
 
             ViewBag.Questions = quesitons;
@@ -53,8 +53,8 @@ namespace TCU.English.Controllers
                 PageCurrent = categoryPage,
                 NumberPage = PaginationUtils.TotalPageCount(
                     _TestCategoryManager.GetAll(TestCategory.WRITING, 1).Count(),
-                    limit),
-                Offset = limit
+                    Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             var s = _WritingPartOneManager.CountAll(category.ToInt());
             // Tạo đối tượng phân trang cho Reading Part 1
@@ -66,8 +66,8 @@ namespace TCU.English.Controllers
                 Type = "0",
                 NumberPage = PaginationUtils.TotalPageCount(
                     _WritingPartOneManager.CountAll(category.ToInt()),
-                    limit),
-                Offset = limit
+                    Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
 
             return View($"{nameof(Part1)}/Index");

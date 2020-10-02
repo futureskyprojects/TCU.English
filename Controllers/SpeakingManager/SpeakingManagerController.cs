@@ -187,10 +187,10 @@ namespace TCU.English.Controllers
 
         private IEnumerable<TestCategory> CategoryRender(string actionName, string typeCode, int partId, int categoryPage = 1, string categorySearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
+            
+            int categoryStart = (categoryPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
-            var testCategories = _TestCategoryManager.GetByPagination(typeCode, partId, categoryStart, limit);
+            var testCategories = _TestCategoryManager.GetByPagination(typeCode, partId, categoryStart, Config.PAGE_PAGINATION_LIMIT);
 
             // Tạo đối tượng phân trang cho Category
             ViewBag.CategoryPagination = new Pagination(actionName, NameUtils.ControllerName<SpeakingManagerController>())
@@ -199,8 +199,8 @@ namespace TCU.English.Controllers
                 PageCurrent = categoryPage,
                 NumberPage = PaginationUtils.TotalPageCount(
                     _TestCategoryManager.GetAll(typeCode, partId).Count(),
-                    limit),
-                Offset = limit
+                    Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             return testCategories;
         }

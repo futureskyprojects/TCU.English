@@ -13,6 +13,11 @@ namespace TCU.English.Utils
             return Math.Ceiling(((float)correctNum / totalNum) * maxScores).ToFloat();
         }
 
+        public static float GetThresholdPoint(string typeCode)
+        {
+            return (GetMaxScores(typeCode) / (float)2);
+        }
+
         public static float GetMaxScores(string typeCode)
         {
             float maxScores;

@@ -32,8 +32,8 @@ namespace TCU.English.Controllers
         }
         public IActionResult Index(string type = "all", int page = 1, string searchKey = "")
         {
-            int limit = 20;
-            int start = (page - 1) * limit;
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             long allUserCount = _UserManager.Count();
             long allLearnersCount = _UserManager.Count(UserType.ROLE_NORMAL_USER);
@@ -55,7 +55,7 @@ namespace TCU.English.Controllers
             if (type.ToUpper() == "LEARNER".ToUpper())
             {
                 total = allLearnersCount;
-                users = _UserManager.GetByPagination(start, limit, UserType.ROLE_NORMAL_USER);
+                users = _UserManager.GetByPagination(start, Config.PAGE_PAGINATION_LIMIT, UserType.ROLE_NORMAL_USER);
 
                 ViewBag.TableName = "LIST ALL LEARNERS";
                 ViewBag.TableDescription = "List all learners using your system";
@@ -64,9 +64,9 @@ namespace TCU.English.Controllers
             {
                 total = allManagersCount;
                 users = users
-                    .Concat(_UserManager.GetByPagination(start, limit, UserType.ROLE_ALL))
-                    .Concat(_UserManager.GetByPagination(start, limit, UserType.ROLE_MANAGER_LIBRARY))
-                    .Concat(_UserManager.GetByPagination(start, limit, UserType.ROLE_MANAGER_USER)).Distinct();
+                    .Concat(_UserManager.GetByPagination(start, Config.PAGE_PAGINATION_LIMIT, UserType.ROLE_ALL))
+                    .Concat(_UserManager.GetByPagination(start, Config.PAGE_PAGINATION_LIMIT, UserType.ROLE_MANAGER_LIBRARY))
+                    .Concat(_UserManager.GetByPagination(start, Config.PAGE_PAGINATION_LIMIT, UserType.ROLE_MANAGER_USER)).Distinct();
 
                 ViewBag.TableName = "LIST ALL MANAGER";
                 ViewBag.TableDescription = "List all manager of your system";
@@ -74,7 +74,7 @@ namespace TCU.English.Controllers
             else if (type.ToUpper() == "BLOCKED".ToUpper())
             {
                 total = allBlockedCount;
-                users = _UserManager.GetByPagination(start, limit, null);
+                users = _UserManager.GetByPagination(start, Config.PAGE_PAGINATION_LIMIT, null);
 
                 ViewBag.TableName = "LIST ALL BLOCKED USERS";
                 ViewBag.TableDescription = "List all blocked user using your system";
@@ -83,7 +83,7 @@ namespace TCU.English.Controllers
             {
                 // ALL
                 total = allUserCount;
-                users = _UserManager.GetByPagination(searchKey, start, limit);
+                users = _UserManager.GetByPagination(searchKey, start, Config.PAGE_PAGINATION_LIMIT);
 
                 if (searchKey != null && searchKey.Length > 0)
                 {
@@ -102,8 +102,8 @@ namespace TCU.English.Controllers
             {
                 PageCurrent = page,
                 Type = type,
-                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), limit),
-                Offset = limit
+                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             // Get data
             return View(users);

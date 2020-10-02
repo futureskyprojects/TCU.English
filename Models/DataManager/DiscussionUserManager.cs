@@ -16,37 +16,46 @@ namespace TCU.English.Models.DataManager
 
         public void Add(DiscussionUser entity)
         {
-            throw new NotImplementedException();
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
+            entity.Active = false;
+
+            instantce.DiscussionUsers.Add(entity);
+            instantce.SaveChanges();
         }
 
         public long Count()
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUsers.Count();
         }
 
         public void Delete(DiscussionUser entity)
         {
-            throw new NotImplementedException();
+            instantce.DiscussionUsers.Remove(entity);
+            instantce.SaveChanges();
         }
 
         public DiscussionUser Get(long id)
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUsers.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<DiscussionUser> GetAll()
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUsers.ToList();
         }
 
         public IEnumerable<DiscussionUser> GetByPagination(int start, int limit)
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUsers.OrderByDescending(x => x.Id).Skip(start).Take(limit);
         }
 
         public void Update(DiscussionUser entity)
         {
-            throw new NotImplementedException();
+            entity.UpdatedTime = DateTime.UtcNow;
+
+            instantce.DiscussionUsers.Update(entity);
+            instantce.SaveChanges();
         }
     }
 }

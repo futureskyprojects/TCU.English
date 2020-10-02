@@ -20,8 +20,8 @@ namespace TCU.English.Controllers
             string categorySearchKey = "",
             string questionSearchKey = "")
         {
-            int limit = 20;
-            int questionStart = (questionPage - 1) * limit;
+            
+            int questionStart = (questionPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             ViewBag.TestCategories = CategoryRender(nameof(Part1), TestCategory.READING, 1, categoryPage, categorySearchKey);
 

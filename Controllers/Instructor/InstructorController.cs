@@ -38,19 +38,19 @@ namespace TCU.English.Controllers
         [HttpGet]
         public IActionResult YourOwnStudents(int page = 1, string searchKey = "")
         {
-            int limit = 20;
-            int start = (page - 1) * limit;
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             ViewBag.SearchKey = searchKey;
 
             long total = _PieceOfTestManager.CountAllStudentOfInstructor(User.Id());
-            IEnumerable<User> users = _UserManager.GetAllStudentsOfInstructor(User.Id(), start, limit, searchKey);
+            IEnumerable<User> users = _UserManager.GetAllStudentsOfInstructor(User.Id(), start, Config.PAGE_PAGINATION_LIMIT, searchKey);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<UserManagementController>())
             {
                 PageCurrent = page,
-                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), limit),
-                Offset = limit
+                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             return View(users);
         }
@@ -73,10 +73,10 @@ namespace TCU.English.Controllers
             ViewBag.UserTestCountOfCrash = _PieceOfTestManager.StudentTestCountOfType(User.Id(), "CRASH", string.Empty, studentId, isUnRead);
 
             // Tiến hành cấu hình phân trang
-            int limit = 20;
-            int start = (page - 1) * limit;
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
             // Lấy danh sách
-            List<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimpleForInstructor(User.Id(), type, start, limit, searchKey, studentId, isUnRead).ToList();
+            List<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPaginationSimpleForInstructor(User.Id(), type, start, Config.PAGE_PAGINATION_LIMIT, searchKey, studentId, isUnRead).ToList();
 
             // Lấy một số thông tin cần thiết của User
             for (int i = 0; i < PieceOfTests.Count(); i++)
@@ -103,9 +103,9 @@ namespace TCU.English.Controllers
                         studentId,
                         isUnRead
                     ).ToInt(),
-                    limit
+                    Config.PAGE_PAGINATION_LIMIT
                     ),
-                Offset = limit
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
 
             // Lấy học viên nếu được chọn cụ thể

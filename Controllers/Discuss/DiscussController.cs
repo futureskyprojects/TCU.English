@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TCU.English.Models;
 using TCU.English.Models.DataManager;
+using TCU.English.Models.Repository;
 
 namespace TCU.English.Controllers
 {
@@ -12,15 +10,22 @@ namespace TCU.English.Controllers
     public class DiscussController : Controller
     {
         private readonly UserManager _UserManager;
+        private readonly DiscussionManager _DiscussionManager;
 
-        public DiscussController(UserManager _UserManager)
+        public DiscussController(
+            IDataRepository<User> _UserManager,
+            IDataRepository<Discussion> _DiscussionManager)
         {
-            this._UserManager = _UserManager;
+            this._UserManager = (UserManager)_UserManager;
+            this._DiscussionManager = (DiscussionManager)_DiscussionManager;
         }
 
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, string searchKey = "")
         {
+            // Lấy danh sách các cuộc thảo luận của người dùng hiện tại
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
             return View();
         }
 

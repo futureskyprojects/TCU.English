@@ -247,10 +247,10 @@ namespace TCU.English.Controllers
         }
         private IEnumerable<TestCategory> CategoryRender(string actionName, string typeCode, int partId, int categoryPage = 1, string categorySearchKey = "")
         {
-            int limit = 20;
-            int categoryStart = (categoryPage - 1) * limit;
+            
+            int categoryStart = (categoryPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
-            var testCategories = _TestCategoryManager.GetByPagination(typeCode, partId, categoryStart, limit);
+            var testCategories = _TestCategoryManager.GetByPagination(typeCode, partId, categoryStart, Config.PAGE_PAGINATION_LIMIT);
 
             // Tạo đối tượng phân trang cho Category
             ViewBag.CategoryPagination = new Pagination(actionName, NameUtils.ControllerName<ReadingManagerController>())
@@ -259,15 +259,15 @@ namespace TCU.English.Controllers
                 PageCurrent = categoryPage,
                 NumberPage = PaginationUtils.TotalPageCount(
                     _TestCategoryManager.GetAll(typeCode, partId).Count(),
-                    limit),
-                Offset = limit
+                    Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             return testCategories;
         }
         private IEnumerable<object> QuestionRender(string actionName, string typeCode, int partId, int questionPage = 1, int category = 0, string questionSearchKey = "")
         {
-            int limit = 20;
-            int questionStart = (questionPage - 1) * limit;
+            
+            int questionStart = (questionPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             int total;
             if (partId == 1)
@@ -282,8 +282,8 @@ namespace TCU.English.Controllers
                 PageCurrent = questionPage,
                 TypeKey = nameof(category),
                 Type = "0",
-                NumberPage = PaginationUtils.TotalPageCount(total, limit),
-                Offset = limit
+                NumberPage = PaginationUtils.TotalPageCount(total, Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
 
             if (category > 0)
@@ -297,18 +297,18 @@ namespace TCU.English.Controllers
                 {
                     ViewBag.QuestionType = testCategory.Name ?? "";
                     if (partId == 1)
-                        return _ReadingPartOneManager.GetByPagination(category, questionStart, limit);
+                        return _ReadingPartOneManager.GetByPagination(category, questionStart, Config.PAGE_PAGINATION_LIMIT);
                     else
-                        return _ReadingPartTwoManager.GetByPagination(category, typeCode, partId, questionStart, limit);
+                        return _ReadingPartTwoManager.GetByPagination(category, typeCode, partId, questionStart, Config.PAGE_PAGINATION_LIMIT);
                 }
             }
             else
             {
                 ViewBag.QuestionType = "ALL";
                 if (partId == 1)
-                    return _ReadingPartOneManager.GetByPagination(questionStart, limit);
+                    return _ReadingPartOneManager.GetByPagination(questionStart, Config.PAGE_PAGINATION_LIMIT);
                 else
-                    return _ReadingPartTwoManager.GetByPagination(typeCode, partId, questionStart, limit);
+                    return _ReadingPartTwoManager.GetByPagination(typeCode, partId, questionStart, Config.PAGE_PAGINATION_LIMIT);
             }
         }
     }

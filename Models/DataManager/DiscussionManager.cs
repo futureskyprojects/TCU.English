@@ -16,37 +16,55 @@ namespace TCU.English.Models.DataManager
 
         public void Add(Discussion entity)
         {
-            throw new NotImplementedException();
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
+
+            entity.Active = true;
+            instantce.Discussions.Add(entity);
+            instantce.SaveChanges();
         }
 
         public long Count()
         {
-            throw new NotImplementedException();
+            return instantce.Discussions.Count();
         }
 
         public void Delete(Discussion entity)
         {
-            throw new NotImplementedException();
+            instantce.Discussions.Remove(entity);
+            instantce.SaveChanges();
         }
 
         public Discussion Get(long id)
         {
-            throw new NotImplementedException();
+            return instantce.Discussions.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<Discussion> GetAll()
         {
-            throw new NotImplementedException();
+            return instantce.Discussions.ToList();
+        }
+
+        public IEnumerable<Discussion> GetAllFor(int userId)
+        {
+            return instantce.Discussions.Where(x => x.CreatorId == userId).OrderByDescending(x => x.Id).ToArray();
         }
 
         public IEnumerable<Discussion> GetByPagination(int start, int limit)
         {
-            throw new NotImplementedException();
+            return instantce.Discussions.OrderByDescending(x => x.Id).Skip(start).Take(limit);
+        }
+
+        public IEnumerable<Discussion> GetByPaginationFor(int userId, int start, int limit)
+        {
+            return instantce.Discussions.Where(x => x.Id == userId).OrderByDescending(x => x.Id).Skip(start).Take(limit);
         }
 
         public void Update(Discussion entity)
         {
-            throw new NotImplementedException();
+            entity.UpdatedTime = DateTime.UtcNow;
+            instantce.Discussions.Update(entity);
+            instantce.SaveChanges();
         }
     }
 }

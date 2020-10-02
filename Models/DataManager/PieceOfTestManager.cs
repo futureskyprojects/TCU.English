@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -91,7 +92,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= Config.THRESHOLD_POINT).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= ScoresUtils.GetThresholdPoint(x.TypeCode)).Count();
             }
             catch (Exception)
             {
@@ -102,7 +103,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores < Config.THRESHOLD_POINT).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores < ScoresUtils.GetThresholdPoint(x.TypeCode)).Count();
             }
             catch (Exception)
             {

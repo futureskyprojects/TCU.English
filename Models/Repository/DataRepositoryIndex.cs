@@ -20,6 +20,9 @@ namespace TCU.English.Models.Repository
             services.AddScoped<IDataRepository<WritingPartTwo>, WritingPartTwoManager>();
             services.AddScoped<IDataRepository<SpeakingEmbed>, SpeakingEmbedManager>();
             services.AddScoped<IDataRepository<PieceOfTest>, PieceOfTestManager>();
+            services.AddScoped<IDataRepository<Discussion>, DiscussionManager>();
+            services.AddScoped<IDataRepository<DiscussionUser>, DiscussionUserManager>();
+            services.AddScoped<IDataRepository<DiscussionUserMessage>, DiscussionUserMessageManager>();
         }
     }
 }

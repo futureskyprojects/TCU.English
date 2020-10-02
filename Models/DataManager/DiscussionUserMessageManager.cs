@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TCU.English.Models.Repository;
 
 namespace TCU.English.Models.DataManager
@@ -16,37 +15,44 @@ namespace TCU.English.Models.DataManager
 
         public void Add(DiscussionUserMessage entity)
         {
-            throw new NotImplementedException();
+            entity.CreatedTime = DateTime.UtcNow;
+            entity.UpdatedTime = DateTime.UtcNow;
+            entity.Active = true;
+            instantce.DiscussionUserMessages.Add(entity);
+            instantce.SaveChanges();
         }
 
         public long Count()
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUserMessages.Count();
         }
 
         public void Delete(DiscussionUserMessage entity)
         {
-            throw new NotImplementedException();
+            instantce.DiscussionUserMessages.Remove(entity);
+            instantce.SaveChanges();
         }
 
         public DiscussionUserMessage Get(long id)
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUserMessages.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<DiscussionUserMessage> GetAll()
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUserMessages.ToList();
         }
 
         public IEnumerable<DiscussionUserMessage> GetByPagination(int start, int limit)
         {
-            throw new NotImplementedException();
+            return instantce.DiscussionUserMessages.OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
 
         public void Update(DiscussionUserMessage entity)
         {
-            throw new NotImplementedException();
+            entity.UpdatedTime = DateTime.UtcNow;
+            instantce.DiscussionUserMessages.Update(entity);
+            instantce.SaveChanges();
         }
     }
 }

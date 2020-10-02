@@ -38,17 +38,17 @@ namespace TCU.English.Controllers
         [HttpGet]
         public IActionResult YourOwnInstructor(int page = 1, string searchKey = "")
         {
-            int limit = 20;
-            int start = (page - 1) * limit;
+            
+            int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             long total = _PieceOfTestManager.CountAllInstructorOfStudent(User.Id());
-            IEnumerable<User> users = _UserManager.GetAllInstructorsOfStudent(User.Id(), start, limit);
+            IEnumerable<User> users = _UserManager.GetAllInstructorsOfStudent(User.Id(), start, Config.PAGE_PAGINATION_LIMIT);
             // Tạo đối tượng phân trang
             ViewBag.Pagination = new Pagination(nameof(Index), NameUtils.ControllerName<UserManagementController>())
             {
                 PageCurrent = page,
-                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), limit),
-                Offset = limit
+                NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), Config.PAGE_PAGINATION_LIMIT),
+                Offset = Config.PAGE_PAGINATION_LIMIT
             };
             // Get data
             return View(users);
