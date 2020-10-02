@@ -45,11 +45,14 @@
                             <h6 class="mb-0" style="font-family: Tahoma">@Html.Raw($"{user.FirstName} {user.LastName}")</h6>
                         </div>
                         <div class="col-lg-6 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                            <a href="@Url.Action(nameof(DiscussController.CreateDiscuss), NameUtils.ControllerName<DiscussController>(), new {
+                                    friendId = user.Id})" class="btn btn-info float-lg-right ml-lg-auto text-white">Discuss</a>
+
                             <a href="@Url.Action(nameof(TestController.Index), NameUtils.ControllerName<TestController>(), new {
                                 type = "ALL",
                                 page = 1,
                                 searchKey = "",
-                                instructorId = user.Id})" class="btn btn-info float-lg-right ml-lg-auto text-white">View tests submitted</a>
+                                instructorId = user.Id})" class="btn btn-info float-lg-right ml-2 text-white">View tests submitted</a>
                         </div>
                     </div>
                 </div>

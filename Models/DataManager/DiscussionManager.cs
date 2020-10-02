@@ -80,6 +80,19 @@ namespace TCU.English.Models.DataManager
 
         }
 
+        internal Discussion GetExistP2PDiscuss(int currentUser, int friendId)
+        {
+            return instantce.Discussions
+                .Join(instantce.DiscussionUsers,
+                d => d.Id,
+                du => du.DiscussionId,
+                (d, du) => new { d, du })
+                .Where(x => (x.du.UserId == friendId && x.d.CreatorId == currentUser) ||
+                (x.du.UserId == currentUser && x.d.CreatorId == friendId))
+                .Select(x => x.d)
+                .FirstOrDefault<Discussion>();
+        }
+
         public IEnumerable<Discussion> GetByPaginationFor(int userId, int start, int limit)
         {
             return instantce.Discussions

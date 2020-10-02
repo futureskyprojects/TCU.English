@@ -12,13 +12,16 @@ namespace TCU.English.Controllers
     {
         private readonly UserManager _UserManager;
         private readonly DiscussionManager _DiscussionManager;
+        private readonly DiscussionUserManager _DiscussionUserManager;
 
         public DiscussController(
             IDataRepository<User> _UserManager,
-            IDataRepository<Discussion> _DiscussionManager)
+            IDataRepository<Discussion> _DiscussionManager,
+            IDataRepository<DiscussionUser> _DiscussionUserManager)
         {
             this._UserManager = (UserManager)_UserManager;
             this._DiscussionManager = (DiscussionManager)_DiscussionManager;
+            this._DiscussionUserManager = (DiscussionUserManager)_DiscussionUserManager;
         }
 
 
@@ -41,7 +44,7 @@ namespace TCU.English.Controllers
             return View(discussions);
         }
 
-        public IActionResult CreateGroup(int friendId)
+        public IActionResult CreateDiscuss(int friendId)
         {
             // Nếu không có mã định danh
             if (friendId <= 0)
@@ -57,21 +60,73 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Tiến hành tạo nhóm
+            // Kiểm tra xem nhóm đã có hay chưa
+            Discussion discussion = _DiscussionManager.GetExistP2PDiscuss(User.Id(), friendId);
 
+            // Nếu đã có, chuyển về cuộc hội thoại
+            if (discussion.Id > 0)
+                RedirectToAction(nameof(Messages), discussion);
 
-            return Redirect("/");
+            // Nếu nhóm chưa có, tạo nhóm
+            discussion.CreatorId = User.Id();
+
+            // Lưu nhóm
+            _DiscussionManager.Add(discussion);
+
+            // Tạo thành viên
+            DiscussionUser discussionUser = new DiscussionUser
+            {
+                UserId = friendId,
+                DiscussionId = discussion.Id
+            };
+
+            // Lưu thành viên
+            _DiscussionUserManager.Add(discussionUser);
+
+            // Chuyển đến màn hình hội thoại
+            return RedirectToAction(nameof(Messages), discussion);
+        }
+
+        public IActionResult Messages()
+        {
+            return View();
         }
 
 
         public IActionResult CountUnRead(int id)
         {
-            throw new System.Exception("Chưa code");
+            // Nếu id không hợp lệ
+            if (id <= 0) return Json(new { success = true, count = 0 });
+
+            // Đếm
+            long count = _DiscussionManager.CountUnReadFor(id);
+
+            // Trả về kết quả
+            return Json(new { success = true, count });
         }
 
         public IActionResult DeleteAjax(int id)
         {
-            throw new System.Exception("Chưa code");
+            // Nếu id không hợp lệ
+            if (id <= 0)
+                return Json(new { success = false, responseText = "This question was not found." });
+
+            // Lấy cuộc trao đổi
+            var discuss = _DiscussionManager.Get(id);
+
+            // Nếu không tìm thấy, cho là thành công
+            if (discuss == null)
+                return Json(new { success = true, id, responseText = "Deleted" });
+
+            // Nếu không phải củ sở hữu
+            if (discuss.CreatorId != User.Id())
+                return Json(new { success = false, responseText = "You not owner of this discuss." });
+
+            // Xóa
+            _DiscussionManager.Delete(discuss);
+
+            // Trả về
+            return Json(new { success = true, id, responseText = "Deleted" });
         }
     }
 }

@@ -123,7 +123,7 @@ namespace TCU.English.Components
                 //    files.AddRange(DirSearch(d));
                 //}
             }
-            catch (Exception excpt)
+            catch (Exception)
             {
             }
 
