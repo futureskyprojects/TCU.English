@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,26 @@ namespace TCU.English.Hubs
             this._DiscussionUserMessageManager = (DiscussionUserMessageManager)_DiscussionUserMessageManager;
         }
 
+
+        public class MessageObject
+        {
+            public int SenderId { get; set; }
+            public string Message { get; set; }
+            public string Time { get; set; }
+        }
+
         #region HubMethods
 
-        public Task SendMessage(string discussId, string message, string senderId)
+        public Task SendMessage(string discussId, string message)
         {
+            // Trống thì bỏ qua
+            if (string.IsNullOrEmpty(message))
+                return Clients.All.SendAsync("Drop");
+
+            MessageObject mo = JsonConvert.DeserializeObject<MessageObject>(message);
+
             // Bỏ qua khi không biết ai gửi
-            if (senderId.ToInt() <= 0)
+            if (mo.SenderId.ToInt() <= 0)
                 return Clients.All.SendAsync("Drop");
 
             // Bỏ qua khi không biết cuộc thảo luận nào
@@ -43,26 +58,32 @@ namespace TCU.English.Hubs
                 return Clients.All.SendAsync("Drop");
 
             // Nếu người dùng không thuộc nhóm cũng bỏ qua
-            if (_DiscussionManager.IsIn(discussId.ToLong(), senderId.ToLong()))
+            if (!_DiscussionManager.IsIn(discussId.ToLong(), mo.SenderId.ToLong()))
                 return Clients.All.SendAsync("Drop");
 
             // Lấy mã Du
-            DiscussionUser du = _DiscussionUserManager.GetBy(discussId.ToInt(), senderId.ToInt());
+            DiscussionUser du = _DiscussionUserManager.GetBy(discussId.ToInt(), mo.SenderId.ToInt());
 
             // Lưu tín nhắn
             DiscussionUserMessage dum = new DiscussionUserMessage
             {
                 SenderId = du.Id,
-                Message = message
+                Message = mo.Message
             };
             _DiscussionUserMessageManager.Add(dum);
 
-            return Clients.All.SendAsync("ReceiveMessage", discussId, new
+            // Tạo đối tượng tin nhắn
+            var messageObj = new MessageObject
             {
-                message,
-                senderId,
-                date = dum.CreatedTime?.ToString("hh:mm:ss dd/MM/yyyy")
-            });
+                Message = dum.Message,
+                SenderId = dum.DiscussionUser.UserId,
+                Time = dum.CreatedTime?.ToLocalTime().ToString("hh:mm:ss dd/MM/yyyy")
+            };
+
+            // Chuyển đối tượng thành JSON
+            var msgJson = JsonConvert.SerializeObject(messageObj);
+
+            return Clients.All.SendAsync("ReceiveMessage", discussId, msgJson);
         }
 
         public Task SendMessageToCaller(string message)

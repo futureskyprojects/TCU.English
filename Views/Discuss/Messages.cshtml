@@ -6,7 +6,7 @@
 }
 @Html.Hidden("discussId", Model.Id)
 @Html.Hidden("senderId", yourSelft.Id)
-<div class="card mt-5">
+<div class="card my-5">
     <div class="card-header">
         <div class="row">
             <div class="col-md-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
@@ -42,3 +42,9 @@
 </style>
 
 <script src="~/js/chat.js"></script>
+<script>
+    var dumsArr = @Html.Raw(ViewBag.DumJsonArray);
+    dumsArr.forEach(function (dum) {
+        generateMessage(@Model.Id,dum);
+    });
+</script>

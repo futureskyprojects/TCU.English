@@ -46,6 +46,10 @@ namespace TCU.English.Models.DataManager
             // Lấy người dùng là thành viên trong nhóm
             DiscussionUser du = instantce.DiscussionUsers.FirstOrDefault(x => x.DiscussionId == discussId && x.UserId == userId);
 
+            // Có thì trả về luôn
+            if (du != null && du.Id > 0)
+                return du;
+
             // Nếu không có khì thêm chính người tạo vào
             du = new DiscussionUser
             {

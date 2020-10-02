@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
 using TCU.English.Utils;
+using static TCU.English.Hubs.ChatHub;
 
 namespace TCU.English.Controllers
 {
@@ -13,15 +16,18 @@ namespace TCU.English.Controllers
         private readonly UserManager _UserManager;
         private readonly DiscussionManager _DiscussionManager;
         private readonly DiscussionUserManager _DiscussionUserManager;
+        private readonly DiscussionUserMessageManager _DiscussionUserMessageManager;
 
         public DiscussController(
             IDataRepository<User> _UserManager,
             IDataRepository<Discussion> _DiscussionManager,
-            IDataRepository<DiscussionUser> _DiscussionUserManager)
+            IDataRepository<DiscussionUser> _DiscussionUserManager,
+            IDataRepository<DiscussionUserMessage> _DiscussionUserMessageManager)
         {
             this._UserManager = (UserManager)_UserManager;
             this._DiscussionManager = (DiscussionManager)_DiscussionManager;
             this._DiscussionUserManager = (DiscussionUserManager)_DiscussionUserManager;
+            this._DiscussionUserMessageManager = (DiscussionUserMessageManager)_DiscussionUserMessageManager;
         }
 
 
@@ -137,6 +143,26 @@ namespace TCU.English.Controllers
 
             // Gửi dữ liệu
             ViewBag.Friend = _UserManager.Get(yourFriendId);
+
+            // Lấy danh sách các tin nhắn trước đó
+            var dums = _DiscussionUserMessageManager.GetAllForDiscuss(discussion.Id);
+
+            // Tạo danh sách đối tượng mà JS có thể hiểu được
+            List<MessageObject> dumsJsonArray = new List<MessageObject>();
+
+            foreach (DiscussionUserMessage dum in dums)
+            {
+                var messageObj = new MessageObject
+                {
+                    Message = dum.Message,
+                    SenderId = dum.DiscussionUser.UserId,
+                    Time = dum.CreatedTime?.ToLocalTime().ToString("hh:mm:ss dd/MM/yyyy")
+                };
+                dumsJsonArray.Add(messageObj);
+            }
+
+            // Chuyển thành JSON cho javascript hiểu
+            ViewBag.DumJsonArray = JsonConvert.SerializeObject(dumsJsonArray);
 
             return View(discussion);
         }

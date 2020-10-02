@@ -38,6 +38,18 @@ namespace TCU.English.Models.DataManager
             return instantce.DiscussionUserMessages.FirstOrDefault(x => x.Id == id);
         }
 
+        public IEnumerable<DiscussionUserMessage> GetAllForDiscuss(long id)
+        {
+            return instantce.DiscussionUserMessages
+                .Join(instantce.DiscussionUsers,
+                dum => dum.SenderId,
+                du => du.Id,
+                (dum, du) => new { dum, du })
+                .Where(x => x.du.DiscussionId == id)
+                .Select(x => x.dum)
+                .ToList();
+        }
+
         public IEnumerable<DiscussionUserMessage> GetAll()
         {
             return instantce.DiscussionUserMessages.ToList();
