@@ -11,6 +11,8 @@ connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
+
+    scroll();
 });
 
 connection.start().then(function () {
@@ -25,5 +27,10 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
+    scroll();
     event.preventDefault();
 });
+
+function scroll() {
+    $("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight") }, 500);
+}

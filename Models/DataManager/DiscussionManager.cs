@@ -46,6 +46,21 @@ namespace TCU.English.Models.DataManager
             return instantce.Discussions.FirstOrDefault(x => x.Id == id);
         }
 
+        public User GetFirstMember(long discussId)
+        {
+            return instantce.Discussions
+                .Join(instantce.DiscussionUsers,
+                d => d.Id,
+                du => du.DiscussionId,
+                (d, du) => new { d, du })
+                .Join(instantce.User,
+                ddu => ddu.du.UserId,
+                u => u.Id,
+                (ddu, u) => new { ddu, u })
+                .Select(x => x.u)
+                .FirstOrDefault();
+        }
+
         public IEnumerable<Discussion> GetAll()
         {
             return instantce.Discussions.ToList();
@@ -97,7 +112,12 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.Discussions
                 .Include(x => x.DiscussionUsers)
-                .Where(x => x.Id == userId)
+                .Join(instantce.DiscussionUsers,
+                d => d.Id,
+                du => du.DiscussionId,
+                (d, du) => new { d, du })
+                .Where(x => x.d.CreatorId == userId || x.du.UserId == userId)
+                .Select(x => x.d)
                 .OrderByDescending(x => x.Id)
                 .Skip(start)
                 .Take(limit);

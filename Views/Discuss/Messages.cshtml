@@ -1,27 +1,52 @@
-﻿<div class="container">
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4"><input type="text" id="userInput" /></div>
+﻿@model Discussion
+@{
+    ViewData["Title"] = "Message Box";
+    User yourSelft = ViewBag.YourSelft;
+    User yourFriend = ViewBag.Friend;
+}
+@Html.Hidden("userInput", User.Id())
+<div class="card mt-5">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                <img src="@Html.Raw(yourFriend != null ? yourFriend.Avatar:"")" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                <h6 class="text-uppercase">MESSAGE BOX</h6>
+            </div>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" placeholder="Your message..." class="form-control" id="messageInput">
+                    <div class="input-group-append">
+                        <button type="button" id="sendButton" class="btn btn-primary">Send <i class="fas fa-paper-plane ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
+    <div class="card-body">
+        <div id="messages">
+            <div class="message">
+                <ul id="messagesList"></ul>
+            </div>
+        </div>
+        <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
+            <div class="row">
+                <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                    <img src="/" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                    <h6 class="mb-0" style="font-family: Tahoma">@Html.Raw($"sfsfsgsg")</h6>
+                </div>
+                <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
+
+<style>
+    #messages {
+        height: 300px;
+        overflow-y: auto;
+    }
+</style>
+
+<script src="~/js/chat.js"></script>

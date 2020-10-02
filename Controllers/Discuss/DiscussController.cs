@@ -64,14 +64,17 @@ namespace TCU.English.Controllers
             Discussion discussion = _DiscussionManager.GetExistP2PDiscuss(User.Id(), friendId);
 
             // Nếu đã có, chuyển về cuộc hội thoại
-            if (discussion.Id > 0)
+            if (discussion != null && discussion.Id > 0)
             {
                 this.NotifySuccess("Entered the discussion");
                 RedirectToAction(nameof(Messages), discussion);
-            }    
+            }
 
             // Nếu nhóm chưa có, tạo nhóm
-            discussion.CreatorId = User.Id();
+            discussion = new Discussion
+            {
+                CreatorId = User.Id()
+            };
 
             // Lưu nhóm
             _DiscussionManager.Add(discussion);
@@ -91,9 +94,17 @@ namespace TCU.English.Controllers
             return RedirectToAction(nameof(Messages), discussion);
         }
 
-        public IActionResult Messages()
+        public IActionResult Messages(Discussion discussion)
         {
-            return View();
+            ViewBag.YourSelft = _UserManager.Get(User.Id());
+
+            // Nếu bạn là người tạo
+            if (discussion.CreatorId == User.Id())
+                ViewBag.Friend = _DiscussionManager.GetFirstMember(discussion.Id); // thì thành viên kia chính là bạn của bạn
+            else
+                ViewBag.Friend = _UserManager.Get(discussion.CreatorId); // Còn không, người tạo chính là bạn của bạn
+
+            return View(discussion);
         }
 
 
