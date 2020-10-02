@@ -125,7 +125,7 @@
                                         }
                                         else
                                         { // Nếu đã được chấm điểm rồi -> Hiển thị điểm lên
-                                            @Html.Raw($"{Model.ElementAt(i).Scores.ToScores()}/{@Config.MAX_SCORE_POINT}")
+                                            @Html.Raw($"{Model.ElementAt(i).Scores.ToScores()}/{ScoresUtils.GetThresholdPoint(Model.ElementAt(i).TypeCode)}")
                                             if (Model.ElementAt(i).InstructorId >= 0)
                                             {
                                                 <i class="fas fa-check-circle pl-3 @Html.Raw(string.IsNullOrEmpty(Model.ElementAt(i).InstructorComments)?"text-gray":"")"></i>

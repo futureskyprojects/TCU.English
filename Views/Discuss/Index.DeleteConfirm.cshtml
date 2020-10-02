@@ -1,0 +1,43 @@
+﻿<script>
+    function deleteConfirm(id) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(DiscussController.DeleteAjax), NameUtils.ControllerName<DiscussController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Disscuss has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 100);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Disscuss has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Disscuss has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal('FINISHED', "safe!");
+                    }
+                });
+        }
+</script>

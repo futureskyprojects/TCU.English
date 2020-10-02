@@ -17,7 +17,7 @@ namespace TCU.English.Models.DataManager
         {
             entity.CreatedTime = DateTime.UtcNow;
             entity.UpdatedTime = DateTime.UtcNow;
-            entity.Active = true;
+            entity.Active = false;
             instantce.DiscussionUserMessages.Add(entity);
             instantce.SaveChanges();
         }

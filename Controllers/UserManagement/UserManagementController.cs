@@ -105,6 +105,7 @@ namespace TCU.English.Controllers
                 NumberPage = PaginationUtils.TotalPageCount(total.ToInt(), Config.PAGE_PAGINATION_LIMIT),
                 Offset = Config.PAGE_PAGINATION_LIMIT
             };
+
             // Get data
             return View(users);
         }
