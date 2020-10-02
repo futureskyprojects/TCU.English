@@ -58,11 +58,11 @@
     @Html.HiddenFor(x => x.ListeningPartOnes[i].TestCategory.WYSIWYGContent, new { @value = Model.ListeningPartOnes[i].TestCategory.WYSIWYGContent })
     @if (Model.ListeningPartOnes[i].TestCategory == null || Model.ListeningPartOnes[i].ListeningBaseQuestions == null || Model.ListeningPartOnes[i].ListeningBaseQuestions.Count <= 0)
     {
-        <div class="h6 font-weight-bold my-auto">Part 1</div>
         <div class="alert alert-danger mt-2" role="alert">
             <div class="text-center">
                 Could not create the right question for this section. Maybe due to lack of data in question library.
             </div>
+            <textarea>@JsonConvert.SerializeObject(Model.ListeningPartOnes[i])</textarea>
         </div>
     }
     else
