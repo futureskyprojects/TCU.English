@@ -43,6 +43,8 @@
             @foreach (var discuss in Model)
             {
                 User chatMember = discuss.DiscussionUsers.FirstOrDefault().User;
+                if (chatMember.Id == User.Id())
+                    chatMember = discuss.User;
 
                 <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
                     <div class="row">
@@ -57,7 +59,7 @@
                         </div>
                         <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
                             <button type="button" class="btn btn-red float-lg-right ml-lg-auto" onclick="deleteConfirm(@discuss.Id)">Delete</button>
-                            <a href="@Url.Action(nameof(DiscussController.Index), NameUtils.ControllerName<DiscussController>(), new { id = discuss.Id })" class="btn btn-info float-lg-right ml-2 text-white">Discuss</a>
+                            <a href="@Url.Action(nameof(DiscussController.Messages), NameUtils.ControllerName<DiscussController>(), new { id = discuss.Id })" class="btn btn-info float-lg-right ml-2 text-white">Discuss</a>
                         </div>
                     </div>
                 </div>

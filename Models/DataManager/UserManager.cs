@@ -111,7 +111,7 @@ namespace TCU.English.Models.DataManager
         {
             try
             {
-                return instantce.User.Where(user => user.Id == id).First();
+                return instantce.User.Where(user => user.Id == id).FirstOrDefault();
             }
             catch (Exception)
             {
@@ -123,9 +123,9 @@ namespace TCU.English.Models.DataManager
             try
             {
                 if (identity != null && identity.Length > 0 && identity.Contains("@"))
-                    return instantce.User.Where(user => user.Email == identity).First();
+                    return instantce.User.Where(user => user.Email == identity).FirstOrDefault();
                 else
-                    return instantce.User.Where(user => user.Username == identity).First();
+                    return instantce.User.Where(user => user.Username == identity).FirstOrDefault();
             }
             catch (Exception)
             {

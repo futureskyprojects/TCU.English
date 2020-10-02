@@ -46,19 +46,30 @@ namespace TCU.English.Models.DataManager
             return instantce.Discussions.FirstOrDefault(x => x.Id == id);
         }
 
-        public User GetFirstMember(long discussId)
+        public long GetFirstMemberId(long discussId)
+        {
+            var query = instantce.Discussions
+                .Join(instantce.DiscussionUsers,
+                d => d.Id,
+                du => du.DiscussionId,
+                (d, du) => new { d, du })
+                .Where(z => z.d.Id == discussId);
+            if (query.Any(x => x.d.CreatorId != x.du.UserId))
+                return query.Select(x => x.du.UserId).FirstOrDefault();
+            else
+                return query.Select(x => x.d.CreatorId).FirstOrDefault();
+        }
+
+        // Kiểm tra xem người dùng có trong cuộc hội thoại không
+        public bool IsIn(long discussId, long userId)
         {
             return instantce.Discussions
                 .Join(instantce.DiscussionUsers,
                 d => d.Id,
                 du => du.DiscussionId,
                 (d, du) => new { d, du })
-                .Join(instantce.User,
-                ddu => ddu.du.UserId,
-                u => u.Id,
-                (ddu, u) => new { ddu, u })
-                .Select(x => x.u)
-                .FirstOrDefault();
+                .Any(x => x.d.Id == discussId &&
+                (x.du.UserId == userId || x.d.CreatorId == userId));
         }
 
         public IEnumerable<Discussion> GetAll()
@@ -120,7 +131,8 @@ namespace TCU.English.Models.DataManager
                 .Select(x => x.d)
                 .OrderByDescending(x => x.Id)
                 .Skip(start)
-                .Take(limit);
+                .Take(limit)
+                .ToList();
         }
 
         public void Update(Discussion entity)

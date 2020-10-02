@@ -67,7 +67,7 @@ namespace TCU.English.Controllers
             if (discussion != null && discussion.Id > 0)
             {
                 this.NotifySuccess("Entered the discussion");
-                RedirectToAction(nameof(Messages), discussion);
+                RedirectToAction(nameof(Messages), discussion.Id);
             }
 
             // Nếu nhóm chưa có, tạo nhóm
@@ -91,22 +91,55 @@ namespace TCU.English.Controllers
 
             this.NotifySuccess("Entered the discussion");
             // Chuyển đến màn hình hội thoại
-            return RedirectToAction(nameof(Messages), discussion);
+            return RedirectToAction(nameof(Messages), discussion.Id);
         }
-
-        public IActionResult Messages(Discussion discussion)
+        [HttpGet]
+        public IActionResult Messages(int id)
         {
+            if (id <= 0)
+            {
+                this.NotifyError("Disscuss ID invalid!");
+                return RedirectToAction(nameof(Index));
+            }
+
+            Discussion discussion = _DiscussionManager.Get(id);
+
+            if (discussion == null)
+            {
+                this.NotifyError("Discuss not found!");
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!_DiscussionManager.IsIn(discussion.Id, User.Id()))
+            {
+                this.NotifyError("You are not member of this discuss!");
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Khai báo bản thân
             ViewBag.YourSelft = _UserManager.Get(User.Id());
+
+            // Khai báo bạn trong cuộc trò chuyện
+            long yourFriendId = 0;
 
             // Nếu bạn là người tạo
             if (discussion.CreatorId == User.Id())
-                ViewBag.Friend = _DiscussionManager.GetFirstMember(discussion.Id); // thì thành viên kia chính là bạn của bạn
+                yourFriendId = _DiscussionManager.GetFirstMemberId(discussion.Id); // thì thành viên kia chính là bạn của bạn
             else
-                ViewBag.Friend = _UserManager.Get(discussion.CreatorId); // Còn không, người tạo chính là bạn của bạn
+                yourFriendId = discussion.CreatorId; // Còn không, người tạo chính là bạn của bạn
+
+            // Nếu không tìm ra ai khác trong cuộc trò chuyện, quay lại
+            if (yourFriendId <= 0)
+            {
+                this.NotifyError("Not found your partner in discuss");
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Gửi dữ liệu
+            ViewBag.Friend = _UserManager.Get(yourFriendId);
 
             return View(discussion);
         }
-
 
         public IActionResult CountUnRead(int id)
         {

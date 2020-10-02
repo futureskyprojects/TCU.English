@@ -78,15 +78,30 @@ namespace TCU.English.Models.DataManager
         }
         public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId, int minQuestions = 1)
         {
-            return instantce.TestCategories
+            var query = instantce.TestCategories
                 .Include(x => x.ReadingPartOnes)
                 .Include(x => x.ReadingPartTwos)
                 .Where(it =>
                     it.TypeCode.ToLower() == type.ToLower() &&
-                    it.PartId == partId &&
-                    ((it.ReadingPartOnes.Count >= minQuestions) ||
-                    it.ReadingPartTwos.Count >= minQuestions))
-                .ToList();
+                    it.PartId == partId);
+
+            if (type == TestCategory.READING && partId == 1)
+                return query.Where(x => x.ReadingPartOnes.Count >= minQuestions).ToList();
+            if (type == TestCategory.READING && partId >= 2)
+                return query.Where(x => x.ReadingPartTwos.Count >= minQuestions).ToList();
+
+            if (type == TestCategory.LISTENING)
+                return query.Where(x => x.ListeningBaseQuestions.Count >= minQuestions).ToList();
+
+            if (type == TestCategory.WRITING && partId == 1)
+                return query.Where(x => x.WritingPartOnes.Count >= minQuestions).ToList();
+            if (type == TestCategory.WRITING && partId == 2)
+                return query.Where(x => x.WritingPartTwos.Count >= minQuestions).ToList();
+
+            if (type == TestCategory.SPEAKING && partId == 2)
+                return query.Where(x => x.SpeakingEmbeds.Count >= minQuestions).ToList();
+
+            return null;
         }
         public IEnumerable<TestCategory> GetAll(string type, int partId)
         {

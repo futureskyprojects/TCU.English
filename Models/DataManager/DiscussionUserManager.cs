@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -38,6 +39,21 @@ namespace TCU.English.Models.DataManager
         public DiscussionUser Get(long id)
         {
             return instantce.DiscussionUsers.FirstOrDefault(x => x.Id == id);
+        }
+
+        public DiscussionUser GetBy(long discussId, long userId)
+        {
+            // Lấy người dùng là thành viên trong nhóm
+            DiscussionUser du = instantce.DiscussionUsers.FirstOrDefault(x => x.DiscussionId == discussId && x.UserId == userId);
+
+            // Nếu không có khì thêm chính người tạo vào
+            du = new DiscussionUser
+            {
+                DiscussionId = discussId.ToInt(),
+                UserId = userId.ToInt()
+            };
+            Add(du);
+            return du;
         }
 
         public IEnumerable<DiscussionUser> GetAll()

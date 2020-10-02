@@ -4,13 +4,14 @@
     User yourSelft = ViewBag.YourSelft;
     User yourFriend = ViewBag.Friend;
 }
-@Html.Hidden("userInput", User.Id())
+@Html.Hidden("discussId", Model.Id)
+@Html.Hidden("senderId", yourSelft.Id)
 <div class="card mt-5">
     <div class="card-header">
         <div class="row">
             <div class="col-md-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                <img src="@Html.Raw(yourFriend != null ? yourFriend.Avatar:"")" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
-                <h6 class="text-uppercase">MESSAGE BOX</h6>
+                <img src="@Html.Raw(yourFriend.Avatar??"")" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
+                <h6 class="text-uppercase">@Html.Raw($"{yourFriend.FirstName} {yourFriend.LastName}")</h6>
             </div>
             <div class="col-md-8">
                 <div class="input-group">
@@ -25,16 +26,7 @@
     <div class="card-body">
         <div id="messages">
             <div class="message">
-                <ul id="messagesList"></ul>
-            </div>
-        </div>
-        <div href="#" class="message card px-5 py-3 mb-4 bg-hover-gradient-primary no-anchor-style">
-            <div class="row">
-                <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
-                    <img src="/" style="max-width: 3rem" class="rounded-circle mr-3 my-2 my-lg-0 top-avatar" onerror="this.onerror=null; this.src='/img/no_avatar.png'">
-                    <h6 class="mb-0" style="font-family: Tahoma">@Html.Raw($"sfsfsgsg")</h6>
-                </div>
-                <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
+                <div id="messagesList">
 
                 </div>
             </div>
@@ -44,7 +36,7 @@
 
 <style>
     #messages {
-        height: 300px;
+        height: 450px;
         overflow-y: auto;
     }
 </style>
