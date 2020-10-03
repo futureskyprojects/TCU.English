@@ -20,6 +20,7 @@ namespace TCU.English.Controllers
         private readonly ListeningBaseQuestionManager _ListeningBaseQuestionManager;
         private readonly WritingPartOneManager _WritingPartOneManager;
         private readonly WritingPartTwoManager _WritingPartTwoManager;
+        private readonly SpeakingEmbedManager _SpeakingEmbedManager;
         private readonly PieceOfTestManager _PieceOfTestManager;
         private readonly UserManager _UserManager;
 
@@ -33,6 +34,7 @@ namespace TCU.English.Controllers
           IDataRepository<WritingPartOne> _WritingPartOneManager,
           IDataRepository<WritingPartTwo> _WritingPartTwoManager,
           IDataRepository<PieceOfTest> _PieceOfTestManager,
+          IDataRepository<SpeakingEmbed> _SpeakingEmbedManager,
           IDataRepository<User> _UserManager)
         {
             host = _host;
@@ -44,6 +46,7 @@ namespace TCU.English.Controllers
             this._WritingPartOneManager = (WritingPartOneManager)_WritingPartOneManager;
             this._WritingPartTwoManager = (WritingPartTwoManager)_WritingPartTwoManager;
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
+            this._SpeakingEmbedManager = (SpeakingEmbedManager)_SpeakingEmbedManager;
             this._UserManager = (UserManager)_UserManager;
         }
         public IActionResult Index()

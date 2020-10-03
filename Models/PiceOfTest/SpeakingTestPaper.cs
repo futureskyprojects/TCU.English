@@ -19,7 +19,7 @@ namespace TCU.English.Models.PiceOfTest
         public static SpeakingDTO Generate(TestCategoryManager _TestCategoryManager, SpeakingEmbedManager _SpeakingEmbedManager)
         {
             var category = _TestCategoryManager
-                .GetForGenerateTest(TestCategory.SPEAKING)
+                .GetForGenerateTest(TestCategory.SPEAKING, Config.SPEAKING_EMBED_PART_ID)
                 .ToList()
                 .Shuffle() // Trộn
                 .First();

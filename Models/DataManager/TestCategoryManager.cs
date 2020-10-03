@@ -67,6 +67,12 @@ namespace TCU.English.Models.DataManager
             instantce.SaveChanges();
         }
 
+        public string GetWYSIWYGContent(long id)
+        {
+            return instantce.TestCategories.First(it => it.Id == id)
+                .WYSIWYGContent;
+        }
+
         public TestCategory Get(long id)
         {
             return instantce.TestCategories.First(it => it.Id == id);
@@ -76,30 +82,28 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.TestCategories.ToList();
         }
-        public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId = -1, int minQuestions = 1)
+        public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId, int minQuestions = 1)
         {
             var query = instantce.TestCategories
-                .Include(x => x.ReadingPartOnes)
-                .Include(x => x.ReadingPartTwos)
                 .Where(it =>
                     it.TypeCode.ToLower() == type.ToLower() &&
                     it.PartId == partId);
 
             if (type == TestCategory.READING && partId == 1)
-                return query.Where(x => x.ReadingPartOnes.Count >= minQuestions).ToList();
+                return query.Include(x => x.ReadingPartOnes).Where(x => x.ReadingPartOnes.Count >= minQuestions).ToList();
             if (type == TestCategory.READING && partId >= 2)
-                return query.Where(x => x.ReadingPartTwos.Count >= minQuestions).ToList();
+                return query.Include(x => x.ReadingPartTwos).Where(x => x.ReadingPartTwos.Count >= minQuestions).ToList();
 
             if (type == TestCategory.LISTENING)
-                return query.Where(x => x.ListeningBaseQuestions.Count >= minQuestions).ToList();
+                return query.Include(x => x.ListeningBaseQuestions).Where(x => x.ListeningBaseQuestions.Count >= minQuestions).ToList();
 
             if (type == TestCategory.WRITING && partId == 1)
-                return query.Where(x => x.WritingPartOnes.Count >= minQuestions).ToList();
+                return query.Include(x => x.WritingPartOnes).Where(x => x.WritingPartOnes.Count >= minQuestions).ToList();
             if (type == TestCategory.WRITING && partId == 2)
-                return query.Where(x => x.WritingPartTwos.Count >= minQuestions).ToList();
+                return query.Include(x => x.WritingPartTwos).Where(x => x.WritingPartTwos.Count >= minQuestions).ToList();
 
             if (type == TestCategory.SPEAKING)
-                return query.Where(x => x.SpeakingEmbeds.Count >= minQuestions).ToList();
+                return query.Include(x => x.SpeakingEmbeds).Where(x => x.SpeakingEmbeds.Count >= minQuestions).ToList();
 
             return null;
         }

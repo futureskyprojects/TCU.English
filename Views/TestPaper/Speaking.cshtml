@@ -1,4 +1,4 @@
-﻿@model WritingTestPaper
+﻿@model SpeakingTestPaper
 @{
     // Truyền ID Sang cho Layout
     ViewData["potID"] = Model.PiceOfTestId;
@@ -19,39 +19,34 @@
         resultPaper = ViewBag.ResultPaper;
     }
 
-    bool checkCorrectPart1(int index)
-    {
-        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
-        .Equals(Model.WritingPartOnes.WritingPart[index].Answers));
-    }
-
-    string visibleAnswer(int index)
-    {
-        string trueAnswers = "";
-        foreach (BaseAnswer ba in resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers)
-        {
-            if (!string.IsNullOrEmpty(ba.AnswerContent) && !string.IsNullOrWhiteSpace(ba.AnswerContent))
-            {
-                if (!string.IsNullOrEmpty(trueAnswers))
-                    trueAnswers += " / ";
-                trueAnswers += ba.AnswerContent;
-            }
-        }
-        return trueAnswers;
-    }
-
     int qIndex = 1;
 }
 
+@* Giữ lại dữ liệu cho mã mảnh bài kiểm tra *@
 @Html.HiddenFor(x => x.PiceOfTestId)
-@* PART 1 *@
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Id, new { @value = Model.WritingPartOnes.TestCategory.Id })
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.TypeCode, new { @value = Model.WritingPartOnes.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.PartId, new { @value = Model.WritingPartOnes.TestCategory.PartId })
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Name, new { @value = Model.WritingPartOnes.TestCategory.Name })
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.Description, new { @value = Model.WritingPartOnes.TestCategory.Description })
-@Html.HiddenFor(x => x.WritingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.WritingPartOnes.TestCategory.WYSIWYGContent })
-@if (Model.WritingPartOnes.TestCategory == null || Model.WritingPartOnes.WritingPart == null || Model.WritingPartOnes.WritingPart.Count <= 0)
+@* Kết thúc phần giữu lại dữ liệu mã mảnh *@
+
+@* Giữ lại dữ liệu cho chuyên mục test *@
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.Id, new { @value = Model.SpeakingPart.Speaking.TestCategory.Id })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.TypeCode, new { @value = Model.SpeakingPart.Speaking.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.PartId, new { @value = Model.SpeakingPart.Speaking.TestCategory.PartId })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.Name, new { @value = Model.SpeakingPart.Speaking.TestCategory.Name })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.Description, new { @value = Model.SpeakingPart.Speaking.TestCategory.Description })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.WYSIWYGContent, new { @value = Model.SpeakingPart.Speaking.TestCategory.WYSIWYGContent })
+@* End giữ lại dữ liệu cho chuyên mục test *@
+
+@* Giữ lại dữ liệu cho phần nhúng của bài đọc *@
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.Active, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.Active })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.CreatedTime, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.CreatedTime })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.CreatorId, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.CreatorId })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.Hint, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.Hint })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.Id, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.Id })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.TestCategoryId, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.TestCategoryId })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.UpdatedTime, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.UpdatedTime })
+@Html.HiddenFor(x => x.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo, new { @value = Model.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo })
+@* End giữ lại dữ liệu cho phần nhúng của bài đọc *@
+
+@if (Model.SpeakingPart.Speaking.TestCategory == null || Model.SpeakingPart.Speaking.SpeakingEmbed == null || string.IsNullOrEmpty(Model.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo))
 {
     <div class="h6 font-weight-bold my-auto">Part 1</div>
     <div class="alert alert-danger mt-2" role="alert">
@@ -62,136 +57,49 @@
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.WritingPartOnes.TestCategory.Name</span></div>
-    <div class="my-2">@Html.Raw(Model.WritingPartOnes.TestCategory.Description)</div>
-    <div>
-        @for (int i = 0; i < Model.WritingPartOnes.WritingPart.Count(); i++)
-        {
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Active)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatedTime)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].CreatorId)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].ExplainLink)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Hint)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].Id)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].DefaultSentence)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].SecondSentence)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].TestCategoryId)
-            @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].UpdatedTime)
-            string uuid = Guid.NewGuid().ToString();
-            <div class="pt-3">@(qIndex++). @Model.WritingPartOnes.WritingPart[i].DefaultSentence</div>
-            <div class="pt-3"><span class="font-weight-light" style="text-decoration: underline;">Rewrite:</span> @Model.WritingPartOnes.WritingPart[i].SecondSentence</div>
-            if (Model.WritingPartOnes.WritingPart[i].BaseAnswers == null || Model.WritingPartOnes.WritingPart[i].BaseAnswers.Count <= 0)
-            {
-                <div class="alert alert-danger mt-2" role="alert">
-                    <div class="text-center">
-                        This question has not been answered. Please contact the administrator to report the error.
-                    </div>
-                </div>
-            }
-            else if (!isReviewMode)
-            {
-                <div class="col-md-8">
-                    <div class="row mt-2">
-                        @Html.TextBoxFor(x => x.WritingPartOnes.WritingPart[i].Answers, new { @placeholder = "Input your answer ...", @class = "form-control", @style = "width: unset;" })
-                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartOnes.WritingPart[i].Answers)</small>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="@Html.Raw(isReviewMode?"col-12":"col-md-8")">
-                    <div class="row mt-2">
-                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Your answer:</span>
-                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"color:#0F0;":"text-decoration: line-through;color:#F00;")">
-                            @Model.WritingPartOnes.WritingPart[i].Answers
-                        </span>
-
-                    </div>
-                    <div class="row mt-2">
-                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Test answer:</span>
-                        <span class="mr-2">
-                            @visibleAnswer(i)
-                        </span>
-
-                    </div>
-                </div>
-            }
-        }
+    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.SpeakingPart.Speaking.TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript()"></i></div>
+    <div class="my-2">@Html.Raw(Model.SpeakingPart.Speaking.TestCategory.Description)</div>
+    @* Khu vực dành cho phát *@
+    <div class="p-2 text-center align-self-center my-2">
+        <div class="pt-3">
+            <video controls preload="metadata" style="width:100%" id="video-embed-player">
+                <source src="@Model.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo">
+                Your browser does not support the video tag.
+            </video>
+        </div>
     </div>
 }
 @* END PART 1 *@
 
-<div class="my-3"></div>
-
-@* PART 2 *@
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Id, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Id })
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.TypeCode, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.PartId, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.PartId })
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Name, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Name })
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.Description, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.Description })
-@Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent, new { @value = Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent })
-@if (Model.WritingPartTwos.WritingPart2.TestCategory == null || Model.WritingPartTwos.WritingPart2.WritingPartTwo == null || string.IsNullOrEmpty(Model.WritingPartTwos.WritingPart2.WritingPartTwo.Questions) || string.IsNullOrEmpty(Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent))
-{
-    <div class="h6 font-weight-bold my-auto">Part 2</div>
-    <div class="alert alert-danger mt-2" role="alert">
-        <div class="text-center">
-            Could not create the right question for this section. Maybe due to lack of data in question library.
-        </div>
-    </div>
-}
-else
-{
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.WritingPartTwos.WritingPart2.TestCategory.Name</span></div>
-    <div class="my-2">@Html.Raw(Model.WritingPartTwos.WritingPart2.TestCategory.Description)</div>
-    <div>
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Active)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.CreatedTime)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.CreatorId)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Hint)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.Id)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.TestCategoryId)
-        @Html.HiddenFor(x => x.WritingPartTwos.WritingPart2.WritingPartTwo.UpdatedTime)
-
-        @Html.Raw(Model.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
-
-        <div class="p-3 border border-dark mb-4">
-            @Html.Raw(Model.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent)
-        </div>
-
-        @Html.Label("Your paragraph")
-        @if (!isReviewMode)
-        {
-            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingPartTwos.UserParagraph)</small>
-            @Html.TextAreaFor(x => x.WritingPartTwos.UserParagraph, new { id = "user-paragraph", @required = "required" })
-            <script>
-                $(document).ready(function () {
-                    if (CKEDITOR.instances['user-paragraph']) {
-                        CKEDITOR.instances['user-paragraph'].destroy();
-                    }
-                    CKEDITOR.replace('user-paragraph');
-                });
-            </script>
-        }
-        else
-        {
-            <div class="p-3 border border-info mb-4">
-                @Html.Raw(Model.WritingPartTwos.UserParagraph)
+@* Tiến hành phần ghi âm *@
+<div class="mt-2">
+    <div class="page-holder w-100 d-flex flex-wrap">
+        <div class="container-fluid">
+            <div class="py-5 paper-width">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div>
+                            <canvas class="js-volume" width="20" height="140"></canvas>
+                        </div>
+                        <div class="py-3 ml-4">
+                            <div class="pl-2"><h4>Your SPEAKING recoder </h4></div>
+                            <div><audio controls type="audio/mpeg"></audio></div>
+                            <div><small class="font-italic text-info">Click the buttons on the right corner to record or pause.</small></div>
+                        </div>
+                        <div class="ml-auto">
+                            <button type="button" class="btn btn-primary js-start">Start</button>
+                            <button type="button" class="btn btn-danger js-stop" disabled>Stop</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            if (!string.IsNullOrEmpty(Model.WritingPartTwos.TeacherReviewParagraph) && Model.WritingPartTwos.UserParagraph != Model.WritingPartTwos.TeacherReviewParagraph)
-            {
-                @Html.Label("What teacher edit for your paragraph?")
-                <div class="p-3 border border-success mb-4">
-                    @Html.Raw(Model.WritingPartTwos.TeacherReviewParagraph)
-                </div>
-            }
-        }
+        </div>
     </div>
-}
-@* END PART 2 *@
+</div>
+@* End Phần ghi âm *@
 
-<div class="my-3"></div>
+<partial name="_TranscriptModal" />
 
 @if (!isReviewMode)
 {
@@ -210,3 +118,192 @@ else
         <button type="button" class="btn btn-lg btn-info" onclick="window.location.href='/'">BACK HOME</button>
     }
 }
+
+<script>
+    function LoadTranscript() {
+        $('#transcript-content-loading').hide();
+        $('#transcript-content').html("@Html.Raw(Model.SpeakingPart.Speaking.TestCategory.WYSIWYGContent.Trim().Replace("\"","\\\""))");
+        $('#transcript-content').append(transcript);
+    }
+</script>
+
+
+@* MÃ JS CHO VIỆC GHI ÂM THANH *@
+<script src="~/js/Mp3LameEncoder.js"></script>
+<script>
+    window.URL = window.URL || window.webkitURL;
+    /**
+     * Detecte the correct AudioContext for the browser
+     * */
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    var recorder = new RecordVoiceAudios();
+    let startBtn = document.querySelector('.js-start');
+    let stopBtn = document.querySelector('.js-stop');
+    startBtn.onclick = recorder.startRecord;
+    stopBtn.onclick = recorder.stopRecord;
+
+    function RecordVoiceAudios() {
+        let elementVolume = document.querySelector('.js-volume');
+        let ctx = elementVolume.getContext('2d');
+        let codeBtn = document.querySelector('.js-code');
+        let pre = document.querySelector('pre');
+        let downloadLink = document.getElementById('download');
+        let audioElement = document.querySelector('audio');
+        let encoder = null;
+        let microphone;
+        let isRecording = false;
+        var audioContext;
+        let processor;
+        let config = {
+            bufferLen: 16384,
+            numChannels: 2,
+            mimeType: 'audio/mpeg'
+        };
+
+        this.startRecord = function () {
+            audioContext = new AudioContext();
+            /**
+            * Create a ScriptProcessorNode with a bufferSize of
+            * 4096 and two input and output channel
+            * */
+            if (audioContext.createJavaScriptNode) {
+                processor = audioContext.createJavaScriptNode(config.bufferLen, config.numChannels, config.numChannels);
+            } else if (audioContext.createScriptProcessor) {
+                processor = audioContext.createScriptProcessor(config.bufferLen, config.numChannels, config.numChannels);
+            } else {
+                @Html.Raw(Notification.Error("WebAudio API has no support on this browser."))
+            }
+
+            processor.connect(audioContext.destination);
+            /**
+            *  ask permission of the user for use microphone or camera
+            * */
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+                .then(gotStreamMethod)
+                .catch(logError);
+        };
+
+        let getBuffers = (event) => {
+            var buffers = [];
+            for (var ch = 0; ch < 2; ++ch)
+                buffers[ch] = event.inputBuffer.getChannelData(ch);
+            return buffers;
+        }
+
+        let gotStreamMethod = (stream) => {
+            startBtn.setAttribute('disabled', true);
+            stopBtn.removeAttribute('disabled');
+            audioElement.src = "";
+            config = {
+                bufferLen: 16384,
+                numChannels: 2,
+                mimeType: 'audio/mpeg'
+            };
+            isRecording = true;
+
+            let tracks = stream.getTracks();
+            /**
+            * Create a MediaStreamAudioSourceNode for the microphone
+            * */
+            microphone = audioContext.createMediaStreamSource(stream);
+            /**
+            * connect the AudioBufferSourceNode to the gainNode
+            * */
+            microphone.connect(processor);
+            encoder = new Mp3LameEncoder(audioContext.sampleRate, 160);
+            /**
+            * Give the node a function to process audio events
+            */
+            processor.onaudioprocess = function (event) {
+                encoder.encode(getBuffers(event));
+            };
+
+            stopBtnRecord = () => {
+                isRecording = false;
+                startBtn.removeAttribute('disabled');
+                stopBtn.setAttribute('disabled', true);
+                audioContext.close();
+                processor.disconnect();
+                tracks.forEach(track => track.stop());
+                audioElement.src = URL.createObjectURL(encoder.finish());
+            };
+
+            analizer(audioContext);
+        }
+
+        this.stopRecord = function () {
+            stopBtnRecord();
+        };
+
+        let analizer = (context) => {
+            let listener = context.createAnalyser();
+            microphone.connect(listener);
+            listener.fftSize = 256;
+            var bufferLength = listener.frequencyBinCount;
+            let analyserData = new Uint8Array(bufferLength);
+
+            let getVolume = () => {
+                let volumeSum = 0;
+                let volumeMax = 0;
+
+                listener.getByteFrequencyData(analyserData);
+
+                for (let i = 0; i < bufferLength; i++) {
+                    volumeSum += analyserData[i];
+                }
+
+                let volume = volumeSum / bufferLength;
+
+                if (volume > volumeMax)
+                    volumeMax = volume;
+
+                drawAudio(volume / 10);
+                /**
+                * Call getVolume several time for catch the level until it stop the record
+                */
+                return setTimeout(() => {
+                    if (isRecording)
+                        getVolume();
+                    else
+                        drawAudio(0);
+                }, 10);
+            }
+
+            getVolume();
+        }
+
+        let drawAudio = (volume) => {
+            ctx.save();
+            ctx.translate(0, 120);
+
+            for (var i = 0; i < 14; i++) {
+                fillStyle = '#969696';
+                if (i < volume)
+                    fillStyle = '#2e96ff';
+
+                ctx.fillStyle = fillStyle;
+                ctx.beginPath();
+                ctx.arc(10, 2, 17, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.translate(0, -7);
+            }
+
+            ctx.restore();
+        }
+
+        let logError = (error) => {
+            alert(error);
+            console.log(error);
+        }
+
+        codeBtn.addEventListener('click', () => {
+            pre.classList.toggle('hide');
+            pre.innerHTML = document.querySelector('.containerScript').innerHTML;
+        });
+
+        drawAudio(0);
+    }
+</script>
+@* END MÃ JS CHO VIỆC GHI ÂM THANH *@
