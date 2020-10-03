@@ -4,10 +4,10 @@
     ViewData["potID"] = Model.PiceOfTestId;
 
     bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
-    WritingTestPaper resultPaper = null;
+    SpeakingTestPaper resultPaper = null;
     ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";
     ViewData["Timer"] = ViewBag.Timer ?? 0;
-    ViewData["Action"] = nameof(TestPaperController.Writing);
+    ViewData["Action"] = nameof(TestPaperController.Speaking);
     ViewData["Controller"] = NameUtils.ControllerName<TestPaperController>();
     if (!isReviewMode)
     {
@@ -25,6 +25,11 @@
 @* Giữ lại dữ liệu cho mã mảnh bài kiểm tra *@
 @Html.HiddenFor(x => x.PiceOfTestId)
 @* Kết thúc phần giữu lại dữ liệu mã mảnh *@
+
+@* Khu vực lưu trữ dữ liệu âm thanh của người dùng *@
+@Html.HiddenFor(x => x.SpeakingPart.UserAudioPath)
+@Html.Hidden("audioBase64")
+@* End khu vực lưu trữ dữ liệu âm thanh của người dùng *@
 
 @* Giữ lại dữ liệu cho chuyên mục test *@
 @Html.HiddenFor(x => x.SpeakingPart.Speaking.TestCategory.Id, new { @value = Model.SpeakingPart.Speaking.TestCategory.Id })
@@ -82,14 +87,28 @@ else
                             <canvas class="js-volume" width="20" height="140"></canvas>
                         </div>
                         <div class="py-3 ml-4">
-                            <div class="pl-2"><h4>Your SPEAKING recoder </h4></div>
-                            <div><audio controls type="audio/mpeg"></audio></div>
-                            <div><small class="font-italic text-info">Click the buttons on the right corner to record or pause.</small></div>
+                            <div class="pl-2">
+                                <h4>
+                                    @Html.Raw(isReviewMode?"Record": "Your SPEAKING recoder")
+                                </h4>
+                            </div>
+                            <div>
+                                <audio controls type="audio/mpeg">
+                                    <source src="@Html.Raw(Model.SpeakingPart.UserAudioPath)">
+                                </audio>
+                            </div>
+                            @if (!isReviewMode)
+                            {
+                                <div><small class="font-italic text-info">Click the buttons on the right corner to record or pause.</small></div>
+                            }
                         </div>
-                        <div class="ml-auto">
-                            <button type="button" class="btn btn-primary js-start">Start</button>
-                            <button type="button" class="btn btn-danger js-stop" disabled>Stop</button>
-                        </div>
+                        @if (!isReviewMode)
+                        {
+                            <div class="ml-auto">
+                                <button type="button" class="btn btn-primary js-start">Start</button>
+                                <button type="button" class="btn btn-danger js-stop" disabled>Stop</button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -128,9 +147,11 @@ else
 </script>
 
 
-@* MÃ JS CHO VIỆC GHI ÂM THANH *@
-<script src="~/js/Mp3LameEncoder.js"></script>
-<script>
+@if (!isReviewMode)
+{
+    @* MÃ JS CHO VIỆC GHI ÂM THANH *@
+    <script src="~/js/Mp3LameEncoder.js"></script>
+    <script>
     window.URL = window.URL || window.webkitURL;
     /**
      * Detecte the correct AudioContext for the browser
@@ -147,8 +168,7 @@ else
         var reader = new FileReader();
         reader.readAsDataURL(blob);
         reader.onloadend = function () {
-            var base64data = reader.result;
-            console.log(base64data);
+            $("#audioBase64").val(reader.result);
         }
     }
 
@@ -309,5 +329,6 @@ else
         }
         drawAudio(0);
     }
-</script>
-@* END MÃ JS CHO VIỆC GHI ÂM THANH *@
+    </script>
+    @* END MÃ JS CHO VIỆC GHI ÂM THANH *@
+}

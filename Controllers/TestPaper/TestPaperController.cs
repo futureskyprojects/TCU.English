@@ -70,7 +70,10 @@ namespace TCU.English.Controllers
             }
 
             ViewBag.Title = $"{piece.TypeCode.ToUpper()} TESTING RESULT";
-            ViewBag.Scores = piece.Scores;
+            if (piece.Scores >= 0)
+                ViewBag.Scores = piece.Scores;
+            else
+                ViewBag.Scores = 0;
 
             ViewBag.MaxScores = ScoresUtils.GetMaxScores(piece.TypeCode);
 
@@ -90,6 +93,13 @@ namespace TCU.English.Controllers
                 ViewBag.Msg = "Congratulations, you finished the test, with <span class=\"font-weight-bold text-danger\">PART 1</span> score is";
             }
 
+            if (piece.TypeCode == TestCategory.SPEAKING)
+            {
+                ViewBag.IsSpeaking = true;
+                // Đổi tin nhắn thông báo thành công
+                ViewBag.Msg = "<i class=\"\">Congratulations, you finished the test, your teacher will review your test and mark for you later.</i>";
+            }
+
 
             this.NotifySuccess("Your test is completed!");
 
@@ -105,6 +115,8 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(ListeningReview), new { id });
             if (type == TestCategory.WRITING)
                 return RedirectToAction(nameof(WritingReview), new { id });
+            if (type == TestCategory.SPEAKING)
+                return RedirectToAction(nameof(SpeakingReview), new { id });
             return NotFoundTest();
         }
 

@@ -139,7 +139,18 @@ namespace TCU.English.Controllers
 
             string fileName = $"{owner.Username.ToLower()}_{piece.TypeCode}_{piece.Id}";
             // Tạo tệp tin
-            IFormFile file = new FormFile(memoryStream, 0, bytes.Length, fileName, $"{fileName}.mp3");
+            IFormFile file = new FormFile(memoryStream, 0, bytes.Length, null, $"{fileName}.mp3")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "audio/mpeg"
+            };
+
+            // Nếu file null
+            if (file == null)
+            {
+                this.NotifyError("Can not upload your audio, please try again!");
+                return View(paper);
+            }
 
             // Tiến hành lưu tệp tin cho người dùng
             string path = await host.UploadForUserAudio(file, owner);

@@ -6,7 +6,14 @@
 {
     <div class="modal-body">
         @Html.Hidden(nameof(PieceOfTest.Id), POT.Id)
-        <div id="instructor_tools-content"></div>
+        @*<div id="instructor_tools-content"></div>*@
+        @if (POT.TypeCode == TestCategory.SPEAKING)
+        {
+            @Html.Label("Score of SPEAKING")
+            @Html.TextBox(nameof(PieceOfTest.Scores), POT.Scores, new { @required = "required", @type = "number", @class = "form-control", @style = "width: unset;", @min = "0", @max = Config.SCORES_FULL_SPEAKING })
+            <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(PieceOfTest.Scores), $"Student's speaking score achieved (0 - {Config.SCORES_FULL_SPEAKING})")</small>
+            <hr />
+        }
         @Html.Label("Your comments")
         <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments), null)</small>
         @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment", @required = "required" })

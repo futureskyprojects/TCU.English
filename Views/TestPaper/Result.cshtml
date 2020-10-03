@@ -8,6 +8,7 @@
     ViewData["HideTimer"] = true;
 
     bool isWriting = ViewBag.IsWriting ?? false;
+    bool isSpeaking = ViewBag.IsSpeaking ?? false;
     string msg = ViewBag.Msg ?? "Congratulations, you finished the test with a score of";
     string customScores = ViewBag.CustomScore ?? "";
 }
@@ -19,7 +20,10 @@
         <p style="font-size: 50px;" class="font-weight-bold p-4 text-red">
             @if (string.IsNullOrEmpty(customScores))
             {
-                @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{ViewBag.MaxScores}")
+                if (!isSpeaking)
+                {
+                    @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{ViewBag.MaxScores}")
+                }
             }
             else
             {

@@ -136,11 +136,15 @@
         window.onscroll = function () { scrollFunction() };
 
         function scrollFunction() {
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
-                floatBottomRight.style.display = "block";
-            }
-            else {
-                floatBottomRight.style.display = "none";
+            try {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                    floatBottomRight.style.display = "block";
+                }
+                else {
+                    floatBottomRight.style.display = "none";
+                }
+            } catch (e) {
+
             }
         }
         function topFunction() {
