@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace TCU.English.Models.DataManager
 
         public IEnumerable<Discussion> GetAllFor(int userId)
         {
-            return instantce.Discussions.Where(x => x.CreatorId == userId).OrderByDescending(x => x.Id).ToArray();
+            return instantce.Discussions.Where(x => x.CreatorId == userId).OrderByDescending(x => x.Id).Distinct().ToArray();
         }
 
         public IEnumerable<Discussion> GetByPagination(int start, int limit)
@@ -129,6 +130,7 @@ namespace TCU.English.Models.DataManager
                 (d, du) => new { d, du })
                 .Where(x => x.d.CreatorId == userId || x.du.UserId == userId)
                 .Select(x => x.d)
+                .Distinct()
                 .OrderByDescending(x => x.Id)
                 .Skip(start)
                 .Take(limit)

@@ -199,7 +199,7 @@
 
 @section Scripts {
     <script>
-        let userBirthDay = '@Html.Raw(Model.BirthDay.ToString("yyyy/MM/dd"))';
+        let userBirthDay = '@Html.Raw(Model.BirthDay.ToLocalTime().ToString("yyyy/MM/dd"))';
         if (userBirthDay == null || userBirthDay == undefined || userBirthDay.length <= 0) {
             userBirthDay = moment().format('YYYY/MM/DD');
         }
