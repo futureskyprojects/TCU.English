@@ -76,7 +76,7 @@ namespace TCU.English.Models.DataManager
         {
             return instantce.TestCategories.ToList();
         }
-        public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId, int minQuestions = 1)
+        public IEnumerable<TestCategory> GetForGenerateTest(string type, int partId = -1, int minQuestions = 1)
         {
             var query = instantce.TestCategories
                 .Include(x => x.ReadingPartOnes)
@@ -98,7 +98,7 @@ namespace TCU.English.Models.DataManager
             if (type == TestCategory.WRITING && partId == 2)
                 return query.Where(x => x.WritingPartTwos.Count >= minQuestions).ToList();
 
-            if (type == TestCategory.SPEAKING && partId == 2)
+            if (type == TestCategory.SPEAKING)
                 return query.Where(x => x.SpeakingEmbeds.Count >= minQuestions).ToList();
 
             return null;
