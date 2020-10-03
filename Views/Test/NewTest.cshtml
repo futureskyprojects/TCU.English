@@ -1,10 +1,11 @@
 ﻿@{
     ViewData["Title"] = "NewTest";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestPaperController>();
-    string listening = nameof(TCU.English.Controllers.TestPaperController.ListeningNewTest);
-    string reading = nameof(TCU.English.Controllers.TestPaperController.ReadingNewTest);
-    string speaking = nameof(TCU.English.Controllers.TestPaperController.SpeakingNewTest);
-    string writing = nameof(TCU.English.Controllers.TestPaperController.WritingNewTest);
+    string controller = NameUtils.ControllerName<TestPaperController>();
+    string listening = nameof(TestPaperController.ListeningNewTest);
+    string reading = nameof(TestPaperController.ReadingNewTest);
+    string speaking = nameof(TestPaperController.SpeakingNewTest);
+    string writing = nameof(TestPaperController.WritingNewTest);
+    string general = nameof(TestPaperController.GeneralNewTest);
 }
 
 <div class="container-fluid px-xl-5">
@@ -75,6 +76,20 @@
                 </div>
             </div>
         </div>
+        @* Khu vực nút làm bài thi chung *@
+        <div class="row mt-5">
+            <div class="col-12 mb-4 mb-xl-0">
+                <div onclick="navigationHref('@Url.Action(general, controller)',-140398,true)"
+                     class="bg-warning shadow roundy p-4 h-100 d-flex align-items-center justify-content-between bg-hover-gradient-warning">
+                    <div class="flex-grow-1 d-flex align-items-center text-center">
+                        <div class="w-100 text-white">
+                            <h6 class="mb-0">General</h6><span class="text-white">Create tests common to all test types</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* End khu vực nút làm bài thi chung *@
     </section>
     <div class="alert alert-primary" role="alert">
         <div class="text-center">
@@ -94,7 +109,7 @@
             }
         });
         function navigationHref(address, count, isRequireInstructor = false) {
-            if (count > 0) {
+            if (count > 0 || count == -140398) {
                 let slectedInstructorId = $('#instructor-select').children("option:selected").val();
                 if (isRequireInstructor && slectedInstructorId == 'null') {
                     @Html.Raw(Notification.Error("You need to select your instructor to be able to start this test."))

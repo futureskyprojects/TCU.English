@@ -135,7 +135,7 @@ namespace TCU.English.Controllers
             }
 
             // Tính điểm
-            float scores = paper.ScoreCalculate(piece.ResultOfTestJson);
+            float scores = paper.ScoresCalculate(piece.ResultOfTestJson);
             Console.WriteLine("======================================");
             Console.WriteLine(DateTime.UtcNow);
             Console.WriteLine(piece.CreatedTime);

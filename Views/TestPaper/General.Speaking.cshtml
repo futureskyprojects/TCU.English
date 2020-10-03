@@ -1,0 +1,283 @@
+﻿@model GeneralTestPaper
+@{
+    bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
+    GeneralTestPaper resultPaper = ViewBag.ResultPaper;
+}
+
+@* Khu vực lưu trữ dữ liệu âm thanh của người dùng *@
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.UserAudioPath)
+@Html.Hidden("audioBase64")
+@* End khu vực lưu trữ dữ liệu âm thanh của người dùng *@
+
+@* Giữ lại dữ liệu cho chuyên mục test *@
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Id, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Id })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.TypeCode, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.PartId, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.PartId })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Name, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Name })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Description, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Description })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.WYSIWYGContent, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.WYSIWYGContent })
+@* End giữ lại dữ liệu cho chuyên mục test *@
+
+@* Giữ lại dữ liệu cho phần nhúng của bài đọc *@
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Active, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Active })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.CreatedTime, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.CreatedTime })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.CreatorId, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.CreatorId })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Hint, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Hint })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Id, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.Id })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.TestCategoryId, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.TestCategoryId })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.UpdatedTime, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.UpdatedTime })
+@Html.HiddenFor(x => x.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo, new { @value = Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo })
+@* End giữ lại dữ liệu cho phần nhúng của bài đọc *@
+
+@if (Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory == null || Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed == null || string.IsNullOrEmpty(Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo))
+{
+    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="ShowTranscript()"></i></div>
+    <div class="my-2">@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.Description)</div>
+    @* Khu vực dành cho phát *@
+    <div class="p-2 text-center align-self-center my-2">
+        <div class="pt-3">
+            <video controls preload="metadata" style="width:100%" id="video-embed-player">
+                <source src="@Model.SpeakingTestPaper.SpeakingPart.Speaking.SpeakingEmbed.YoutubeVideo">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+}
+@* END PART 1 *@
+
+@* Tiến hành phần ghi âm *@
+<div class="mt-2">
+    <div class="page-holder w-100 d-flex flex-wrap">
+        <div class="container-fluid">
+            <div class="py-5 paper-width">
+                <div class="card">
+                    <div class="card-body d-flex">
+                        <div>
+                            <canvas class="js-volume" width="20" height="140"></canvas>
+                        </div>
+                        <div class="py-3 ml-4">
+                            <div class="pl-2">
+                                <h4>
+                                    @Html.Raw(isReviewMode ? "Record" : "Your SPEAKING recoder")
+                                </h4>
+                            </div>
+                            <div>
+                                <audio controls type="audio/mpeg">
+                                    <source src="@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.UserAudioPath)">
+                                </audio>
+                            </div>
+                            @if (!isReviewMode)
+                            {
+                                <div><small class="font-italic text-info">Click the buttons on the right corner to record or pause.</small></div>
+                            }
+                        </div>
+                        @if (!isReviewMode)
+                        {
+                            <div class="ml-auto">
+                                <button type="button" class="btn btn-primary js-start">Start</button>
+                                <button type="button" class="btn btn-danger js-stop" disabled>Stop</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@* End Phần ghi âm *@
+
+@if (!isReviewMode)
+{
+    @* MÃ JS CHO VIỆC GHI ÂM THANH *@
+    <script src="~/js/Mp3LameEncoder.js"></script>
+    <script>
+    window.URL = window.URL || window.webkitURL;
+    /**
+     * Detecte the correct AudioContext for the browser
+     * */
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    var recorder = new RecordVoiceAudios();
+    let startBtn = document.querySelector('.js-start');
+    let stopBtn = document.querySelector('.js-stop');
+    startBtn.onclick = recorder.startRecord;
+    stopBtn.onclick = recorder.stopRecord;
+
+    function BlobToBase64(blob) {
+        var reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            $("#audioBase64").val(reader.result);
+        }
+    }
+
+    function RecordVoiceAudios() {
+        let elementVolume = document.querySelector('.js-volume');
+        let ctx = elementVolume.getContext('2d');
+        let pre = document.querySelector('pre');
+        let downloadLink = document.getElementById('download');
+        let audioElement = document.querySelector('audio');
+        let encoder = null;
+        let microphone;
+        let isRecording = false;
+        var audioContext;
+        let processor;
+        let config = {
+            bufferLen: 4096,
+            numChannels: 2,
+            mimeType: 'audio/mpeg'
+        };
+
+        this.startRecord = function () {
+            audioContext = new AudioContext();
+            /**
+            * Create a ScriptProcessorNode with a bufferSize of
+            * 4096 and two input and output channel
+            * */
+            if (audioContext.createJavaScriptNode) {
+                processor = audioContext.createJavaScriptNode(config.bufferLen, config.numChannels, config.numChannels);
+            } else if (audioContext.createScriptProcessor) {
+                processor = audioContext.createScriptProcessor(config.bufferLen, config.numChannels, config.numChannels);
+            } else {
+                @Html.Raw(Notification.Error("WebAudio API has no support on this browser."))
+            }
+
+            processor.connect(audioContext.destination);
+            /**
+            *  ask permission of the user for use microphone or camera
+            * */
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+                .then(gotStreamMethod)
+                .catch(logError);
+        };
+
+        let getBuffers = (event) => {
+            var buffers = [];
+            for (var ch = 0; ch < 2; ++ch)
+                buffers[ch] = event.inputBuffer.getChannelData(ch);
+            return buffers;
+        }
+
+        let gotStreamMethod = (stream) => {
+            startBtn.setAttribute('disabled', true);
+            stopBtn.removeAttribute('disabled');
+            audioElement.src = "";
+            config = {
+                bufferLen: 4096,
+                numChannels: 2,
+                mimeType: 'audio/mpeg'
+            };
+            isRecording = true;
+
+            let tracks = stream.getTracks();
+            /**
+            * Create a MediaStreamAudioSourceNode for the microphone
+            * */
+            microphone = audioContext.createMediaStreamSource(stream);
+            /**
+            * connect the AudioBufferSourceNode to the gainNode
+            * */
+            microphone.connect(processor);
+            encoder = new Mp3LameEncoder(audioContext.sampleRate, 160);
+            /**
+            * Give the node a function to process audio events
+            */
+            processor.onaudioprocess = function (event) {
+                encoder.encode(getBuffers(event));
+            };
+
+            stopBtnRecord = () => {
+                isRecording = false;
+                startBtn.removeAttribute('disabled');
+                stopBtn.setAttribute('disabled', true);
+                audioContext.close();
+                processor.disconnect();
+                tracks.forEach(track => track.stop());
+                var blob = encoder.finish();
+                BlobToBase64(blob);
+                audioElement.src = URL.createObjectURL(blob);
+            };
+
+            analizer(audioContext);
+        }
+
+        this.stopRecord = function () {
+            stopBtnRecord();
+        };
+
+        let analizer = (context) => {
+            let listener = context.createAnalyser();
+            microphone.connect(listener);
+            listener.fftSize = 256;
+            var bufferLength = listener.frequencyBinCount;
+            let analyserData = new Uint8Array(bufferLength);
+
+            let getVolume = () => {
+                let volumeSum = 0;
+                let volumeMax = 0;
+
+                listener.getByteFrequencyData(analyserData);
+
+                for (let i = 0; i < bufferLength; i++) {
+                    volumeSum += analyserData[i];
+                }
+
+                let volume = volumeSum / bufferLength;
+
+                if (volume > volumeMax)
+                    volumeMax = volume;
+
+                drawAudio(volume / 10);
+                /**
+                * Call getVolume several time for catch the level until it stop the record
+                */
+                return setTimeout(() => {
+                    if (isRecording)
+                        getVolume();
+                    else
+                        drawAudio(0);
+                }, 10);
+            }
+
+            getVolume();
+        }
+
+        let drawAudio = (volume) => {
+            ctx.save();
+            ctx.translate(0, 120);
+
+            for (var i = 0; i < 14; i++) {
+                fillStyle = '#969696';
+                if (i < volume)
+                    fillStyle = '#2e96ff';
+
+                ctx.fillStyle = fillStyle;
+                ctx.beginPath();
+                ctx.arc(10, 2, 17, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.translate(0, -7);
+            }
+
+            ctx.restore();
+        }
+
+        let logError = (error) => {
+            alert(error);
+            console.log(error);
+        }
+        drawAudio(0);
+    }
+    </script>
+    @* END MÃ JS CHO VIỆC GHI ÂM THANH *@
+}

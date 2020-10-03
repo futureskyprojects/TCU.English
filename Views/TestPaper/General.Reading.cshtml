@@ -1,0 +1,356 @@
+﻿@model GeneralTestPaper
+@{
+    bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
+    GeneralTestPaper resultPaper = ViewBag.ResultPaper;
+
+    // Phương thức tạo hiển thị cho câu trả lời ở chế độ xem lại
+    void renderAnswerReviewMode(int index, List<BaseAnswer> userAns, List<BaseAnswer> testAns)
+    {
+        string answerAlphapet = ((char)((int)'A' + index)).ToString();
+        if ((userAns[index].IsCorrect && testAns[index].IsCorrect) || testAns[index].IsCorrect)
+        {
+            <span class="border border-success rounded-circle px-2">@answerAlphapet.</span> @testAns[index].AnswerContent
+        }
+        else if (userAns[index].IsCorrect)
+        {
+            <span class="border border-danger rounded-circle px-2">@answerAlphapet.</span> @userAns[index].AnswerContent
+        }
+        else
+        {
+            <span>@answerAlphapet.</span> @testAns[index].AnswerContent
+        }
+    }
+    int qIndex = 1;
+}
+
+@* PART 1 *@
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent })
+@if (Model.ReadingTestPaper.ReadingPartOnes.TestCategory == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Description)</div>
+    <div>
+        @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].Active)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].Answers)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].Hint)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].Id)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].QuestionText)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].UpdatedTime)
+            string uuid = Guid.NewGuid().ToString();
+            <div class="pt-3">@(qIndex++). @Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].QuestionText</div>
+            if (Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList.Count <= 0)
+            {
+                <div class="alert alert-danger mt-2" role="alert">
+                    <div class="text-center">
+                        This question has not been answered. Please contact the administrator to report the error.
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="pt-1 row">
+                    @for (int j = 0; j < Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList.Count; j++)
+                    {
+                        @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent })
+                        string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                        <div class="col-md-3">
+                            <div id="@($"answer_group_{uuid}")">
+                                @if (!isReviewMode)
+                                {
+                                    <span class="@Html.Raw(Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList, resultPaper.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].AnswerList);
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+}
+@* END PART 1 *@
+
+<div class="my-3"></div>
+
+@* PART 2 *@
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent })
+@if (Model.ReadingTestPaper.ReadingPartTwos.TestCategory == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Description)</div>
+    <div>
+        @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].Active)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].Answers)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].Hint)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].Id)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].QuestionImage)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].QuestionText)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].UpdatedTime)
+
+            string uuid = Guid.NewGuid().ToString();
+            <div class="row pb-3">
+                <div class="col-md-8">
+                    <div>@(qIndex++). <span class="">@Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].QuestionText</span></div>
+                    @if (Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList.Count <= 0)
+                    {
+                        <div class="alert alert-danger mt-2" role="alert">
+                            <div class="text-center">
+                                This question has not been answered. Please contact the administrator to report the error.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @for (int j = 0; j < Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList.Count; j++)
+                        {
+                            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent })
+                            string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                            <div id="@($"answer_group_{uuid}")" class="pb-1">
+                                @if (!isReviewMode)
+                                {
+                                    <span class="@Html.Raw(Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList, resultPaper.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].AnswerList);
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-md-4">
+                    <span>
+                        <img class="w-100 reading-part-2-image rounded" src="@Model.ReadingTestPaper.ReadingPartTwos.ReadingPart[i].QuestionImage" onerror="this.onerror=null; this.src='/img/no-image-box.png'">
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+}
+@* END PART 2 *@
+
+<div class="my-3"></div>
+
+@* PART 3 *@
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent })
+@if (Model.ReadingTestPaper.ReadingPartThrees.TestCategory == null || Model.ReadingTestPaper.ReadingPartThrees.ReadingPart == null || Model.ReadingTestPaper.ReadingPartThrees.ReadingPart.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 3</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 3. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Description)</div>
+    @if (Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent != null && Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent.Length > 0)
+    {
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent)
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-2" role="alert">
+            <div class="text-center">
+                This section is missing text. Please contact the administrator to report this content error.
+            </div>
+        </div>
+    }
+    <div>
+        @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartThrees.ReadingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].Active)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].Answers)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].Hint)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].Id)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].QuestionImage)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].QuestionText)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].UpdatedTime)
+
+            string uuid = Guid.NewGuid().ToString();
+            <div class="row pb-3">
+                <div class="col-12">
+                    <div>@(qIndex++). <span class="">@Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].QuestionText</span></div>
+                    @if (Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList == null || Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList.Count <= 0)
+                    {
+                        <div class="alert alert-danger mt-2" role="alert">
+                            <div class="text-center">
+                                This question has not been answered. Please contact the administrator to report the error.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @for (int j = 0; j < Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList.Count; j++)
+                        {
+                            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent })
+                            string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                            <div id="@($"answer_group_{uuid}")" class="pb-1">
+                                @if (!isReviewMode)
+                                {
+                                    <span class="@Html.Raw(Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].AnswerContent
+                                    @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList[j].IsCorrect })
+                                }
+                                else
+                                {
+                                    renderAnswerReviewMode(j, Model.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList, resultPaper.ReadingTestPaper.ReadingPartThrees.ReadingPart[i].AnswerList);
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+@* END PART 3 *@
+
+<div class="my-3"></div>
+
+@* PART 4 *@
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.Id })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.PartId })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.Name })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.Description })
+@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent })
+@if (Model.ReadingTestPaper.ReadingPartFours.TestCategory == null || Model.ReadingTestPaper.ReadingPartFours.ReadingPart == null || Model.ReadingTestPaper.ReadingPartFours.ReadingPart.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 4</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 4. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartFours.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartFours.TestCategory.Description)</div>
+    @if (Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
+    {
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent)
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger mt-2" role="alert">
+            <div class="text-center">
+                This section is missing text. Please contact the administrator to report this content error.
+            </div>
+        </div>
+    }
+    <div>
+        @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartFours.ReadingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].Active)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].Answers)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].Hint)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].Id)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].QuestionImage)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].QuestionText)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].UpdatedTime)
+
+            string uuid = Guid.NewGuid().ToString();
+            <div class="row pb-3">
+                <div class="col-12">
+                    <span class="float-left">@(qIndex++). <span class="">@Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].QuestionText</span></span>
+                    @if (Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList == null || Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList.Count <= 0)
+                    {
+                        <br />
+                        <div class="alert alert-danger mt-2" role="alert">
+                            <div class="text-center">
+                                This question has not been answered. Please contact the administrator to report the error.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            @for (int j = 0; j < Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList.Count; j++)
+                            {
+                                @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent, new { @value = Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent })
+                                string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                                <div id="@($"answer_group_{uuid}")" class="col-3 pb-1">
+                                    @if (!isReviewMode)
+                                    {
+                                        <span class="@Html.Raw(Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect?"border border-dark rounded-circle px-2":"")">@answerAlphapet.</span> @Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].AnswerContent
+                                        @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect, new { @value = Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList[j].IsCorrect })
+                                    }
+                                    else
+                                    {
+                                        renderAnswerReviewMode(j, Model.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList, resultPaper.ReadingTestPaper.ReadingPartFours.ReadingPart[i].AnswerList);
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+@* END PART 4 *@

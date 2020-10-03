@@ -100,6 +100,14 @@ namespace TCU.English.Controllers
                 ViewBag.Msg = "<i class=\"\">Congratulations, you finished the test, your teacher will review your test and mark for you later.</i>";
             }
 
+            if (piece.TypeCode == TestCategory.TEST_ALL)
+            {
+                ViewBag.Title = "GENERAL TESTING RESULT";
+                ViewBag.IsGeneral = true;
+                // Đổi tin nhắn thông báo thành công
+                ViewBag.Msg = "<i class=\"\">Congratulations, you finished the test, your teacher will review your test and mark for you later.</i>";
+            }
+
 
             this.NotifySuccess("Your test is completed!");
 
@@ -117,6 +125,8 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(WritingReview), new { id });
             if (type == TestCategory.SPEAKING)
                 return RedirectToAction(nameof(SpeakingReview), new { id });
+            if (type == TestCategory.TEST_ALL)
+                return RedirectToAction(nameof(GeneralReview), new { id });
             return NotFoundTest();
         }
 

@@ -1,0 +1,95 @@
+﻿@model GeneralTestPaper
+@{
+    // Truyền ID sang cho Layout
+    ViewData["potID"] = Model.PieceOfTestId;
+
+    bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
+    GeneralTestPaper resultPaper = null;
+    ViewData["Title"] = ViewBag.Title ?? "YOUR TESTING";
+    ViewData["Timer"] = ViewBag.Timer ?? 0;
+    ViewData["Action"] = nameof(TestPaperController.General);
+    ViewData["Controller"] = NameUtils.ControllerName<TestPaperController>();
+    if (!isReviewMode)
+    {
+        Layout = "~/Views/Shared/_TestPaperLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_TestPaperReviewLayout.cshtml";
+        resultPaper = ViewBag.ResultPaper;
+    }
+}
+
+@Html.HiddenFor(x => x.PieceOfTestId)
+
+<div class="h6 font-weight-bold my-auto pb-2">I. <span class="text-uppercase ml-3">Listening</span></div>
+<partial name="General.Listening" />
+
+<div class="h6 font-weight-bold my-auto pb-2">II. <span class="text-uppercase ml-3">Reading</span></div>
+<partial name="General.Reading" />
+
+<div class="h6 font-weight-bold my-auto pb-2">III. <span class="text-uppercase ml-3">Writing</span></div>
+<partial name="General.Writing" />
+
+<div class="h6 font-weight-bold my-auto pb-2 pt-4">IV. <span class="text-uppercase ml-3">Speaking</span></div>
+<partial name="General.Speaking" />
+
+<partial name="_TranscriptModal" />
+
+@if (!isReviewMode)
+{
+    @* Confirm modal *@
+    <partial name="_ConfirmFinish" />
+    @* End confirm modal *@
+}
+
+@section FinishButton {
+    @if (!isReviewMode)
+    {
+        <button type="button" class="btn btn-lg btn-danger" data-toggle="modal" data-target="#confirm-finish">FINISH</button>
+    }
+    else
+    {
+        <button type="button" class="btn btn-lg btn-info" onclick="window.location.href='/'">BACK HOME</button>
+    }
+}
+
+@section Scripts {
+    <script>
+        function LoadTranscript(id) {
+            $('#transcript-content-loading').show();
+            $('#transcript-content').html('');
+            $('#transcript-content').hide();
+            $('#transcript-content')
+                .load(`@Url.Action(nameof(TestPaperController.LoadTranscript),NameUtils.ControllerName<TestPaperController>())?id=@Model.PieceOfTestId&mediaId=${id}`, function () {
+                    $('#transcript-content-loading').hide();
+                    $('#transcript-content').show();
+                    if ($('#transcript-content').html().length <= 0) {
+                        $('#transcript-content').html('No have any Transcripts!')
+                    }
+                });
+        }
+
+        $(document).ready(function () {
+            // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
+            $('.resize-image').each(function () {
+                if ($(this).height() > $(this).width()) {
+                    //$(this).addClass('landscape');
+                    $(this).height($(this).width());
+                }
+            });
+        });
+
+        function ShowTranscript() {
+            $('#transcript-content-loading').hide();
+            $('#transcript-content').html("@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.WYSIWYGContent.Trim().Replace("\"","\\\""))");
+        }
+    </script>
+}
+
+<style>
+    .listening-part-2-image, .reading-part-2-image {
+        border: 1px solid #000;
+        max-width: 320px;
+    }
+</style>

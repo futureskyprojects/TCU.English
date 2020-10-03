@@ -1,0 +1,175 @@
+﻿@model GeneralTestPaper
+@{
+    bool isReviewMode = ViewBag.IsReviewMode != null && ((bool)ViewBag.IsReviewMode);
+    GeneralTestPaper resultPaper = ViewBag.ResultPaper;
+
+    bool checkCorrectPart1(int index)
+    {
+        return resultPaper.WritingTestPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
+        .Equals(Model.WritingTestPaper.WritingPartOnes.WritingPart[index].Answers));
+    }
+
+    string visibleAnswer(int index)
+    {
+        string trueAnswers = "";
+        foreach (BaseAnswer ba in resultPaper.WritingTestPaper.WritingPartOnes.WritingPart[index].BaseAnswers)
+        {
+            if (!string.IsNullOrEmpty(ba.AnswerContent) && !string.IsNullOrWhiteSpace(ba.AnswerContent))
+            {
+                if (!string.IsNullOrEmpty(trueAnswers))
+                    trueAnswers += " / ";
+                trueAnswers += ba.AnswerContent;
+            }
+        }
+        return trueAnswers;
+    }
+
+    int qIndex = 1;
+}
+
+@* PART 1 *@
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.Id, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.Id })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.TypeCode, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.PartId, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.PartId })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.Name, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.Name })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.Description, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.Description })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.WYSIWYGContent })
+@if (Model.WritingTestPaper.WritingPartOnes.TestCategory == null || Model.WritingTestPaper.WritingPartOnes.WritingPart == null || Model.WritingTestPaper.WritingPartOnes.WritingPart.Count <= 0)
+{
+    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartOnes.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.WritingTestPaper.WritingPartOnes.TestCategory.Description)</div>
+    <div>
+        @for (int i = 0; i < Model.WritingTestPaper.WritingPartOnes.WritingPart.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].Active)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].CreatedTime)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].CreatorId)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].ExplainLink)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].Hint)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].Id)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].DefaultSentence)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].SecondSentence)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].UpdatedTime)
+            string uuid = Guid.NewGuid().ToString();
+            <div class="pt-3">@(qIndex++). @Model.WritingTestPaper.WritingPartOnes.WritingPart[i].DefaultSentence</div>
+            <div class="pt-3"><span class="font-weight-light" style="text-decoration: underline;">Rewrite:</span> @Model.WritingTestPaper.WritingPartOnes.WritingPart[i].SecondSentence</div>
+            if (Model.WritingTestPaper.WritingPartOnes.WritingPart[i].BaseAnswers == null || Model.WritingTestPaper.WritingPartOnes.WritingPart[i].BaseAnswers.Count <= 0)
+            {
+                <div class="alert alert-danger mt-2" role="alert">
+                    <div class="text-center">
+                        This question has not been answered. Please contact the administrator to report the error.
+                    </div>
+                </div>
+            }
+            else if (!isReviewMode)
+            {
+                <div class="col-md-8">
+                    <div class="row mt-2">
+                        @Html.TextBoxFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].Answers, new { @placeholder = "Input your answer ...", @class = "form-control", @style = "width: unset;" })
+                        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingTestPaper.WritingPartOnes.WritingPart[i].Answers)</small>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="@Html.Raw(isReviewMode?"col-12":"col-md-8")">
+                    <div class="row mt-2">
+                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Your answer:</span>
+                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"color:#0F0;":"text-decoration: line-through;color:#F00;")">
+                            @Model.WritingTestPaper.WritingPartOnes.WritingPart[i].Answers
+                        </span>
+
+                    </div>
+                    <div class="row mt-2">
+                        <span class="font-weight-light mr-2" style="text-decoration: underline;">Test answer:</span>
+                        <span class="mr-2">
+                            @visibleAnswer(i)
+                        </span>
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+@* END PART 1 *@
+
+<div class="my-3"></div>
+
+@* PART 2 *@
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Id, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Id })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.TypeCode, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.TypeCode })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.PartId, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.PartId })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Name, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Name })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Description, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Description })
+@Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent })
+@if (Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory == null || Model.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo == null || string.IsNullOrEmpty(Model.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Questions) || string.IsNullOrEmpty(Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent))
+{
+    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="alert alert-danger mt-2" role="alert">
+        <div class="text-center">
+            Could not create the right question for this section. Maybe due to lack of data in question library.
+        </div>
+    </div>
+}
+else
+{
+    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Name</span></div>
+    <div class="my-2">@Html.Raw(Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Description)</div>
+    <div>
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Active)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.CreatedTime)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.CreatorId)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Hint)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Id)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.TestCategoryId)
+        @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.UpdatedTime)
+
+        @Html.Raw(Model.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)
+
+        <div class="p-3 border border-dark mb-4">
+            @Html.Raw(Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent)
+        </div>
+
+        @Html.Label("Your paragraph")
+        @if (!isReviewMode)
+        {
+            <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WritingTestPaper.WritingPartTwos.UserParagraph)</small>
+            @Html.TextAreaFor(x => x.WritingTestPaper.WritingPartTwos.UserParagraph, new { id = "user-paragraph", @required = "required" })
+            <script>
+                $(document).ready(function () {
+                    if (CKEDITOR.instances['user-paragraph']) {
+                        CKEDITOR.instances['user-paragraph'].destroy();
+                    }
+                    CKEDITOR.replace('user-paragraph');
+                });
+            </script>
+        }
+        else
+        {
+            <div class="p-3 border border-info mb-4">
+                @Html.Raw(Model.WritingTestPaper.WritingPartTwos.UserParagraph)
+            </div>
+
+            if (!string.IsNullOrEmpty(Model.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph) && Model.WritingTestPaper.WritingPartTwos.UserParagraph != Model.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph)
+            {
+                @Html.Label("What teacher edit for your paragraph?")
+                <div class="p-3 border border-success mb-4">
+                    @Html.Raw(Model.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph)
+                </div>
+            }
+        }
+    </div>
+}
+@* END PART 2 *@

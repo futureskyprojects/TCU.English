@@ -81,7 +81,7 @@ namespace TCU.English.Models.PiceOfTest
         #endregion
 
         #region CALCULATE TRUE
-        private float ScoreCalculate(WritingTestPaper resultPaper)
+        public float ScoreCalculate(WritingTestPaper resultPaper)
         {
             if (WritingPartOnes.WritingPart != null &&
                 WritingPartOnes.WritingPart.Count > 0 &&

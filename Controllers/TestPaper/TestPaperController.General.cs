@@ -12,67 +12,9 @@ namespace TCU.English.Controllers
     {
 
         [HttpGet]
-        public IActionResult LoadTranscript([FromQuery] int id, [FromQuery] int mediaId)
+        public IActionResult General(int id)
         {
-            if (id <= 0 || mediaId <= 0)
-                return Content(string.Empty);
-
-            // Lấy bài thi theo mã
-            PieceOfTest piece = _PieceOfTestManager.Get(id);
-
-            // Nếu không có, trả về
-            if (piece == null)
-                return Content(string.Empty);
-
-            if (piece.TypeCode == TestCategory.TEST_ALL)
-            {
-                // Lấy trang giấy thi
-                GeneralTestPaper paper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson);
-
-                // Nếu trang giấy rỗng
-                if (paper == null)
-                    return Content(string.Empty);
-
-                // Cố gắng tìm kiếm transcript ở part 1
-                if (paper.ListeningTestPaper.ListeningPartOnes != null && paper.ListeningTestPaper.ListeningPartOnes.Any(x => x.ListeningMedia.Id == mediaId))
-                    return Content(paper.ListeningTestPaper.ListeningPartOnes.Where(x => x.ListeningMedia.Id == mediaId).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
-
-                // Cố gắng tìm kiếm transcript ở part 2
-                if (paper.ListeningTestPaper.ListeningPartTwos != null && paper.ListeningTestPaper.ListeningPartTwos.Any(x => x.ListeningMedia.Id == mediaId))
-                    return Content(paper.ListeningTestPaper.ListeningPartTwos.Where(x => x.ListeningMedia.Id == mediaId).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
-            }
-            else
-            {
-                // Lấy trang giấy thi
-                ListeningTestPaper paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson);
-
-                // Nếu trang giấy rỗng
-                if (paper == null)
-                    return Content(string.Empty);
-
-                // Cố gắng tìm kiếm transcript ở part 1
-                if (paper.ListeningPartOnes != null && paper.ListeningPartOnes.Any(x => x.ListeningMedia.Id == mediaId))
-                    return Content(paper.ListeningPartOnes.Where(x => x.ListeningMedia.Id == mediaId).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
-
-                // Cố gắng tìm kiếm transcript ở part 2
-                if (paper.ListeningPartTwos != null && paper.ListeningPartTwos.Any(x => x.ListeningMedia.Id == mediaId))
-                    return Content(paper.ListeningPartTwos.Where(x => x.ListeningMedia.Id == mediaId).FirstOrDefault()?.ListeningMedia?.Transcript ?? "");
-            }
-
-            // Nếu cũng không có thì trả về rỗng
-            return Content(string.Empty);
-
-        }
-
-        /// <summary>
-        /// Phương thức tạo dữ liệu thi cho bài thi Listening
-        /// </summary>
-        /// <param name="id">Đây là mã của đối tượng thuộc kiểu PiecOfTest</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult Listening(int id)
-        {
-            ViewBag.Title = "LISTENING TESTING";
+            ViewBag.Title = "GENERAL TESTING";
             if (id <= 0)
                 return NotFoundTest();
 
@@ -101,7 +43,7 @@ namespace TCU.English.Controllers
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {
-                return RedirectToAction(nameof(ListeningReview), new { id });
+                return RedirectToAction(nameof(GeneralReview), new { id });
             }
 
             // Tránh timer bị reset
@@ -110,29 +52,36 @@ namespace TCU.English.Controllers
                 ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
             }
 
-            ListeningTestPaper paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson)
-                .RemoveCorrectAnswers();
-            paper.PiceOfTestId = piece.Id;
+            // Giải mã thành giữ liệu bài thi
+            GeneralTestPaper paper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson);
+
+            // Gắn mã dữ liệu
+            paper.PieceOfTestId = piece.Id;
+
+            // Xóa đáp án của bài thi
+            paper.ClearTrueAnswers();
 
             this.NotifySuccess("Try your best, Good Luck!");
 
             return View(paper);
         }
-        public IActionResult ListeningNewTest(int? id)
+        public IActionResult GeneralNewTest(int? id)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            int PiceOfTestId = _TestCategoryManager
-                .GenerateListeningTestPaper(
-                _ListeningMediaManager,
+            int PiceOfTestId = GeneralTestPaper.Generate(
+                _TestCategoryManager,
                 _ListeningBaseQuestionManager,
+                _ListeningMediaManager,
+                _WritingPartTwoManager,
+                _SpeakingEmbedManager,
                 _PieceOfTestManager,
                 User.Id(),
-                id);
+                id).PieceOfTestId;
 
             if (PiceOfTestId > 0)
             {
                 // Nếu lưu trữ thành công, thì tiến hành cho thí sinh làm
-                return RedirectToAction(nameof(Listening), new { id = PiceOfTestId });
+                return RedirectToAction(nameof(General), new { id = PiceOfTestId });
             }
             else
             {
@@ -141,18 +90,18 @@ namespace TCU.English.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Listening(ListeningTestPaper paper)
+        public IActionResult General(GeneralTestPaper paper, string audioBase64)
         {
             if (paper == null)
                 return NotFoundTest();
 
-            if (paper.PiceOfTestId <= 0)
+            if (paper.PieceOfTestId <= 0)
                 return NotFoundTest();
 
-            ViewBag.Title = "READING TESTING";
+            ViewBag.Title = "GENERAL TESTING";
 
-            // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
-            PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
+            // Lấy bài thi từ mã số
+            PieceOfTest piece = _PieceOfTestManager.Get(paper.PieceOfTestId);
 
             if (piece == null)
                 return NotFoundTest();
@@ -178,34 +127,33 @@ namespace TCU.English.Controllers
                 ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
             }
 
+            if (string.IsNullOrEmpty(audioBase64))
+            {
+                // Xóa đáp án của bài thi
+                this.NotifyError("You have not recorded the reading yet");
+                return View(paper);
+            }
+
             // Kiểm tra check full
-            if (!paper.IsPaperFullSelection())
+            string validateString = paper.IsFullAnswers();
+
+            if (!string.IsNullOrEmpty(validateString))
             {
                 this.NotifyError("Please complete all questions");
 
-                paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
-                    .CopySelectedAnswers(paper);
-
+                //paper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson);
+                // Xóa đáp án của bài thi
                 return View(paper);
             }
-            int total = paper.TotalQuestions(); // Tổng số câu hỏi
-            if (total <= 0)
-            {
-                this.NotifyError("The test does not have any questions");
 
-                paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
-                    .CopySelectedAnswers(paper);
-                return View(paper);
-            }
             // Tính toán số điểm
-            float scores = paper.ScoreCalculate(piece.ResultOfTestJson);
+            paper.ScoreCalculate(piece.ResultOfTestJson);
 
             // Thời gian kết thúc bài thi
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
 
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
-            piece.Scores = scores;
             piece.TimeToFinished = timeToFinished;
             _PieceOfTestManager.Update(piece);
 
@@ -213,12 +161,12 @@ namespace TCU.English.Controllers
             return RedirectToAction(nameof(Result), new { id = piece.Id });
         }
         [HttpGet]
-        public IActionResult ListeningReview(int id)
+        public IActionResult GeneralReview(int id)
         {
             if (id <= 0)
                 return NotFoundTest();
 
-            ViewBag.Title = "LISTENING TESTING";
+            ViewBag.Title = "GENERAL TESTING";
 
             ViewBag.IsReviewMode = true;
 
@@ -250,9 +198,9 @@ namespace TCU.English.Controllers
             ViewBag.Scores = piece.Scores;
 
             // Bài thi của học viên
-            ListeningTestPaper userPaper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfUserJson ?? "");
+            GeneralTestPaper userPaper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfUserJson ?? "");
             // Bài thi mẫu (Được tạo khi thi, của học viên)
-            ListeningTestPaper resultPaper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson ?? "");
+            GeneralTestPaper resultPaper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson ?? "");
 
             bool isReviewOfFailTest = piece.ResultOfUserJson == null || piece.ResultOfUserJson.Length <= 0 || piece.UpdatedTime == null;
             ViewBag.IsReviewOfFailTest = isReviewOfFailTest;
@@ -263,7 +211,7 @@ namespace TCU.English.Controllers
                 userPaper = resultPaper;
             }
 
-            return View(nameof(Listening), userPaper);
+            return View(nameof(General), userPaper);
         }
     }
 }

@@ -347,7 +347,7 @@ namespace TCU.English.Models.PiceOfTest
                 return -1;
         }
 
-        public float ScoreCalculate(string readingTestPaperJson)
+        public float ScoresCalculate(string readingTestPaperJson)
         {
             ReadingTestPaper paper = JsonConvert.DeserializeObject<ReadingTestPaper>(readingTestPaperJson);
             return ScoresCalculate(paper);
