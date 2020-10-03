@@ -143,10 +143,18 @@ else
     startBtn.onclick = recorder.startRecord;
     stopBtn.onclick = recorder.stopRecord;
 
+    function BlobToBase64(blob) {
+        var reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            var base64data = reader.result;
+            console.log(base64data);
+        }
+    }
+
     function RecordVoiceAudios() {
         let elementVolume = document.querySelector('.js-volume');
         let ctx = elementVolume.getContext('2d');
-        let codeBtn = document.querySelector('.js-code');
         let pre = document.querySelector('pre');
         let downloadLink = document.getElementById('download');
         let audioElement = document.querySelector('audio');
@@ -156,7 +164,7 @@ else
         var audioContext;
         let processor;
         let config = {
-            bufferLen: 16384,
+            bufferLen: 4096,
             numChannels: 2,
             mimeType: 'audio/mpeg'
         };
@@ -196,7 +204,7 @@ else
             stopBtn.removeAttribute('disabled');
             audioElement.src = "";
             config = {
-                bufferLen: 16384,
+                bufferLen: 4096,
                 numChannels: 2,
                 mimeType: 'audio/mpeg'
             };
@@ -226,7 +234,9 @@ else
                 audioContext.close();
                 processor.disconnect();
                 tracks.forEach(track => track.stop());
-                audioElement.src = URL.createObjectURL(encoder.finish());
+                var blob = encoder.finish();
+                BlobToBase64(blob);
+                audioElement.src = URL.createObjectURL(blob);
             };
 
             analizer(audioContext);
@@ -297,12 +307,6 @@ else
             alert(error);
             console.log(error);
         }
-
-        codeBtn.addEventListener('click', () => {
-            pre.classList.toggle('hide');
-            pre.innerHTML = document.querySelector('.containerScript').innerHTML;
-        });
-
         drawAudio(0);
     }
 </script>

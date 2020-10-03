@@ -9,6 +9,7 @@ namespace TCU.English.Models.PiceOfTest
         public class SpeakingDTO
         {
             public SpeakingEmbedCombined Speaking { get; set; }
+            public string UserAudioPath { get; set; }
             public float Scores { get; set; } = -1;
         }
 

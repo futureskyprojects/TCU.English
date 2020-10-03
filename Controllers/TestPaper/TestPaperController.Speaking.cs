@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TCU.English.Models;
@@ -91,7 +95,7 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult Speaking(SpeakingTestPaper paper)
+        public async Task<IActionResult> Speaking(SpeakingTestPaper paper, string audioBase64)
         {
             if (paper == null)
                 return NotFoundTest();
@@ -99,7 +103,27 @@ namespace TCU.English.Controllers
             if (paper.PiceOfTestId <= 0)
                 return NotFoundTest();
 
+            if (string.IsNullOrEmpty(audioBase64))
+            {
+                this.NotifyError("You have not recorded the reading yet");
+                return View(paper);
+            }
+
             ViewBag.Title = "SPEAKING TESTING";
+
+            // Lấy người dùng hiện tại
+            var owner = _UserManager.Get(User.Id());
+
+            // Nếu không tìm thấy người này là ai
+            if (owner == null)
+            {
+                this.NotifyError("Unable to determine your identity");
+                return View(paper);
+            }
+
+            // Chuyển base64 thành stream
+            var bytes = Convert.FromBase64String(audioBase64.Replace("data:audio/mpeg;base64,", ""));
+            var memoryStream = new MemoryStream(bytes);
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
@@ -113,8 +137,23 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
             }
 
+            string fileName = $"{owner.Username.ToLower()}_{piece.TypeCode}_{piece.Id}";
+            // Tạo tệp tin
+            IFormFile file = new FormFile(memoryStream, 0, bytes.Length, fileName, $"{fileName}.mp3");
+
+            // Tiến hành lưu tệp tin cho người dùng
+            string path = await host.UploadForUserAudio(file, owner);
+
+            // Nếu path không đúng
+            if (string.IsNullOrEmpty(path))
+            {
+                this.NotifyError("Can not upload your speaking, please try again!");
+                return View(paper);
+            }
+
+            // Nếu OK thì tiếp tục
+
             // Lấy chủ sở hữu của bài kiểm tra
-            User owner = _UserManager.Get(piece.UserId);
             ViewData["Owner"] = new User
             {
                 Avatar = owner.Avatar,
@@ -130,6 +169,9 @@ namespace TCU.English.Controllers
 
             // Thời gian hoàn tất
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
+
+            // Cập nhật đường dẫn bài nói của HV cho bài thi
+            paper.SpeakingPart.UserAudioPath = path;
 
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
