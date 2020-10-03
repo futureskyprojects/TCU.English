@@ -125,9 +125,9 @@ namespace TCU.English.Models.DataManager
             }
             else
             {
-                var pieceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0);
+                var pieceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= 0);
                 totalPiceOfTests = pieceOfTests.Count();
-                totalScores = pieceOfTests.Sum(x => x.Scores);
+                totalScores = pieceOfTests.Where(x => x.Scores >= 0).Sum(x => x.Scores);
             }
             if (totalPiceOfTests > 0)
                 return (totalScores / ((float)totalPiceOfTests));
