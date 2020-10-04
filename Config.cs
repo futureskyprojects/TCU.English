@@ -62,6 +62,10 @@ namespace TCU.English
         public static string ToScores(this object scores)
         {
             float theScores = scores.ToString().ToFloat();
+
+            if (theScores == -1)
+                return "Not yet";
+
             if (theScores.ToInt() == theScores)
             {
                 return theScores.ToInt().ToString();

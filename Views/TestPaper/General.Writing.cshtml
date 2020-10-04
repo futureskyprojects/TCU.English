@@ -36,7 +36,13 @@
 @Html.HiddenFor(x => x.WritingTestPaper.WritingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.WritingTestPaper.WritingPartOnes.TestCategory.WYSIWYGContent })
 @if (Model.WritingTestPaper.WritingPartOnes.TestCategory == null || Model.WritingTestPaper.WritingPartOnes.WritingPart == null || Model.WritingTestPaper.WritingPartOnes.WritingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 1
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.WritingTestPaper.WritingPartOnes.Scores.ToScores())</span>
+        }
+    </div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.
@@ -115,7 +121,13 @@ else
 @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent, new { @value = Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent })
 @if (Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory == null || Model.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo == null || string.IsNullOrEmpty(Model.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Questions) || string.IsNullOrEmpty(Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.WYSIWYGContent))
 {
-    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 2
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.WritingTestPaper.WritingPartTwos.Scores.ToScores())</span>
+        }
+    </div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.

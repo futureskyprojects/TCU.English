@@ -32,7 +32,12 @@
 @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent })
 @if (Model.ReadingTestPaper.ReadingPartOnes.TestCategory == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 1</div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 1 @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ReadingTestPaper.ReadingPartOnes.Scores.ToScores())</span>
+        }
+    </div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.
@@ -105,7 +110,12 @@ else
 @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent })
 @if (Model.ReadingTestPaper.ReadingPartTwos.TestCategory == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 2</div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 2 @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ReadingTestPaper.ReadingPartTwos.Scores.ToScores())</span>
+        }
+    </div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.
@@ -194,7 +204,12 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 3. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 3. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name</span>  @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ReadingTestPaper.ReadingPartThrees.Scores.ToScores())</span>
+        }
+    </div>
     <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Description)</div>
     @if (Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent != null && Model.ReadingTestPaper.ReadingPartThrees.TestCategory.WYSIWYGContent.Length > 0)
     {
@@ -274,7 +289,12 @@ else
 @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent })
 @if (Model.ReadingTestPaper.ReadingPartFours.TestCategory == null || Model.ReadingTestPaper.ReadingPartFours.ReadingPart == null || Model.ReadingTestPaper.ReadingPartFours.ReadingPart.Count <= 0)
 {
-    <div class="h6 font-weight-bold my-auto">Part 4</div>
+    <div class="h6 font-weight-bold my-auto">
+        Part 4 @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ReadingTestPaper.ReadingPartFours.Scores.ToScores())</span>
+        }
+    </div>
     <div class="alert alert-danger mt-2" role="alert">
         <div class="text-center">
             Could not create the right question for this section. Maybe due to lack of data in question library.

@@ -118,7 +118,14 @@
                             </div>
                             <div class="col-lg-4 d-flex align-items-center flex-column flex-lg-row text-center text-md-left">
                                 <div class="roundy px-4 py-1 mr-0 mr-lg-3 mt-2 mt-lg-0 text-white exclode float-lg-left @getTypeColor(Model.ElementAt(i).TypeCode)">
-                                    @Html.Raw(Model.ElementAt(i).TypeCode)
+                                    @if (Model.ElementAt(i).TypeCode == TestCategory.TEST_ALL)
+                                    {
+                                        @Html.Raw("GENERAL")
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Model.ElementAt(i).TypeCode)
+                                    }
                                 </div>
                                 <div class="w-100">
                                     <img src="@Html.Raw(Model.ElementAt(i).User.Avatar)" class="img-fluid rounded-circle shadow top-avatar mx-2" onerror="this.onerror=null; this.src='/img/no_avatar.png'">

@@ -21,7 +21,7 @@
         <p style="font-size: 50px;" class="font-weight-bold p-4 text-red">
             @if (string.IsNullOrEmpty(customScores))
             {
-                if (!isSpeaking)
+                if (!isSpeaking && !isGeneral)
                 {
                     @Html.Raw($"{((float)ViewBag.Scores).ToScores()}/{ViewBag.MaxScores}")
                 }

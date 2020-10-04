@@ -22,16 +22,48 @@
 
 @Html.HiddenFor(x => x.PieceOfTestId)
 
-<div class="h6 font-weight-bold my-auto pb-2">I. <span class="text-uppercase ml-3">Listening</span></div>
+<div class="h6 font-weight-bold my-auto pb-2">
+    I. <span class="text-uppercase ml-3">
+        Listening
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal" >(Scores: @Model.TotalListeningScores().ToScores())</span>
+        }
+    </span>
+</div>
 <partial name="General.Listening" />
 
-<div class="h6 font-weight-bold my-auto pb-2">II. <span class="text-uppercase ml-3">Reading</span></div>
+<div class="h6 font-weight-bold my-auto pb-2">
+    II. <span class="text-uppercase ml-3">
+        Reading
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.TotalReadingScores().ToScores())</span>
+        }
+    </span>
+</div>
 <partial name="General.Reading" />
 
-<div class="h6 font-weight-bold my-auto pb-2">III. <span class="text-uppercase ml-3">Writing</span></div>
+<div class="h6 font-weight-bold my-auto pb-2">
+    III. <span class="text-uppercase ml-3">
+        Writing
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.TotalWritingScores().ToScores())</span>
+        }
+    </span>
+</div>
 <partial name="General.Writing" />
 
-<div class="h6 font-weight-bold my-auto pb-2 pt-4">IV. <span class="text-uppercase ml-3">Speaking</span></div>
+<div class="h6 font-weight-bold my-auto pb-2 pt-4">
+    IV. <span class="text-uppercase ml-3">
+        Speaking
+        @if (isReviewMode)
+        {
+            <span class="text-danger text-sm font-weight-normal" class="text-danger text-sm font-weight-normal">(Scores: @Model.WritingTestPaper.WritingPartTwos.Scores.ToScores())</span>
+        }
+    </span>
+</div>
 <partial name="General.Speaking" />
 
 <partial name="_TranscriptModal" />

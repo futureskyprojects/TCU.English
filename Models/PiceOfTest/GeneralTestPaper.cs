@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +121,7 @@ namespace TCU.English.Models.PiceOfTest
             SpeakingTestPaper.SpeakingPart.Scores = -1;
         }
 
-       
+
         public void ClearTrueAnswers()
         {
             ReadingTestPaper.RemoveCorrectAnswers();
@@ -128,6 +129,47 @@ namespace TCU.English.Models.PiceOfTest
             // Xóa answers writing
             for (int i = 0; i < WritingTestPaper.WritingPartOnes.WritingPart.Count; i++)
                 WritingTestPaper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
+        }
+
+        public float TotalReadingScores()
+        {
+            float scores = 0;
+            if (ReadingTestPaper.ReadingPartOnes.Scores >= 0)
+                scores += ReadingTestPaper.ReadingPartOnes.Scores;
+
+            if (ReadingTestPaper.ReadingPartTwos.Scores >= 0)
+                scores += ReadingTestPaper.ReadingPartTwos.Scores;
+
+            if (ReadingTestPaper.ReadingPartThrees.Scores >= 0)
+                scores += ReadingTestPaper.ReadingPartThrees.Scores;
+
+            if (ReadingTestPaper.ReadingPartFours.Scores >= 0)
+                scores += ReadingTestPaper.ReadingPartFours.Scores;
+
+            return scores;
+        }
+
+        public float TotalListeningScores()
+        {
+            float scores = 0;
+            if (ListeningTestPaper.Part1Scores >= 0)
+                scores += ListeningTestPaper.Part1Scores;
+
+            if (ListeningTestPaper.Part2Scores >= 0)
+                scores += ListeningTestPaper.Part2Scores;
+
+            return scores;
+        }
+        public float TotalWritingScores()
+        {
+            float scores = 0;
+            if (WritingTestPaper.WritingPartOnes.Scores >= 0)
+                scores += WritingTestPaper.WritingPartOnes.Scores;
+
+            if (WritingTestPaper.WritingPartTwos.Scores >= 0)
+                scores += WritingTestPaper.WritingPartTwos.Scores;
+
+            return scores;
         }
     }
 

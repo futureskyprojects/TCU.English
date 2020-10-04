@@ -5,6 +5,7 @@ using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.PiceOfTest;
 using TCU.English.Models.Repository;
+using static TCU.English.Models.PiceOfTest.SpeakingTestPaper;
 
 namespace TCU.English.Components
 {
@@ -20,6 +21,49 @@ namespace TCU.English.Components
             this._PieceOfTestManager = (PieceOfTestManager)_PieceOfTestManager;
             this._UserManager = (UserManager)_UserManager;
         }
+
+        public IViewComponentResult InvokeForGenralTest(int pieceOfTestId)
+        {
+            // Lấy bài thi theo mã cho trước
+            PieceOfTest pot = _PieceOfTestManager.Get(pieceOfTestId);
+
+            // Nếu đây là bài hỏng của học viên
+            if (string.IsNullOrEmpty(pot.ResultOfUserJson))
+                return View("GeneralTools");
+
+            // Lấy đối tượng bài thi chung
+            GeneralTestPaper gtp = JsonConvert.DeserializeObject<GeneralTestPaper>(pot.ResultOfUserJson);
+
+            // Gắn bài thi vô đối tượng biến tạm
+            ViewBag.POT = _PieceOfTestManager.GetForInstructorTool(pieceOfTestId); ;
+
+            // Khởi tạo đoạn văn chấm cho GV nếu chưa có
+            if (string.IsNullOrEmpty(gtp.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph))
+                gtp.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph = gtp.WritingTestPaper.WritingPartTwos.UserParagraph;
+
+
+
+            return View("GeneralTools", new GeneralTestPaper
+            {
+                PieceOfTestId = gtp.PieceOfTestId,
+                WritingTestPaper = new WritingTestPaper
+                {
+                    WritingPartTwos = new WritingTestPaper.WritingPartTwoDTO
+                    {
+                        TeacherReviewParagraph = gtp.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph,
+                        Scores = gtp.WritingTestPaper.WritingPartTwos.Scores
+                    }
+                },
+                SpeakingTestPaper = new SpeakingTestPaper
+                {
+                    SpeakingPart = new SpeakingDTO
+                    {
+                        Scores = gtp.SpeakingTestPaper.SpeakingPart.Scores
+                    }
+                }
+            });
+        }
+
         public IViewComponentResult Invoke(int piceOfTestId)
         {
             // Nếu biến số truyền vào không đúng
@@ -32,6 +76,10 @@ namespace TCU.English.Components
             // Nếu không tìm thấy bài thi
             if (pot == null)
                 return View();
+
+            // Nếu là bài thi tổng, chuyển sang một tool riêng
+            if (pot.TypeCode == TestCategory.TEST_ALL)
+                return InvokeForGenralTest(piceOfTestId);
 
             ViewBag.POT = pot;
 

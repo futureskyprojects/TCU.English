@@ -28,7 +28,12 @@
     int qIndex = 1;
 }
 
-<div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@*@Html.Raw(Model.ListeningTestPaper.ListeningPartOnes.Where(x => x != null && x.TestCategory.Description != null && x.TestCategory.Description.Length > 0).FirstOrDefault()?.TestCategory.Name ?? "")*@</span></div>
+<div class="h6 font-weight-bold my-auto">
+    Part 1 @if (isReviewMode)
+    {
+        <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ListeningTestPaper.Part1Scores.ToScores())</span>
+    }
+</div>
 <div class="my-2">@Html.Raw(Model.ListeningTestPaper.ListeningPartOnes.Where(x => x != null && x.TestCategory.Description != null && x.TestCategory.Description.Length > 0).FirstOrDefault()?.TestCategory.Description ?? "")</div>
 @* PART 1 *@
 @for (int i = 0; i < Model.ListeningTestPaper.ListeningPartOnes.Count; i++)
@@ -139,7 +144,12 @@
     }
     else
     {
-        <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ListeningTestPaper.ListeningPartTwos[i].TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartTwos[i].ListeningMedia.Id);"></i></div>
+        <div class="h6 font-weight-bold my-auto">
+            Part 2. <span class="text-uppercase ml-3">@Model.ListeningTestPaper.ListeningPartTwos[i].TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartTwos[i].ListeningMedia.Id);"></i> @if (isReviewMode)
+            {
+                <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ListeningTestPaper.Part2Scores.ToScores())</span>
+            }
+        </div>
         <div class="my-2">@Html.Raw(Model.ListeningTestPaper.ListeningPartTwos[i].TestCategory.Description)</div>
         @* Khu vực dành cho phát *@
         <div class="p-2 text-center alert alert-warning align-self-center my-2">

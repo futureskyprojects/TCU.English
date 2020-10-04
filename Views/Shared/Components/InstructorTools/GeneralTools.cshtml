@@ -1,0 +1,30 @@
+﻿@model GeneralTestPaper
+@{
+    var POT = (PieceOfTest)ViewBag.POT;
+}
+
+@if (Model == null)
+    return;
+
+@if (POT == null)
+    return;
+<div class="row">
+    <div class="col-12">
+        <div class="d-inline-block">
+            @if (POT.InstructorId == User.Id())
+            { // Nếu là GVHD cho bài thi này
+                <partial name="~/Views/Shared/Components/InstructorTools/__Tool.Full.cshtml" />
+            }
+        </div>
+        <div class="d-inline-block @Html.Raw(POT.InstructorId == User.Id()?"float-right":"")">
+            @if (POT.UserId == User.Id())
+            { // Nếu là chủ bài thi
+                <partial name="~/Views/Shared/Components/InstructorTools/__YourInstructorRating.cshtml" />
+            }
+        </div>
+        <div>
+            @*Điểm của bài thi*@
+            <partial name="~/Views/Shared/Components/InstructorTools/__TestScores.cshtml" />
+        </div>
+    </div>
+</div>

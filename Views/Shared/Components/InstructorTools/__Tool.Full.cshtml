@@ -1,0 +1,89 @@
+﻿@model GeneralTestPaper
+@{
+    var POT = (PieceOfTest)ViewBag.POT;
+}
+@if (POT == null)
+    return;
+
+@* Nút hiển thị hộp thoại đánh giá và nhận xét *@
+<div class="pt-0">
+    <button type="button"
+            class="btn btn-lg btn-primary rounded-circle p-0"
+            data-toggle="modal"
+            data-target="#instructor_tools_model">
+        <i class="fas fa-check-circle m-2" style="font-size: 2.5rem;"></i>
+    </button>
+</div>
+@* Kết thúc nút hiển thị hộp thoại *@
+
+@* Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@
+<div class="modal fade" id="instructor_tools_model" tabindex="-1" role="dialog" aria-labelledby="instructor_tools_model" aria-hidden="true" style="z-index: 1041;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructor_tools_model_title">Instructor Tools</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            @using (Html.BeginForm(nameof(InstructorController.SubmitToolResultForGeneral), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
+            {
+                <div class="modal-body">
+                    @Html.HiddenFor(x => x.PieceOfTestId)
+
+                    @* Khu vực đánh giá điểm và chỉnh sửa đoạn văn của phần WRITING *@
+                    @Html.Label("Score of WRITING PART 2")
+                    @Html.TextBoxFor(x => x.WritingTestPaper.WritingPartTwos.Scores, new { @required = "required", @type = "number", @class = "form-control", @style = "width: unset;", @min = "0", @max = Config.SCORES_FULL_WRITING_PART_2 })
+                    <small class="form-text text-info mr-3">@Html.ValidationMessageFor(x => x.WritingTestPaper.WritingPartTwos.Scores, $"Student's writing score achieved (0 - {Config.SCORES_FULL_WRITING_PART_2})")</small>
+                    <hr />
+                    @Html.Label("Your review for student writing")
+                    <small class="form-text text-info mr-3">@Html.ValidationMessageFor(x => x.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph, "This field cannot be left blank. You can make corrections to make it interesting to students without affecting the original exam.")</small>
+                    @Html.TextAreaFor(x => x.WritingTestPaper.WritingPartTwos.TeacherReviewParagraph, new { id = "teacher-review", @required = "required" })
+                    <hr />
+                    @* END Khu vực đánh giá điểm và chỉnh sửa đoạn văn của phần WRITING *@
+
+                    @* Khu vực điểm của bài thi speaking *@
+                    @Html.Label("Score of SPEAKING")
+                    @Html.TextBoxFor(x => x.SpeakingTestPaper.SpeakingPart.Scores, new { @required = "required", @type = "number", @class = "form-control", @style = "width: unset;", @min = "0", @max = Config.SCORES_FULL_SPEAKING })
+                    <small class="form-text text-info mr-3">@Html.ValidationMessageFor(x => x.SpeakingTestPaper.SpeakingPart.Scores, $"Student's speaking score achieved (0 - {Config.SCORES_FULL_SPEAKING})")</small>
+                    <hr />
+                    @* End khu vực điểm của bài thi speaking *@
+
+                    @* Khu vực đánh giá, bình luận *@
+                    @Html.Label("Your comments")
+                    <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments), null)</small>
+                    @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment", @required = "required" })
+                    @* End khu vực đánh giá, bình luận *@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+@* End Hộp thoại chứa công cụ nhận xét, đánh giá và chấm điểm *@
+
+<script>
+    $(document).ready(function () {
+        if (CKEDITOR.instances['teacher-review']) {
+            CKEDITOR.instances['teacher-review'].destroy();
+        }
+        CKEDITOR.replace('teacher-review');
+
+        if (CKEDITOR.instances['instructor-comment']) {
+            CKEDITOR.instances['instructor-comment'].destroy();
+        }
+        CKEDITOR.replace('instructor-comment', {
+            toolbar:
+                [
+                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                    { name: 'tools', items: ['Maximize', '-', 'About'] }
+                ]
+        });
+    });
+</script>
