@@ -18,8 +18,6 @@
         Layout = "~/Views/Shared/_TestPaperReviewLayout.cshtml";
         resultPaper = ViewBag.ResultPaper;
     }
-
-    int qIndex = 1;
 }
 
 @* Giữ lại dữ liệu cho mã mảnh bài kiểm tra *@
@@ -170,7 +168,6 @@ else
         reader.onloadend = function () {
             $("#audioBase64").val(reader.result);
         }
-        reader.
     }
 
     function RecordVoiceAudios() {

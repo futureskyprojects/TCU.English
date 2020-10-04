@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TCU.English.Models;
@@ -90,7 +93,7 @@ namespace TCU.English.Controllers
             }
         }
         [HttpPost]
-        public IActionResult General(GeneralTestPaper paper, string audioBase64)
+        public async Task<IActionResult> General(GeneralTestPaper paper, string audioBase64)
         {
             if (paper == null)
                 return NotFoundTest();
@@ -99,6 +102,17 @@ namespace TCU.English.Controllers
                 return NotFoundTest();
 
             ViewBag.Title = "GENERAL TESTING";
+
+            if (string.IsNullOrEmpty(audioBase64))
+            {
+                // Xóa đáp án của bài thi
+                this.NotifyError("You have not recorded the reading yet");
+                return View(paper);
+            }
+
+            // Chuyển base64 thành stream
+            var bytes = Convert.FromBase64String(audioBase64.Replace("data:audio/mpeg;base64,", ""));
+            var memoryStream = new MemoryStream(bytes);
 
             // Lấy bài thi từ mã số
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PieceOfTestId);
@@ -121,17 +135,35 @@ namespace TCU.English.Controllers
                 LastName = owner.LastName
             };
 
+            string fileName = $"{owner.Username.ToLower()}_{piece.TypeCode}_{piece.Id}";
+            // Tạo tệp tin
+            IFormFile file = new FormFile(memoryStream, 0, bytes.Length, null, $"{fileName}.mp3")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "audio/mpeg"
+            };
+
+            // Nếu file null
+            if (file == null)
+            {
+                this.NotifyError("Can not upload your audio, please try again!");
+                return View(paper);
+            }
+
+            // Tiến hành lưu tệp tin cho người dùng
+            string path = await host.UploadForUserAudio(file, owner);
+
+            // Nếu path không đúng
+            if (string.IsNullOrEmpty(path))
+            {
+                this.NotifyError("Can not upload your speaking, please try again!");
+                return View(paper);
+            }
+
             // Tránh timer bị reset
             if (piece.CreatedTime != null)
             {
                 ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-            }
-
-            if (string.IsNullOrEmpty(audioBase64))
-            {
-                // Xóa đáp án của bài thi
-                this.NotifyError("You have not recorded the reading yet");
-                return View(paper);
             }
 
             // Kiểm tra check full
@@ -151,6 +183,9 @@ namespace TCU.English.Controllers
 
             // Thời gian kết thúc bài thi
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
+
+            // Cập nhật đường dẫn bài nói của HV cho bài thi
+            paper.SpeakingTestPaper.SpeakingPart.UserAudioPath = path;
 
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
