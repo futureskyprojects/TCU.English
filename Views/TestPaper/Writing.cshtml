@@ -78,7 +78,10 @@ else
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].TestCategoryId)
             @Html.HiddenFor(x => x.WritingPartOnes.WritingPart[i].UpdatedTime)
             string uuid = Guid.NewGuid().ToString();
-            <div class="pt-3">@(qIndex++). @Model.WritingPartOnes.WritingPart[i].DefaultSentence</div>
+            <div class="pt-3">
+                @(qIndex++). @Model.WritingPartOnes.WritingPart[i].DefaultSentence
+                <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.WritingPartOnes.WritingPart[i].Hint));"></i>
+            </div>
             <div class="pt-3"><span class="font-weight-light" style="text-decoration: underline;">Rewrite:</span> @Model.WritingPartOnes.WritingPart[i].SecondSentence</div>
             if (Model.WritingPartOnes.WritingPart[i].BaseAnswers == null || Model.WritingPartOnes.WritingPart[i].BaseAnswers.Count <= 0)
             {
@@ -199,6 +202,8 @@ else
     <partial name="_ConfirmFinish" />
     @* End confirm modal *@
 }
+
+<partial name="_HintModal" />
 
 @section FinishButton {
     @if (!isReviewMode)
