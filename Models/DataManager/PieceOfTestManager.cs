@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TCU.English.Models.PiceOfTest;
 using TCU.English.Models.Repository;
 using TCU.English.Utils;
 
@@ -125,9 +127,49 @@ namespace TCU.English.Models.DataManager
             }
             else
             {
+                // Tính điểm kỹ năng theo cho từng phần
                 var pieceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= 0);
                 totalPiceOfTests = pieceOfTests.Count();
                 totalScores = pieceOfTests.Where(x => x.Scores >= 0).Sum(x => x.Scores);
+
+                try
+                {
+                    // Lấy điềm kỹ năng được tính từ bài thi tổng
+                    pieceOfTests = instantce.PieceOfTests.Where(x =>
+                        x.UserId == userId &&
+                        x.TypeCode.ToUpper() == TestCategory.TEST_ALL &&
+                        x.ResultOfUserJson != null &&
+                        x.ResultOfUserJson.Length > 0);
+
+                    // Nếu là bài thi đọc
+                    if (typeCode == TestCategory.LISTENING)
+                    {
+                        totalPiceOfTests += pieceOfTests.Count();
+                        totalScores += pieceOfTests.Sum(x => JsonConvert.DeserializeObject<GeneralTestPaper>(x.ResultOfUserJson).TotalReadingScores());
+                    }
+                    else if (typeCode == TestCategory.READING)
+                    {
+                        totalPiceOfTests += pieceOfTests.Count();
+                        totalScores += pieceOfTests.Sum(x => JsonConvert.DeserializeObject<GeneralTestPaper>(x.ResultOfUserJson).TotalListeningScores());
+                    }
+                    else if (typeCode == TestCategory.WRITING)
+                    {
+                        pieceOfTests = pieceOfTests.Where(x => x.Scores >= 0);
+                        totalPiceOfTests += pieceOfTests.Count();
+                        totalScores += pieceOfTests.Sum(x => JsonConvert.DeserializeObject<GeneralTestPaper>(x.ResultOfUserJson).TotalWritingScores());
+                    }
+                    else if (typeCode == TestCategory.SPEAKING)
+                    {
+                        pieceOfTests = pieceOfTests.Where(x => x.Scores >= 0);
+                        totalPiceOfTests += pieceOfTests.Count();
+                        totalScores += pieceOfTests.Sum(x => JsonConvert.DeserializeObject<GeneralTestPaper>(x.ResultOfUserJson).SpeakingTestPaper.SpeakingPart.Scores.ToFloat());
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
             }
             if (totalPiceOfTests > 0)
                 return (totalScores / ((float)totalPiceOfTests));

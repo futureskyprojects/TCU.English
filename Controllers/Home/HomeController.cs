@@ -26,12 +26,17 @@ namespace TCU.English.Controllers
             ViewBag.PassedTests = _PieceOfTestManager.PassedTestsCount(userId);
             ViewBag.FaildTests = _PieceOfTestManager.FaildTestsCount(userId);
 
-            ViewBag.ListeningGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.LISTENING).ToScores();
-            ViewBag.ReadingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.READING).ToScores();
-            ViewBag.WritingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.WRITING).ToScores();
-            ViewBag.SpeakingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.SPEAKING).ToScores();
+            float ListeningGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.LISTENING);
+            float ReadingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.READING);
+            float WritingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.WRITING);
+            float SpeakingGPA = _PieceOfTestManager.CalculateGPA(userId, TestCategory.SPEAKING);
 
-            ViewBag.YourGPA = _PieceOfTestManager.CalculateGPA(userId).ToScores();
+            ViewBag.ListeningGPA = ListeningGPA.ToScores();
+            ViewBag.ReadingGPA = ReadingGPA.ToScores();
+            ViewBag.WritingGPA = WritingGPA.ToScores();
+            ViewBag.SpeakingGPA = SpeakingGPA.ToScores();
+
+            ViewBag.YourGPA = (ListeningGPA + ReadingGPA + WritingGPA + SpeakingGPA).ToScores();
 
             return View();
         }
