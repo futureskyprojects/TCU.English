@@ -71,7 +71,7 @@ else
                                 </h4>
                             </div>
                             <div>
-                                <audio controls type="audio/mpeg">
+                                <audio controls type="audio/mpeg" id="reading-audio">
                                     <source src="@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.UserAudioPath)">
                                 </audio>
                             </div>
@@ -126,7 +126,7 @@ else
         let ctx = elementVolume.getContext('2d');
         let pre = document.querySelector('pre');
         let downloadLink = document.getElementById('download');
-        let audioElement = document.querySelector('audio');
+        let audioElement = document.querySelector('#reading-audio');
         let encoder = null;
         let microphone;
         let isRecording = false;

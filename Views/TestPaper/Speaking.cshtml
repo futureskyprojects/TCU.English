@@ -89,11 +89,11 @@ else
                         <div class="py-3 ml-4">
                             <div class="pl-2">
                                 <h4>
-                                    @Html.Raw(isReviewMode?"Record": "Your SPEAKING recoder")
+                                    @Html.Raw(isReviewMode ? "Record" : "Your SPEAKING recoder")
                                 </h4>
                             </div>
                             <div>
-                                <audio controls type="audio/mpeg">
+                                <audio controls type="audio/mpeg" id="reading-audio">
                                     <source src="@Html.Raw(Model.SpeakingPart.UserAudioPath)">
                                 </audio>
                             </div>
@@ -170,6 +170,7 @@ else
         reader.onloadend = function () {
             $("#audioBase64").val(reader.result);
         }
+        reader.
     }
 
     function RecordVoiceAudios() {
@@ -177,7 +178,7 @@ else
         let ctx = elementVolume.getContext('2d');
         let pre = document.querySelector('pre');
         let downloadLink = document.getElementById('download');
-        let audioElement = document.querySelector('audio');
+        let audioElement = document.querySelector('#reading-audio');
         let encoder = null;
         let microphone;
         let isRecording = false;
@@ -324,7 +325,7 @@ else
         }
 
         let logError = (error) => {
-            alert(error);
+            //alert(error);
             console.log(error);
         }
         drawAudio(0);
