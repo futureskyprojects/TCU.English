@@ -1,10 +1,9 @@
-﻿@using TCU.English.Models
-@* Menu dành cho giáo viên chấm điểm hoặc reivew bài thi của HV *@
+﻿@* Menu dành cho giáo viên chấm điểm hoặc reivew bài thi của HV *@
 @if (User.IsInRole(UserType.ROLE_ALL) || User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
 {
     <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">INSTRUCTOR</div>
     <ul class="sidebar-menu list-unstyled">
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.InstructorController.YourOwnStudents), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.InstructorController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>Own Students</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.InstructorController.StudentTest), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.InstructorController>())" class="sidebar-link text-muted"><i class="o-survey-1 mr-3 text-gray"></i><span>Student Tests</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(InstructorController.YourOwnStudents), NameUtils.ControllerName<InstructorController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>Own Students</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(InstructorController.StudentTest), NameUtils.ControllerName<InstructorController>())" class="sidebar-link text-muted"><i class="o-survey-1 mr-3 text-gray"></i><span>Student Tests</span></a></li>
     </ul>
 }
