@@ -71,9 +71,10 @@ namespace TCU.English.Controllers
 
             WritingTestPaper paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
 
-            // Xóa answers 
-            for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
-                paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
+            // Xóa answers
+            if (!Config.IsShowCorrectAnswer)
+                for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
+                    paper.WritingPartOnes.WritingPart[i].Answers = string.Empty;
 
             paper.PiceOfTestId = piece.Id;
 

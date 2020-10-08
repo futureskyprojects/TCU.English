@@ -43,6 +43,9 @@ namespace TCU.English.Models.PiceOfTest
 
         public ReadingTestPaper RemoveCorrectAnswers()
         {
+            if (Config.IsShowCorrectAnswer)
+                return this;
+
             #region Remove for part 1
             if (ReadingPartOnes.TestCategory != null &&
                 ReadingPartOnes.ReadingPart != null &&
@@ -322,24 +325,24 @@ namespace TCU.English.Models.PiceOfTest
         public float ScoresCalculate(ReadingTestPaper paper)
         {
             // Tính điểm cho part 1
-            var totalTrue = CalculateTrueOfPart(1, paper);
-            if (totalTrue >= 0)
-                ReadingPartOnes.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartOnes.ReadingPart.Count, Config.SCORES_FULL_READING_PART_1);
+            var totalTrue1 = CalculateTrueOfPart(1, paper);
+            if (totalTrue1 >= 0)
+                ReadingPartOnes.Scores = ScoresUtils.ScoresCalculate(totalTrue1, ReadingPartOnes.ReadingPart.Count, Config.SCORES_FULL_READING_PART_1);
 
             // Tính điểm cho part 2
-            totalTrue = CalculateTrueOfPart(2, paper);
-            if (totalTrue >= 0)
-                ReadingPartTwos.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartTwos.ReadingPart.Count, Config.SCORES_FULL_READING_PART_2);
+            var totalTrue2 = CalculateTrueOfPart(2, paper);
+            if (totalTrue2 >= 0)
+                ReadingPartTwos.Scores = ScoresUtils.ScoresCalculate(totalTrue2, ReadingPartTwos.ReadingPart.Count, Config.SCORES_FULL_READING_PART_2);
 
             // Tính điểm cho part 3
-            totalTrue = CalculateTrueOfPart(3, paper);
-            if (totalTrue >= 0)
-                ReadingPartThrees.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartThrees.ReadingPart.Count, Config.SCORES_FULL_READING_PART_3);
+            var totalTrue3 = CalculateTrueOfPart(3, paper);
+            if (totalTrue3 >= 0)
+                ReadingPartThrees.Scores = ScoresUtils.ScoresCalculate(totalTrue3, ReadingPartThrees.ReadingPart.Count, Config.SCORES_FULL_READING_PART_3);
 
             // Tính điểm cho part 4
-            totalTrue = CalculateTrueOfPart(4, paper);
-            if (totalTrue >= 0)
-                ReadingPartFours.Scores = ScoresUtils.ScoresCalculate(totalTrue, ReadingPartFours.ReadingPart.Count, Config.SCORES_FULL_READING_PART_4);
+            var totalTrue4 = CalculateTrueOfPart(4, paper);
+            if (totalTrue4 >= 0)
+                ReadingPartFours.Scores = ScoresUtils.ScoresCalculate(totalTrue4, ReadingPartFours.ReadingPart.Count, Config.SCORES_FULL_READING_PART_4);
 
             if (ReadingPartOnes.Scores >= 0 && ReadingPartTwos.Scores >= 0 && ReadingPartThrees.Scores >= 0 && ReadingPartFours.Scores >= 0)
                 return ReadingPartOnes.Scores + ReadingPartTwos.Scores + ReadingPartThrees.Scores + ReadingPartFours.Scores;

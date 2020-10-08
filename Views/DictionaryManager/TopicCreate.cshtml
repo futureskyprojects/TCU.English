@@ -1,0 +1,93 @@
+﻿@{
+    string modalId = nameof(TCU.English.Models.TestCategory) + "_Create";
+    string modalTitle = "Create category";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>();
+    string actionName = nameof(TCU.English.Controllers.TestCategoryController.CreateAjax);
+    string errorMsg = "An error occurred during operation, please try again.";
+}
+
+<div id="@(modalId)" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
+    <div role="document" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="@(modalId)_label" class="modal-title">@Html.Raw(modalTitle)</h4>
+                <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+            </div>
+            @*=======================================================*@
+            <form asp-controller="@controller" asp-action="@actionName"
+                  data-ajax="true"
+                  data-ajax-method="POST"
+                  data-ajax-complete="onComplete"
+                  data-ajax-success="onSuccess"
+                  data-ajax-begin="onBegin"
+                  data-ajax-failure="onFailed">
+
+                @*//========= MODAL BODY =============//*@
+                <div class="modal-body">
+                    <div id="@(modalId)_body">
+                        <partial name="~/Views/DictionaryManager/_TopicForm.cshtml" />
+                    </div>
+                    <div id="@(modalId)_loading">
+                        <partial name="__Loading" />
+                    </div>
+                </div>
+                @*//========= END MODAL BODY =============//*@
+
+                @*//========= MODAL FOOTER =============//*@
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                @*//========= END MODAL FOOTER =============//*@
+            </form>
+            @*@using (Html.BeginForm(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>(), FormMethod.Post))
+                {
+                }*@
+            @*=======================================================*@
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#@(modalId)_loading").hide();
+
+    $("#@(modalId)_body").show();
+
+    $("#@(modalId)_loading").hide();
+
+
+    var onComplete = function () {
+        $("#@(modalId)_loading").hide();
+        $("#@(modalId)_body").show();
+    };
+    var onBegin  = function () {
+        $("#@(modalId)_loading").show();
+        $("#@(modalId)_body").hide();
+    };
+    var onSuccess = function (data, status, xhr) {
+        if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
+
+            if (data.status) {
+                toastr["success"](data.message);
+                $("#@(modalId)").hide();
+                setTimeout(function () { location.reload(); }, 1000);
+            } else {
+                toastr["error"](data.message);
+            }
+            return;
+        }
+        toastr["error"]("@errorMsg");
+        //console.log("data", data);
+        //console.log("status", status);
+        //console.log("xhr", xhr);
+    }
+    var onFailed = function (xhr, status, error) {
+        toastr["error"]("@errorMsg");
+        //console.log("xhr", xhr);
+        //console.log("status", status);
+
+        //// TODO: make me pretty
+        //alert(error);
+    };
+</script>

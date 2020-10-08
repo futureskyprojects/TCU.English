@@ -1,0 +1,226 @@
+﻿@{
+    ViewData["Title"] = "Dictionary Manager";
+}
+<div class="py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Grammars</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(TestCategory)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div class="card mb-2 bg-hover-gradient-blue no-anchor-style"
+                         data-toggle="tooltip" data-placement="bottom" title="Mô tả">
+                        <div class="card-body p-3">
+                            <div class="row align-items-center flex-row">
+                                <div class="col-10" onclick="window.location.href='@Url.Action(nameof(ReadingManagerController.Part1), NameUtils.ControllerName<ReadingManagerController>(), new { category = 123 })'">
+                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span>1. 123 <sup class="smaller text-gray font-weight-normal">(123)</sup></span></p>
+                                    <small class="text-muted">iahipokf[f[dfk</small>
+                                </div>
+                                <div class="col-2" onclick="dictionaryPopupOptions(123)">
+                                    <img src="~/img/3dot.webp" width="18" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<partial name="__EmptyAnimation" />*@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <h2 class="h6 text-uppercase my-auto">Topic: ALL</h2>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(ReadingPartOne)_Create" class="btn btn-primary ml-auto">Add</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center flex-row">
+                                <div class="col-11">
+                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">12334.<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> Hello</span></p>
+                                </div>
+                                <div class="col-1" onclick="displayPopupOptions(123)">
+                                    <img src="~/img/3dot.webp" width="18" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*                        <partial name="__EmptyAnimation" />*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* TEST CATEGORY DIALOG *@
+<div id="modal-create-test-category"></div>
+<div id="modal-update-test-category"></div>
+@* END TEST CATEGORY DIALOG *@
+
+@* READING PART 1 DIALOG *@
+<div id="modal-create-reading-part-1-question"></div>
+<div id="modal-update-reading-part-1-question"></div>
+@* END READING PART 1 DIALOG *@
+
+@section Scripts {
+    <script>
+        window.onload = function () {
+            $("#modal-create-test-category").load("@Url.Action(nameof(TestCategoryController.Create), NameUtils.ControllerName<TestCategoryController>())", {
+                "testCategory": @Html.Raw((JsonConvert.SerializeObject(TestCategory.ReadingCategory(1))))
+            });
+            $("#modal-create-reading-part-1-question").load("@Url.Action(nameof(ReadingManagerController.Part1Create), NameUtils.ControllerName<ReadingManagerController>())");
+        };
+        function dictionaryPopupOptions(id) {
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with this category?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-test-category").load(`@Url.Action(nameof(TestCategoryController.Update), NameUtils.ControllerName<TestCategoryController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            dictionaryDeleteConfirm(id);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function dictionaryDeleteConfirm(id) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(TestCategoryController.Delete), NameUtils.ControllerName<TestCategoryController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Category has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 100);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Category has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Category has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal(`Category`, " is safe!");
+                    }
+                });
+        }
+        //==============================================================//
+        function displayPopupOptions(id) {
+            $("#modal-update-test-category").empty();
+            swal(`What do you want to do with this question?`, {
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    confirm: {
+                        text: "Delete",
+                        value: "remove"
+                    },
+                    edit: true,
+                    cancel: true,
+                },
+            })
+                .then((value) => {
+                    switch (value) {
+
+                        case "edit":
+                            $("#modal-update-reading-part-1-question").load(`@Url.Action(nameof(ReadingManagerController.Part1Update), NameUtils.ControllerName<ReadingManagerController>())/${id}`);
+                            break;
+
+                        case "remove":
+                            deleteVocubolaryConfirm(id);
+                            break;
+
+                        default:
+                            // Do no thing
+                            break;
+                    }
+                });
+        }
+        function deleteVocubolaryConfirm(id) {
+            swal({
+                title: "Are you sure?",
+                text: `Once deleted, this action cannot be undone.`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        fetch(`@Url.Action(nameof(ReadingManagerController.Part1DeleteAjax), NameUtils.ControllerName<ReadingManagerController>())/${id}`, {
+                            method: 'DELETE'
+                        }).then(function (response) {
+                            response.json().then(function (data) {
+                                if (data.success) {
+                                    swal(`OK! Question has been deleted.`, {
+                                        icon: "success",
+                                    });
+                                    setTimeout(function () { location.reload(); }, 100);
+                                } else {
+                                    swal(`${data.responseText}`, {
+                                        icon: "error",
+                                    });
+                                }
+                            }).catch(function (error) {
+                                console.log(error);
+                                swal(`Sorry! Question has not been deleted.`, {
+                                    icon: "error",
+                                });
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                            swal(`Sorry! Question has not been deleted.`, {
+                                icon: "error",
+                            });
+                        })
+                    } else {
+                        swal('FINISHED', "safe!");
+                    }
+                });
+        }
+    </script>
+}

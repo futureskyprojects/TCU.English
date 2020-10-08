@@ -9,22 +9,29 @@ User.IsInRole(UserType.ROLE_NORMAL_USER)
 {
     <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">MAIN</div>
     <ul class="sidebar-menu list-unstyled">
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.HomeController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.HomeController>())" class="sidebar-link text-muted"><i class="o-home-1 mr-3 text-gray"></i><span>Home</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.TestController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestController>())" class="sidebar-link text-muted"><i class="o-archive-1 mr-3 text-gray"></i><span>Test History</span></a></li>
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.TestController.NewTest), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestController>())" class="sidebar-link text-muted"><i class="o-survey-1 mr-3 text-gray"></i><span>New Test</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>())" class="sidebar-link text-muted"><i class="o-home-1 mr-3 text-gray"></i><span>Home</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TestController.Index), NameUtils.ControllerName<TestController>())" class="sidebar-link text-muted"><i class="o-archive-1 mr-3 text-gray"></i><span>Test History</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TestController.NewTest), NameUtils.ControllerName<TestController>())" class="sidebar-link text-muted"><i class="o-survey-1 mr-3 text-gray"></i><span>New Test</span></a></li>
     </ul>
 
     <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">HELPER</div>
     <ul class="sidebar-menu list-unstyled">
-        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.StudentController.YourOwnInstructor), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.StudentController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>Your Instructor</span></a></li>
+        <li class="sidebar-list-item"><a href="@Url.Action(nameof(StudentController.YourOwnInstructor), NameUtils.ControllerName<StudentController>())" class="sidebar-link text-muted"><i class="fas fa-users mr-3 text-gray"></i><span>Your Instructor</span></a></li>
         @*        <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.UserManagementController.CreateUser), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.UserManagementController>())" class="sidebar-link text-muted"><i class="fas fa-user-plus mr-3 text-gray"></i><span>Create User</span></a></li>*@
     </ul>
 }
 
 <div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">INTERACTIVE</div>
 <ul class="sidebar-menu list-unstyled">
-    <li class="sidebar-list-item"><a href="@Url.Action(nameof(TCU.English.Controllers.DiscussController.Index), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.DiscussController>())" class="sidebar-link text-muted"><i class="o-letter-1 mr-3 text-gray"></i><span>Discuss</span></a></li>
+    <li class="sidebar-list-item"><a href="@Url.Action(nameof(DiscussController.Index), NameUtils.ControllerName<DiscussController>())" class="sidebar-link text-muted"><i class="o-letter-1 mr-3 text-gray"></i><span>Discuss</span></a></li>
 </ul>
+
+@*// DICTIONARY*@
+<div class="text-gray-400 text-uppercase px-3 px-lg-4 py-4 font-weight-bold small headings-font-family">DICTIONARY</div>
+<ul class="sidebar-menu list-unstyled">
+    <li class="sidebar-list-item"><a href="@Url.Action(nameof(DictionaryController.Index), NameUtils.ControllerName<DictionaryController>())" class="sidebar-link text-muted"><i class="o-letter-1 mr-3 text-gray"></i><span>Discuss</span></a></li>
+</ul>
+@*// END DICTIONARY*@
 
 @{await Html.RenderPartialAsync("./_InstructorMenu.cshtml");}
 @{await Html.RenderPartialAsync("./_ManagerUserMenu.cshtml");}

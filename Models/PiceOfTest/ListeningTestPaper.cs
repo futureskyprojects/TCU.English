@@ -28,6 +28,8 @@ namespace TCU.English.Models.PiceOfTest
 
         public ListeningTestPaper RemoveCorrectAnswers()
         {
+            if (Config.IsShowCorrectAnswer)
+                return this;
             ListeningPartOnes = RemoveCorrectAnswers(ListeningPartOnes);
             ListeningPartTwos = RemoveCorrectAnswers(ListeningPartTwos);
             return this;
@@ -206,14 +208,14 @@ namespace TCU.English.Models.PiceOfTest
         public float ScoreCalculate(ListeningTestPaper paper)
         {
             // Tính điểm cho part 1
-            var totalTrue = CalculateTrueOfPart(1, paper);
-            if (totalTrue >= 0)
-                Part1Scores = ScoresUtils.ScoresCalculate(totalTrue, ListeningPartOnes.Count, Config.SCORES_FULL_LISTENING_PART_1);
+            var totalTrue1 = CalculateTrueOfPart(1, paper);
+            if (totalTrue1 >= 0)
+                Part1Scores = ScoresUtils.ScoresCalculate(totalTrue1, ListeningPartOnes.Count, Config.SCORES_FULL_LISTENING_PART_1);
 
             // Tính điểm cho part 2
-            totalTrue = CalculateTrueOfPart(2, paper);
-            if (totalTrue >= 0)
-                Part2Scores = ScoresUtils.ScoresCalculate(totalTrue, ListeningPartTwos.Count, Config.SCORES_FULL_LISTENING_PART_2);
+            var totalTrue2 = CalculateTrueOfPart(2, paper);
+            if (totalTrue2 >= 0)
+                Part2Scores = ScoresUtils.ScoresCalculate(totalTrue2, ListeningPartTwos.Count, Config.SCORES_FULL_LISTENING_PART_2);
 
             if (Part1Scores >= 0 && Part2Scores >= 0)
                 return Part1Scores + Part2Scores;
