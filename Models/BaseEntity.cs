@@ -10,7 +10,7 @@ namespace TCU.English.Models
         [Key, Column(Order = 0)]
         public int Id { get; set; }
         public bool Active { get; set; }
-        public DateTime? UpdatedTime { get; set; }
-        public DateTime? CreatedTime { get; set; }
+        public DateTime? UpdatedTime { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedTime { get; set; } = DateTime.UtcNow;
     }
 }

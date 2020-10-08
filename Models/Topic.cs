@@ -8,5 +8,7 @@ namespace TCU.English.Models
     public class Topic : BaseEntity
     {
         public string Name { get; set; }
+
+        public virtual IEnumerable<Vocabulary> Vocabularies { get; set; }
     }
 }

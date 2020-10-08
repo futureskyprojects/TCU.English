@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace TCU.English.Models
         public string Use { get; set; }
 
         // Dẫn khóa đến topic
+        [ForeignKey(nameof(TopicId))]
         public virtual Topic Topic { get; set; }
     }
 }

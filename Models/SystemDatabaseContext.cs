@@ -26,6 +26,8 @@ namespace TCU.English.Models
         public virtual DbSet<Discussion> Discussions { get; set; }
         public virtual DbSet<DiscussionUser> DiscussionUsers { get; set; }
         public virtual DbSet<DiscussionUserMessage> DiscussionUserMessages { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+        public virtual DbSet<Vocabulary> Vocabularies { get; set; }
 
         public SystemDatabaseContext(DbContextOptions<SystemDatabaseContext> options) : base(options)
         {
