@@ -1,9 +1,12 @@
-﻿@{
-    string modalId = nameof(ReadingPartOne) + "_Create";
-    string modalTitle = "New question for \"Reading Part 1\"";
-    string controller = NameUtils.ControllerName<ReadingManagerController>();
-    string actionName = nameof(ReadingManagerController.Part1CreateAjax);
+﻿@model TCU.English.Models.TestCategory
+@{
+    string modalId = nameof(TCU.English.Models.TestCategory) + "_Update";
+    string modalTitle = "Update category";
+    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>();
+    string actionName = nameof(TCU.English.Controllers.TestCategoryController.UpdateAjax);
     string errorMsg = "An error occurred during operation, please try again.";
+
+    bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
 }
 
 <div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
@@ -15,7 +18,6 @@
             </div>
             @*=======================================================*@
             <form asp-controller="@controller" asp-action="@actionName"
-                  id="@(modalId)_form"
                   data-ajax="true"
                   data-ajax-method="POST"
                   data-ajax-complete="onComplete"
@@ -26,7 +28,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        <partial name="~/Views/DictionaryManager/_VocubolaryForm.cshtml" />
+                        <partial name="~/Views/DictionaryManager/_TopicForm.cshtml" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />
@@ -50,7 +52,7 @@
 </div>
 
 <script type="text/javascript">
-
+    var isShowImmediately = @(isShowImmediately.ToString().ToLower());
     $("#@(modalId)_loading").hide();
 
     $("#@(modalId)_body").show();
@@ -78,9 +80,22 @@
             }
             return;
         }
-        toastr["error"]("@modalId");
+        toastr["error"]("@errorMsg");
+        //console.log("data", data);
+        //console.log("status", status);
+        //console.log("xhr", xhr);
     }
     var onFailed = function (xhr, status, error) {
         toastr["error"]("@errorMsg");
+        //console.log("xhr", xhr);
+        //console.log("status", status);
+
+        //// TODO: make me pretty
+        //alert(error);
     };
+
+    if (isShowImmediately) {
+        $("#@modalId").modal('show');
+    }
+
 </script>
