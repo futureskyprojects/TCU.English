@@ -68,7 +68,13 @@
                 @Html.HiddenFor(x => x.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].TestCategoryId)
                 @Html.HiddenFor(x => x.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].UpdatedTime)
                 string uuid = Guid.NewGuid().ToString();
-                <div class="pt-3">@(qIndex++). @Model.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartOnes[i].ListeningMedia.Id);"></i></div>
+                <div class="pt-3">
+                    @(qIndex++). @Model.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText
+                    @if (isReviewMode)
+                    {
+                        <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartOnes[i].ListeningMedia.Id);"></i>
+                    }
+                </div>
                 @* Khu vực dành cho phát *@
                 <div class="p-2 text-center alert alert-warning align-self-center my-2">
                     @Html.HiddenFor(x => x.ListeningTestPaper.ListeningPartOnes[i].ListeningMedia.Active)
@@ -145,8 +151,9 @@
     else
     {
         <div class="h6 font-weight-bold my-auto">
-            Part 2. <span class="text-uppercase ml-3">@Model.ListeningTestPaper.ListeningPartTwos[i].TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartTwos[i].ListeningMedia.Id);"></i> @if (isReviewMode)
+            Part 2. <span class="text-uppercase ml-3">@Model.ListeningTestPaper.ListeningPartTwos[i].TestCategory.Name</span> @if (isReviewMode)
             {
+                <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartTwos[i].ListeningMedia.Id);"></i>
                 <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ListeningTestPaper.Part2Scores.ToScores())</span>
             }
         </div>
