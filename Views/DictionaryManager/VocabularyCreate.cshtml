@@ -70,21 +70,17 @@
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
-                                @Html.Raw(Notification.Error())
-                toastr["success"](data.message);
+                notySuccess(data.message);
                 $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
-                                @Html.Raw(Notification.Error())
-                toastr["error"](data.message);
+                notyError(data.message);
             }
             return;
         }
-                        @Html.Raw(Notification.Error())
-        toastr["error"]("@modalId");
+        @Html.Raw(Notification.Error(modalId))
     }
     var onFailed = function (xhr, status, error) {
-                        @Html.Raw(Notification.Error())
-        toastr["error"]("@errorMsg");
+        @Html.Raw(Notification.Error(errorMsg))
     };
 </script>

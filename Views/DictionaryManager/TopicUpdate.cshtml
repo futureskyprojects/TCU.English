@@ -72,30 +72,18 @@
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
-                                @Html.Raw(Notification.Error())
-                toastr["success"](data.message);
+                notySuccess(data.message);
                 $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
-                                @Html.Raw(Notification.Error())
-                toastr["error"](data.message);
+                notyError(data.message);
             }
             return;
         }
-                        @Html.Raw(Notification.Error())
-        toastr["error"]("@errorMsg");
-        //console.log("data", data);
-        //console.log("status", status);
-        //console.log("xhr", xhr);
+        @Html.Raw(Notification.Error(errorMsg))
     }
     var onFailed = function (xhr, status, error) {
-                        @Html.Raw(Notification.Error())
-        toastr["error"]("@errorMsg");
-        //console.log("xhr", xhr);
-        //console.log("status", status);
-
-        //// TODO: make me pretty
-        //alert(error);
+        @Html.Raw(Notification.Error(errorMsg))
     };
 
     if (isShowImmediately) {

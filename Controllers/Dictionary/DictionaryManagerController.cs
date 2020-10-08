@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
 using TCU.English.Models.Repository;
@@ -94,9 +95,6 @@ namespace TCU.English.Controllers
 
         public IActionResult TopicCreateAjax(Topic topic)
         {
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Topic is invalid" });
-
             if (_TopicManager.Exists(topic.Name))
                 return Json(new { status = false, message = "Topic is exist" });
 
@@ -106,8 +104,6 @@ namespace TCU.English.Controllers
 
         public IActionResult TopicUpdateAjax(Topic topic)
         {
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Topic is invalid" });
 
             _TopicManager.Update(topic);
             return Json(new { status = true, message = "Update topic success" });
@@ -127,9 +123,6 @@ namespace TCU.English.Controllers
 
         public IActionResult VocabularyCreateAjax(Vocabulary vocabulary)
         {
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Vocabulary invalid" });
-
             if (_VocabularyManager.Exists(vocabulary.TopicId, vocabulary.Word))
                 return Json(new { status = false, message = "Vocabulary is exist" });
 
@@ -140,9 +133,6 @@ namespace TCU.English.Controllers
 
         public IActionResult VocabularyUpdateAjax(Vocabulary vocabulary)
         {
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Vocabulary invalid" });
-
             _VocabularyManager.Add(vocabulary);
 
             return Json(new { status = true, message = "Add new vocabulary success" });

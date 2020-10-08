@@ -195,8 +195,7 @@
             const validImageTypes = ['audio/basic', 'audio/mid', 'audio/mpeg', 'audio/ogg'];
             if (!validImageTypes.includes(fileType)) {
                 // invalid file type code goes here.
-                toastr["error"]("Please only select audio type!");
-                                @Html.Raw(Notification.Error())
+                @Html.Raw(Notification.Error("Please only select audio type!"))
                 $(input).val(null);
                 $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>');
             } else {

@@ -7,7 +7,27 @@
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <script>
-    $(function () {
+$(function() {
         $('[data-toggle="tooltip"]').tooltip()
     });
+
+function notySuccess(msg) {
+    new Noty({
+        theme: 'metroui',
+        timeout: 3000,
+        layout: 'bottomRight',
+        text: `<em class=\'fa fa-check\'></em>&nbsp;&nbsp;&nbsp;&nbsp;${msg}`,
+        type: 'success',
+    }).show();
+}
+
+function notyError(msg) {
+    new Noty({
+        theme: 'metroui',
+        timeout: 3000,
+        layout: 'bottomRight',
+        text: `<em class=\'fa fa-check\'></em>&nbsp;&nbsp;&nbsp;&nbsp;${msg}`,
+        type: 'error',
+    }).show();
+}
 </script>

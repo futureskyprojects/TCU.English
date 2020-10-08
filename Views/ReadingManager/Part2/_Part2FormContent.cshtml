@@ -116,7 +116,7 @@
             if (!validImageTypes.includes(fileType)) {
                 // invalid file type code goes here.
                 $(input).val(null);
-                toastr["error"]("Please only select image type for avatar!");                @Html.Raw(Notification.Error())
+                @Html.Raw(Notification.Error("Please only select image type for avatar!"))
             } else {
                 var reader = new FileReader();
                 reader.onload = function (e) {
