@@ -1,0 +1,57 @@
+﻿@model Vocabulary
+@{
+    IEnumerable<Topic> topics = ViewBag.Topics;
+}
+
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.CreatedTime)
+@Html.HiddenFor(x => x.UpdatedTime)
+@Html.HiddenFor(x => x.Active)
+<div class="form-group">
+    <label>Topic</label>
+    <div class="select">
+        @Html.DropDownListFor(x => x.TopicId,
+       new SelectList(topics, nameof(Topic.Id), nameof(Topic.Name)),
+       new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(x => x.Word)
+    @Html.TextBoxFor(x => x.Word, new { @placeholder = "Question text", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Word)</small>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(x => x.Spelling)
+    @Html.TextBoxFor(x => x.Spelling, new { @placeholder = "Question text", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Spelling)</small>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(x => x.TypeOfWord)
+    @Html.TextBoxFor(x => x.TypeOfWord, new { @placeholder = "Question text", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.TypeOfWord)</small>
+</div>
+
+<div class="form-group">
+    @Html.Label("Use Example")
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Use)</small>
+    @Html.TextAreaFor(x => x.Use)
+</div>
+
+<script>
+    $(document).ready(function () {
+        if (CKEDITOR.instances['@nameof(Model.Use)']) {
+            CKEDITOR.instances['@nameof(Model.Use)'].destroy();
+        }
+        CKEDITOR.replace('@nameof(Model.Use)', {
+            toolbar:
+                [
+                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
+                    { name: 'tools', items: ['Maximize', '-', 'About'] }
+                ]
+        });
+    });
+</script>

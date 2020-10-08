@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using System.Collections.Generic;
 using System.Linq;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -15,6 +17,11 @@ namespace TCU.English.Models.DataManager
         {
             context.Topics.Add(entity);
             context.SaveChanges();
+        }
+
+        public bool Exists(string topicName)
+        {
+            return context.Topics.Any(x => x.Name.Trim().ToLower().Equals(topicName.Trim().ToLower()));
         }
 
         public long Count()

@@ -397,6 +397,29 @@ namespace TCU.English.Migrations
                     b.ToTable("test_categories");
                 });
 
+            modelBuilder.Entity("TCU.English.Models.Topic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Topics");
+                });
+
             modelBuilder.Entity("TCU.English.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -508,6 +531,43 @@ namespace TCU.English.Migrations
                     b.HasIndex("UserTypeId");
 
                     b.ToTable("user_type_users");
+                });
+
+            modelBuilder.Entity("TCU.English.Models.Vocabulary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Spelling")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TypeOfWord")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Use")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Word")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("Vocabularies");
                 });
 
             modelBuilder.Entity("TCU.English.Models.WritingPartOne", b =>
@@ -729,6 +789,15 @@ namespace TCU.English.Migrations
                     b.HasOne("TCU.English.Models.UserType", "UserType")
                         .WithMany("UserTypeUser")
                         .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TCU.English.Models.Vocabulary", b =>
+                {
+                    b.HasOne("TCU.English.Models.Topic", "Topic")
+                        .WithMany("Vocabularies")
+                        .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

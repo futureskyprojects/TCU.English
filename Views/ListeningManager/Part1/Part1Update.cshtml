@@ -232,6 +232,7 @@
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
                     toastr["error"]("Please only select image type for avatar!")
+                                    @Html.Raw(Notification.Error())
                     $(input).val(null);
                 } else {
                     var reader = new FileReader();
@@ -256,6 +257,7 @@
                 if (!validImageTypes.includes(fileType)) {
                     // invalid file type code goes here.
                     toastr["error"]("Please only select audio type!");
+                                    @Html.Raw(Notification.Error())
                     $(input).val(null);
                     $('#selected-audio').html('<small class="form-text text-danger mr-3">No audio availabe.</small>');
                 } else {

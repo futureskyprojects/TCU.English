@@ -1,11 +1,9 @@
 ﻿@{
-    string modalId = nameof(ReadingPartOne) + "_Update";
-    string modalTitle = "Update question of \"Reading Part 1\"";
-    string controller = NameUtils.ControllerName<ReadingManagerController>();
-    string actionName = nameof(ReadingManagerController.Part1UpdateAjax);
+    string modalId = nameof(Vocabulary) + "_Create";
+    string modalTitle = "New question for \"Reading Part 1\"";
+    string controller = NameUtils.ControllerName<DictionaryManagerController>();
+    string actionName = nameof(DictionaryManagerController.VocabularyCreateAjax);
     string errorMsg = "An error occurred during operation, please try again.";
-
-    bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
 }
 
 <div id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@(modalId)_label" aria-hidden="true" class="modal fade text-left">
@@ -28,7 +26,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        <partial name="~/Views/DictionaryManager/_VocubolaryForm.cshtml" />
+                        <partial name="~/Views/DictionaryManager/_VocabularyForm.cshtml" />
                     </div>
                     <div id="@(modalId)_loading">
                         <partial name="__Loading" />
@@ -43,13 +41,15 @@
                 </div>
                 @*//========= END MODAL FOOTER =============//*@
             </form>
+            @*@using (Html.BeginForm(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>(), FormMethod.Post))
+                {
+                }*@
             @*=======================================================*@
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var isShowImmediately = @(isShowImmediately.ToString().ToLower());
 
     $("#@(modalId)_loading").hide();
 
@@ -70,21 +70,21 @@
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
+                                @Html.Raw(Notification.Error())
                 toastr["success"](data.message);
                 $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
+                                @Html.Raw(Notification.Error())
                 toastr["error"](data.message);
             }
             return;
         }
+                        @Html.Raw(Notification.Error())
         toastr["error"]("@modalId");
     }
     var onFailed = function (xhr, status, error) {
+                        @Html.Raw(Notification.Error())
         toastr["error"]("@errorMsg");
     };
-
-    if (isShowImmediately) {
-        $("#@modalId").modal('show');
-    }
 </script>

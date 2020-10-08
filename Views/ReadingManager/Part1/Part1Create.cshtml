@@ -71,16 +71,20 @@
 
             if (data.status) {
                 toastr["success"](data.message);
+                                @Html.Raw(Notification.Error())
                 $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
                 toastr["error"](data.message);
+                                @Html.Raw(Notification.Error())
             }
             return;
         }
         toastr["error"]("@modalId");
+                        @Html.Raw(Notification.Error())
     }
     var onFailed = function (xhr, status, error) {
         toastr["error"]("@errorMsg");
+                        @Html.Raw(Notification.Error())
     };
 </script>

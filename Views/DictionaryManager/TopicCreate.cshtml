@@ -1,8 +1,8 @@
 ﻿@{
-    string modalId = nameof(TCU.English.Models.TestCategory) + "_Create";
-    string modalTitle = "Create category";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>();
-    string actionName = nameof(TCU.English.Controllers.TestCategoryController.CreateAjax);
+    string modalId = nameof(Topic) + "_Create";
+    string modalTitle = "Create topic";
+    string controller = NameUtils.ControllerName<DictionaryManagerController>();
+    string actionName = nameof(DictionaryManagerController.TopicCreateAjax);
     string errorMsg = "An error occurred during operation, please try again.";
 }
 
@@ -40,7 +40,7 @@
                 </div>
                 @*//========= END MODAL FOOTER =============//*@
             </form>
-            @*@using (Html.BeginForm(nameof(TCU.English.Controllers.TestCategoryController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>(), FormMethod.Post))
+            @*@using (Html.BeginForm(nameof(TCU.English.Controllers.TopicController.Create), TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TopicController>(), FormMethod.Post))
                 {
                 }*@
             @*=======================================================*@
@@ -69,20 +69,24 @@
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
+                @Html.Raw(Notification.Error())
                 toastr["success"](data.message);
                 $("#@(modalId)").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
+                                @Html.Raw(Notification.Error())
                 toastr["error"](data.message);
             }
             return;
         }
+                        @Html.Raw(Notification.Error())
         toastr["error"]("@errorMsg");
         //console.log("data", data);
         //console.log("status", status);
         //console.log("xhr", xhr);
     }
     var onFailed = function (xhr, status, error) {
+                        @Html.Raw(Notification.Error())
         toastr["error"]("@errorMsg");
         //console.log("xhr", xhr);
         //console.log("status", status);
