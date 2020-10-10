@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -47,7 +48,7 @@ namespace TCU.English.Models.DataManager
 
         public Vocabulary Get(long id)
         {
-            return instance.Vocabularies.Find(id);
+            return instance.Vocabularies.Find(id.ToInt());
         }
 
         public IEnumerable<Vocabulary> GetAll()

@@ -90,6 +90,8 @@ namespace TCU.English.Controllers
             if (topic == null)
                 return NotFound();
 
+            ViewBag.IsShowImmediately = true;
+
             return PartialView(topic);
         }
 
@@ -115,10 +117,20 @@ namespace TCU.English.Controllers
             return PartialView();
         }
 
-        public IActionResult VocabularyUpdate()
+        public IActionResult VocabularyUpdate(int id)
         {
+
+            if (id <= 0)
+                return NotFound();
+
+            Vocabulary vocabulary = _VocabularyManager.Get(id);
+
+            if (vocabulary == null)
+                return NotFound();
+
+            ViewBag.IsShowImmediately = true;
             ViewBag.Topics = _TopicManager.GetAll();
-            return PartialView();
+            return PartialView(vocabulary);
         }
 
         public IActionResult VocabularyCreateAjax(Vocabulary vocabulary)

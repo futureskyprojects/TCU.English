@@ -43,15 +43,15 @@
 <div class="form-group">
     @Html.Label("Use Example")
     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Use)</small>
-    @Html.TextAreaFor(x => x.Use)
+    @Html.TextAreaFor(x => x.Use, new { @id = $"Use_{Model?.Id ?? 0}" })
 </div>
 
 <script>
     $(document).ready(function () {
-        if (CKEDITOR.instances['@nameof(Model.Use)']) {
-            CKEDITOR.instances['@nameof(Model.Use)'].destroy();
+        if (CKEDITOR.instances['@Html.Raw($"Use_{Model?.Id??0}")']) {
+            CKEDITOR.instances['@Html.Raw($"Use_{Model?.Id??0}")'].destroy();
         }
-        CKEDITOR.replace('@nameof(Model.Use)', {
+        CKEDITOR.replace('@Html.Raw($"Use_{Model?.Id??0}")', {
             toolbar:
                 [
                     { name: 'basicstyles', items: ['Bold', 'Italic'] },
