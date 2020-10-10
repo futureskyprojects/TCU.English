@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         }
-                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.CategoryPagination);
+                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.CategoryPagination)
                     }
                     else
                     {
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                         }
-                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.QuestionPagination);
+                        @await Component.InvokeAsync(nameof(Pagination), (Pagination)ViewBag.QuestionPagination)
                     }
                     else
                     {
