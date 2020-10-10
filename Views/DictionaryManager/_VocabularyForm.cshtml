@@ -23,6 +23,12 @@
 </div>
 
 <div class="form-group">
+    @Html.LabelFor(x => x.Meaning)
+    @Html.TextBoxFor(x => x.Meaning, new { @placeholder = "Meaning", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Meaning)</small>
+</div>
+
+<div class="form-group">
     @Html.LabelFor(x => x.Spelling)
     @Html.TextBoxFor(x => x.Spelling, new { @placeholder = "Question text", @class = "form-control" })
     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Spelling)</small>

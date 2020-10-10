@@ -11,6 +11,7 @@ namespace TCU.English.Models
         // Từ thuộc topic gì
         public int TopicId { get; set; }
         public string Word { get; set; }
+        public string Meaning { get; set; }
         public string Spelling { get; set; }
         public string TypeOfWord { get; set; }
         public string Use { get; set; }

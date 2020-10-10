@@ -410,6 +410,7 @@ namespace TCU.English.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime?>("UpdatedTime")
@@ -544,6 +545,9 @@ namespace TCU.English.Migrations
 
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Meaning")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Spelling")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
