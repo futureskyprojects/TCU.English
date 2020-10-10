@@ -48,8 +48,11 @@
     <div class="row">
         @foreach (var statistical in statisticals)
         {
-            <div class="col-md-2 col-sm-4 mb-4 mb-xl-0 none-a">
-                <a href="@Url.Action(ActionName,ControllerName, new Dictionary<string, string> { { "type",statistical.Item5.ToUpper().Trim() } })" class="bg-white shadow roundy px-2 py-3 h-100 d-flex align-items-center justify-content-between @Html.Raw(statistical.Item1) @Html.Raw(TableName.ToUpper().Trim()==statistical.Item5.ToUpper().Trim()?" bg-gray-300":"")"
+            string link = Url.Action(ActionName, ControllerName, new Dictionary<string, string> { { "type", statistical.Item5.ToUpper().Trim() } });
+            if (statistical.Item5.ToUpper().Trim() == "CRASH")
+                link = "javascript:void(0)";
+            <div class="col-lg-2 col-md-4 mb-4 mb-xl-0 none-a">
+                <a href="@link" class="bg-white shadow roundy px-2 py-3 h-100 d-flex align-items-center justify-content-between @Html.Raw(statistical.Item1) @Html.Raw(TableName.ToUpper().Trim()==statistical.Item5.ToUpper().Trim()?" bg-gray-300":"")"
                    data-toggle="tooltip" data-placement="bottom" title="@Html.Raw(statistical.Item2)">
                     <div class="flex-grow-1 d-flex align-items-center">
                         <div class="icon text-white mx-2 @Html.Raw(statistical.Item3)"><i class="@Html.Raw(statistical.Item4)"></i></div>

@@ -113,6 +113,12 @@ namespace TCU.English.Models.DataManager
             }
         }
 
+        /// <summary>
+        /// Phương thức tính điểm số trung bình
+        /// </summary>
+        /// <param name="userId">Mã của người cần tính</param>
+        /// <param name="typeCode">Mã string của mục cần tính điểm trung bình. Để trống để tính điểm trung bình tổng</param>
+        /// <returns></returns>
         public float CalculateGPA(long userId, string typeCode = "ALL")
         {
             long totalPiceOfTests = 0;
@@ -262,19 +268,15 @@ namespace TCU.English.Models.DataManager
             }
         }
 
-        public IEnumerable<PieceOfTest> GetByPagination(long userId, string typeCode, int start, int limit, string searchKey = "")
+        public IEnumerable<PieceOfTest> GetByPagination(long userId, string typeCode, int start, int limit, string searchKey = "", int instructorId = -1)
         {
             var query = QueryableOfUserTest(userId, typeCode);
             if (query == null)
                 return new List<PieceOfTest>();
-            return query.Where(x => x.ResultOfTestJson.Contains(searchKey)).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
-        }
-        public IEnumerable<PieceOfTest> GetByPaginationSimple(long userId, string typeCode, int start, int limit, string searchKey = "", int instructorId = -1)
-        {
-            var query = QueryableOfUserTest(userId, typeCode);
-            if (query == null)
-                return new List<PieceOfTest>();
-            return query.Where(x => (x.ResultOfTestJson.Contains(searchKey) || searchKey.Contains(x.Id.ToString())) && (instructorId <= 0 || x.InstructorId == instructorId))
+            return query.Where(x =>
+                    (x.ResultOfTestJson.Contains(searchKey) || searchKey.Contains(x.Id.ToString())) &&
+                    (instructorId <= 0 || x.InstructorId == instructorId) &&
+                    !string.IsNullOrEmpty(x.ResultOfUserJson))
                 .Select(x => new PieceOfTest
                 {
                     Id = x.Id,
@@ -294,6 +296,7 @@ namespace TCU.English.Models.DataManager
                 return new List<PieceOfTest>();
             return query.Where(x => x.ResultOfTestJson.Contains(searchKey) &&
             (studentId <= 0 || studentId == x.UserId) &&
+            !string.IsNullOrEmpty(x.ResultOfUserJson) &&
             (!isUnRead || (x.Scores < 0 || string.IsNullOrEmpty(x.InstructorComments))))
                 .Select(x => new PieceOfTest
                 {
