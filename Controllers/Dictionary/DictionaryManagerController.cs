@@ -145,7 +145,7 @@ namespace TCU.English.Controllers
 
         public IActionResult VocabularyUpdateAjax(Vocabulary vocabulary)
         {
-            _VocabularyManager.Add(vocabulary);
+            _VocabularyManager.Update(vocabulary);
 
             return Json(new { status = true, message = "Add new vocabulary success" });
         }
