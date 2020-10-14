@@ -24,7 +24,7 @@ namespace TCU.English.Controllers
         public IActionResult Index(
             int grammarPage = 1,
             string grammarSearchKey = "",
-            string vocabularySearchKey = "")
+            string lookup = "")
         {
             #region For grammar
             int topicStart = (grammarPage - 1) * Math.Min(10, Config.PAGE_PAGINATION_LIMIT);
@@ -45,6 +45,8 @@ namespace TCU.English.Controllers
             #endregion
 
             #region For search vocabulary
+            ViewBag.Vocabularies = _VocabularyManager.LookUp(lookup ?? string.Empty);
+            ViewBag.LookUp = lookup;
             #endregion
             return View();
         }

@@ -51,6 +51,15 @@ namespace TCU.English.Models.DataManager
             return instance.Vocabularies.Find(id.ToInt());
         }
 
+        public IEnumerable<Vocabulary> LookUp(string vocabulary)
+        {
+            if (string.IsNullOrEmpty(vocabulary))
+                return new List<Vocabulary>();
+
+            vocabulary = vocabulary.Trim().ToLower();
+            return instance.Vocabularies.Where(x => x.Word.Trim().Contains(vocabulary) || vocabulary.Contains(x.Word.Trim())).ToList();
+        }
+
         public IEnumerable<Vocabulary> GetAll()
         {
             return instance.Vocabularies.ToList();
