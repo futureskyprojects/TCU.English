@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TCU.English.Models.Repository;
-using TCU.English.Utils.PasswordUtils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -30,7 +29,9 @@ namespace TCU.English.Models.DataManager
         }
         public long ListeningQuestionCount()
         {
-            var category = instantce.TestCategories.Where(x => x.TypeCode == TestCategory.LISTENING);
+            var category = instantce
+                .TestCategories
+                .Where(x => x.TypeCode == TestCategory.LISTENING);
             return category.Sum(x => x.ListeningBaseQuestions.Count);
         }
 
@@ -110,6 +111,11 @@ namespace TCU.English.Models.DataManager
         public IEnumerable<TestCategory> GetAll(string type, int partId)
         {
             return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).ToList();
+        }
+
+        public int CountFor(string type, int partId)
+        {
+            return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).Count();
         }
 
         public IEnumerable<TestCategory> GetByPagination(string type, int partId, int start, int limit)

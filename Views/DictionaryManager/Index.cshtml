@@ -24,24 +24,24 @@
                     {
                         for (int i = 0; i < topics.Count(); i++)
                         {
-                    <div class="card mb-2 bg-hover-gradient-blue no-anchor-style">
-                        <div class="card-body p-3">
-                            <div class="row align-items-center flex-row">
-                                <div class="col-10" onclick="window.location.href='@Url.Action(nameof(DictionaryManagerController.Index), NameUtils.ControllerName<DictionaryManagerController>(), new { category = topics.ElementAt(i).Id })'">
-                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i+1). @Html.Raw(topics.ElementAt(i).Name) <sup class="smaller text-gray font-weight-normal">(@topics.ElementAt(i).Vocabularies.Count())</sup></span></p>
-                                </div>
-                                <div class="col-2" onclick="dictionaryPopupOptions(@topics.ElementAt(i).Id)">
-                                    <img src="~/img/3dot.webp" width="18" />
+                            <div class="card mb-2 bg-hover-gradient-blue no-anchor-style">
+                                <div class="card-body p-3">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-10" onclick="window.location.href='@Url.Action(nameof(DictionaryManagerController.Index), NameUtils.ControllerName<DictionaryManagerController>(), new { topic = topics.ElementAt(i).Id })'">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span>@(i+1). @Html.Raw(topics.ElementAt(i).Name) <sup class="smaller text-gray font-weight-normal"></sup></span></p>
+                                        </div>
+                                        <div class="col-2" onclick="dictionaryPopupOptions(@topics.ElementAt(i).Id)">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                         }
-                    @await Component.InvokeAsync(nameof(Pagination), tp)
+                        @await Component.InvokeAsync(nameof(Pagination), tp)
                     }
                     else
                     {
-                    <partial name="__EmptyAnimation" />
+                        <partial name="__EmptyAnimation" />
                     }
                 </div>
             </div>
@@ -57,26 +57,26 @@
                 <div class="card-body">
                     @if (vocabularies != null && vocabularies.Count() > 0)
                     {
-                    @for (int i = 0; i < vocabularies.Count(); i++)
+                        @for (int i = 0; i < vocabularies.Count(); i++)
                         {
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row align-items-center flex-row">
-                                <div class="col-11">
-                                    <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i+1).<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(vocabularies.ElementAt(i).Word)</span></p>
-                                </div>
-                                <div class="col-1" onclick="displayPopupOptions(@vocabularies.ElementAt(i).Id)">
-                                    <img src="~/img/3dot.webp" width="18" />
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row align-items-center flex-row">
+                                        <div class="col-11">
+                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0">@(i+1).<sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(vocabularies.ElementAt(i).Word)</span></p>
+                                        </div>
+                                        <div class="col-1" onclick="displayPopupOptions(@vocabularies.ElementAt(i).Id)">
+                                            <img src="~/img/3dot.webp" width="18" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                         }
-                    @await Component.InvokeAsync(nameof(Pagination), vp)
+                        @await Component.InvokeAsync(nameof(Pagination), vp)
                     }
                     else
                     {
-                    <partial name="__EmptyAnimation" />
+                        <partial name="__EmptyAnimation" />
                     }
                 </div>
             </div>

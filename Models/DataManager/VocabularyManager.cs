@@ -51,26 +51,46 @@ namespace TCU.English.Models.DataManager
             return instance.Vocabularies.Find(id.ToInt());
         }
 
+        public IEnumerable<Vocabulary> LookUp(string vocabulary)
+        {
+            if (string.IsNullOrEmpty(vocabulary))
+                return new List<Vocabulary>();
+
+            vocabulary = vocabulary.Trim().ToLower();
+            return instance.Vocabularies.Where(x => x.Word.Trim().Contains(vocabulary) || vocabulary.Contains(x.Word.Trim())).ToList();
+        }
+
         public IEnumerable<Vocabulary> GetAll()
         {
-            return instance.Vocabularies.AsEnumerable();
+            return instance.Vocabularies.ToList();
         }
 
         public IEnumerable<Vocabulary> GetAllFor(long topicId)
         {
-            return instance.Vocabularies.Where(x => x.TopicId == topicId).AsEnumerable();
+            return instance.Vocabularies.Where(x => x.TopicId == topicId).ToList();
         }
 
         public IEnumerable<Vocabulary> GetByPagination(int start, int limit)
         {
-            return instance.Vocabularies.OrderByDescending(x => x.Id).Skip(start).Take(limit).AsEnumerable();
+            return instance.Vocabularies.OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
         }
         public IEnumerable<Vocabulary> GetByPagination(long topicId, int start, int limit)
         {
             if (topicId <= 0)
                 return GetByPagination(start, limit);
 
-            return instance.Vocabularies.Where(x => x.TopicId == topicId).OrderByDescending(x => x.Id).Skip(start).Take(limit).AsEnumerable();
+            return instance.Vocabularies
+                .Select(x => new Vocabulary
+                {
+                    Id = x.Id,
+                    TopicId = x.TopicId,
+                    Word = x.Word
+                })
+                .Where(x => x.TopicId == topicId)
+                .OrderByDescending(x => x.Id)
+                .Skip(start)
+                .Take(limit)
+                .ToList();
         }
 
         public void Update(Vocabulary entity)
