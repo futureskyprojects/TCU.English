@@ -1,0 +1,11 @@
+﻿@model Topic
+
+@Html.HiddenFor(x => x.Id)
+@Html.HiddenFor(x => x.CreatedTime)
+@Html.HiddenFor(x => x.UpdatedTime)
+@Html.HiddenFor(x => x.Active)
+<div class="form-group">
+    @Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name, new { @placeholder = "Topic Name", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Name)</small>
+</div>
