@@ -83,7 +83,10 @@
                 <div class="pt-3">
                     @(qIndex++). @Model.ListeningPartOnes[i].ListeningBaseQuestions[j].QuestionText
                     <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartOnes[i].ListeningMedia.Id);"></i>
-                    <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint));"></i>
+                    @if (!string.IsNullOrEmpty(Model.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint))
+                    {
+                        <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint"></i>
+                    }
                 </div>
                 @* Khu vực dành cho phát *@
                 <div class="p-2 text-center alert alert-warning align-self-center my-2">
@@ -162,7 +165,10 @@
     {
         <div class="h6 font-weight-bold my-auto">
             Part 2. <span class="text-uppercase ml-3">@Model.ListeningPartTwos[i].TestCategory.Name</span> <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningPartTwos[i].ListeningMedia.Id);"></i>
-            <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ListeningPartTwos[i].ListeningBaseQuestions.FirstOrDefault()?.Hint??""));"></i>
+            @if (!string.IsNullOrEmpty(Model.ListeningPartTwos[i].ListeningBaseQuestions.FirstOrDefault()?.Hint))
+            {
+                <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@(Model.ListeningPartTwos[i].ListeningBaseQuestions.FirstOrDefault()?.Hint??"")"></i>
+            }
         </div>
         <div class="my-2">@Html.Raw(Model.ListeningPartTwos[i].TestCategory.Description)</div>
         @* Khu vực dành cho phát *@
@@ -235,7 +241,6 @@
 }
 
 <partial name="_TranscriptModal" />
-<partial name="_HintModal" />
 
 @if (!isReviewMode)
 {

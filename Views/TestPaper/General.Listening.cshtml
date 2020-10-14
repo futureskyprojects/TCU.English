@@ -73,6 +73,10 @@
                     @if (isReviewMode)
                     {
                         <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript(@Model.ListeningTestPaper.ListeningPartOnes[i].ListeningMedia.Id);"></i>
+                        @*@if (!string.IsNullOrEmpty(Model.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint))
+                        {
+                            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ListeningTestPaper.ListeningPartOnes[i].ListeningBaseQuestions[j].Hint"></i>
+                        }*@
                     }
                 </div>
                 @* Khu vực dành cho phát *@

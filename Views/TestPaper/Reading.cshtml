@@ -60,7 +60,10 @@ else
 {
     <div class="h6 font-weight-bold my-auto">
         Part 1. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.TestCategory.Name</span>
-        <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ReadingPartOnes.TestCategory.WYSIWYGContent));"></i>
+        @if (!string.IsNullOrEmpty(Model.ReadingPartOnes.TestCategory.WYSIWYGContent))
+        {
+            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes.TestCategory.WYSIWYGContent"></i>
+        }
     </div>
     <div class="my-2">@Html.Raw(Model.ReadingPartOnes.TestCategory.Description)</div>
     <div>
@@ -156,7 +159,10 @@ else
                 <div class="col-md-8">
                     <div>
                         @(qIndex++). <span class="">@Model.ReadingPartTwos.ReadingPart[i].QuestionText</span>
-                        <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ReadingPartTwos.ReadingPart[i].ExplainLink));"></i>
+                        @if (!string.IsNullOrEmpty(Model.ReadingPartTwos.ReadingPart[i].ExplainLink))
+                        {
+                            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartTwos.ReadingPart[i].ExplainLink"></i>
+                        }
                     </div>
                     @if (Model.ReadingPartTwos.ReadingPart[i].AnswerList == null || Model.ReadingPartTwos.ReadingPart[i].AnswerList.Count <= 0)
                     {
@@ -253,7 +259,10 @@ else
                 <div class="col-12">
                     <div>
                         @(qIndex++). <span class="">@Model.ReadingPartThrees.ReadingPart[i].QuestionText</span>
-                        <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ReadingPartThrees.ReadingPart[i].ExplainLink));"></i>
+                        @if (!string.IsNullOrEmpty(Model.ReadingPartThrees.ReadingPart[i].ExplainLink))
+                        {
+                            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartThrees.ReadingPart[i].ExplainLink"></i>
+                        }
                     </div>
                     @if (Model.ReadingPartThrees.ReadingPart[i].AnswerList == null || Model.ReadingPartThrees.ReadingPart[i].AnswerList.Count <= 0)
                     {
@@ -345,7 +354,10 @@ else
                 <div class="col-12">
                     <span class="float-left">
                         @(qIndex++). <span class="">@Model.ReadingPartFours.ReadingPart[i].QuestionText</span>
-                        <i class="fas fa-info-circle text-blue" data-toggle="modal" data-target="#hint_modal" onclick="LoadHint(@JsonConvert.SerializeObject(Model.ReadingPartFours.ReadingPart[i].ExplainLink));"></i>
+                        @if (!string.IsNullOrEmpty(Model.ReadingPartFours.ReadingPart[i].ExplainLink))
+                        {
+                            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartFours.ReadingPart[i].ExplainLink"></i>
+                        }
                     </span>
                     @if (Model.ReadingPartFours.ReadingPart[i].AnswerList == null || Model.ReadingPartFours.ReadingPart[i].AnswerList.Count <= 0)
                     {
@@ -401,8 +413,6 @@ else
         <button type="button" class="btn btn-lg btn-info" onclick="window.location.href='/'">BACK HOME</button>
     }
 }
-
-<partial name="_HintModal" />
 
 @section Scripts {
     <script>
