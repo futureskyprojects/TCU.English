@@ -65,17 +65,8 @@
                     {
                         @for (int i = 0; i < vocabularies.Count(); i++)
                         {
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="row align-items-center flex-row">
-                                        <div class="col-11">
-                                            <p class="mb-0 d-flex align-items-center font-weight-bold"><span><strong class="h5 mb-0"><sup class="smaller text-gray font-weight-normal">&harr;</sup></strong> @Html.Raw(vocabularies.ElementAt(i).Word)</span></p>
-                                        </div>
-                                        <div class="col-1">
-                                            <button class="btn btn-sm btn-info">Open</button>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div>
+                                <p><span class="font-weight-bold text-info">@Html.Raw(vocabularies.ElementAt(i).Word)</span> @Html.Raw(vocabularies.ElementAt(i).Spelling) [@Html.Raw(vocabularies.ElementAt(i).Topic.Name)]</p>
                             </div>
                         }
                     }
@@ -96,6 +87,6 @@
 
 @section Scripts {
     <script>
-                                                                        //$("#modal-update-vocabulary").load(`Url.Action(nameof(DictionaryManagerController.VocabularyUpdate), NameUtils.ControllerName<DictionaryManagerController>())/${id}`);
+                                                                                                        //$("#modal-update-vocabulary").load(`Url.Action(nameof(DictionaryManagerController.VocabularyUpdate), NameUtils.ControllerName<DictionaryManagerController>())/${id}`);
     </script>
 }
