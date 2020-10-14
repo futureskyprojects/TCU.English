@@ -215,7 +215,7 @@ namespace TCU.English.Models.PiceOfTest
             // Tính điểm cho part 2
             var totalTrue2 = CalculateTrueOfPart(2, paper);
             if (totalTrue2 >= 0)
-                Part2Scores = ScoresUtils.ScoresCalculate(totalTrue2, ListeningPartTwos.Count, Config.SCORES_FULL_LISTENING_PART_2);
+                Part2Scores = ScoresUtils.ScoresCalculate(totalTrue2, ListeningPartTwos.Sum(x => x.ListeningBaseQuestions.Count) * ListeningPartTwos.Count, Config.SCORES_FULL_LISTENING_PART_2);
 
             if (Part1Scores >= 0 && Part2Scores >= 0)
                 return Part1Scores + Part2Scores;
