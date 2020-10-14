@@ -29,8 +29,9 @@ namespace TCU.English.Controllers
             #region For grammar
             int topicStart = (grammarPage - 1) * Math.Min(10, Config.PAGE_PAGINATION_LIMIT);
 
-            var grammars = _TestCategoryManager.GetByPagination(TestCategory.READING, 1, topicStart, Math.Min(10, Config.PAGE_PAGINATION_LIMIT));
+            var grammars = _TestCategoryManager.GetByPagination(TestCategory.READING, 1, topicStart, Math.Min(10, Config.PAGE_PAGINATION_LIMIT), grammarSearchKey);
             ViewBag.Grammars = grammars;
+            ViewBag.GrammarSearchKey = grammarSearchKey;
 
             // Tạo đối tượng phân trang cho Grammars
             ViewBag.GrammarPagination = new Pagination(nameof(Index), NameUtils.ControllerName<DictionaryController>())
@@ -38,7 +39,7 @@ namespace TCU.English.Controllers
                 PageKey = nameof(grammarPage),
                 PageCurrent = grammarPage,
                 NumberPage = PaginationUtils.TotalPageCount(
-                    _TestCategoryManager.CountFor(TestCategory.READING, 1),
+                    _TestCategoryManager.CountFor(TestCategory.READING, 1, grammarSearchKey),
                     Math.Min(10, Config.PAGE_PAGINATION_LIMIT)),
                 Offset = Math.Min(10, Config.PAGE_PAGINATION_LIMIT)
             };

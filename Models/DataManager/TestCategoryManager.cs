@@ -113,14 +113,33 @@ namespace TCU.English.Models.DataManager
             return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).ToList();
         }
 
-        public int CountFor(string type, int partId)
+        public int CountFor(string type, int partId, string key = "")
         {
-            return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).Count();
+            key = key.Trim().ToLower();
+            return instantce
+                .TestCategories
+                .Where(it =>
+                    it.TypeCode.ToLower() == type.ToLower() &&
+                    it.PartId == partId &&
+                    (it.Name.Trim().ToLower().Contains(key) ||
+                    key.Contains(it.Name.Trim().ToLower())))
+                .Count();
         }
 
-        public IEnumerable<TestCategory> GetByPagination(string type, int partId, int start, int limit)
+        public IEnumerable<TestCategory> GetByPagination(string type, int partId, int start, int limit, string key = "")
         {
-            return instantce.TestCategories.Where(it => it.TypeCode.ToLower() == type.ToLower() && it.PartId == partId).OrderByDescending(x => x.Id).Skip(start).Take(limit).ToList();
+            key = key.Trim().ToLower();
+            return instantce
+                .TestCategories
+                .Where(it =>
+                    it.TypeCode.ToLower() == type.ToLower() &&
+                    it.PartId == partId &&
+                    (it.Name.Trim().ToLower().Contains(key) ||
+                    key.Contains(it.Name.Trim().ToLower())))
+                .OrderByDescending(x => x.Id)
+                .Skip(start)
+                .Take(limit)
+                .ToList();
         }
 
         public IEnumerable<TestCategory> GetByPagination(int start, int limit)
