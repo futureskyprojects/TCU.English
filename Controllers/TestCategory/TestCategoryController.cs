@@ -81,6 +81,22 @@ namespace TCU.English.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetGrammarViaAjax(long id)
+        {
+            if (id <= 0)
+            {
+                return Json(new { name = "", content = "" });
+            }
+            else
+            {
+                var testCategory = _TestCategoryManager.Get(id);
+                if (testCategory == null || testCategory.PartId != 1 || testCategory.TypeCode != TestCategory.READING)
+                    return Json(new { name = "", content = "" });
+                return Json(new { name = testCategory.Name, content = testCategory.WYSIWYGContent });
+            }
+        }
+
+        [HttpGet]
         public IActionResult Update(long id)
         {
             if (id <= 0)

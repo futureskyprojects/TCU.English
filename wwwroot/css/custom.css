@@ -63,3 +63,7 @@
 .w-0 {
     width: 0% !important;
 }
+
+.cursor:hover {
+    cursor: pointer;
+}

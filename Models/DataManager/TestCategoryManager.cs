@@ -115,6 +115,7 @@ namespace TCU.English.Models.DataManager
 
         public int CountFor(string type, int partId, string key = "")
         {
+            key ??= "";
             key = key.Trim().ToLower();
             return instantce
                 .TestCategories
@@ -128,6 +129,7 @@ namespace TCU.English.Models.DataManager
 
         public IEnumerable<TestCategory> GetByPagination(string type, int partId, int start, int limit, string key = "")
         {
+            key ??= "";
             key = key.Trim().ToLower();
             return instantce
                 .TestCategories

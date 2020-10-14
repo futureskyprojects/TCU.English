@@ -30,7 +30,7 @@
                     {
                         for (int i = 0; i < grammars.Count(); i++)
                         {
-                            <div class="card mb-2 bg-hover-gradient-blue no-anchor-style">
+                            <div class="card mb-2 bg-hover-gradient-blue no-anchor-style cursor" onclick="loadGrammar(@grammars.ElementAt(i).Id)">
                                 <div class="card-body p-3">
                                     <div class="row align-items-center flex-row">
                                         <div class="col-12">
@@ -92,7 +92,14 @@
                     }
                     else
                     {
-                        <partial name="__EmptyAnimation" />
+                        if (string.IsNullOrEmpty(ViewBag.LookUp))
+                        {
+                            <p class="text-center"><i>Please enter the word you are looking for in the search box above and press "Look up".</i></p>
+                        }
+                        else
+                        {
+                            <partial name="__EmptyAnimation" />
+                        }
                     }
                 </div>
             </div>
@@ -100,13 +107,49 @@
     </div>
 </div>
 
-@* READING PART 1 DIALOG *@
-<div id="modal-create-vocabulary"></div>
-<div id="modal-update-vocabulary"></div>
-@* END READING PART 1 DIALOG *@
+@* Start Modal for grammar *@
+<div class="modal fade" id="display-grammar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <p class="modal-title" id="grammar"></p>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="grammar-content">
+                Modal body..
+            </div>
+            <!-- Modal footer -->
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>-->
+
+        </div>
+    </div>
+</div>
+@* End Modal for grammar *@
 
 @section Scripts {
     <script>
-                                                                                                                                                                                                    //$("#modal-update-vocabulary").load(`Url.Action(nameof(DictionaryManagerController.VocabularyUpdate), NameUtils.ControllerName<DictionaryManagerController>())/${id}`);
+        function loadGrammar(id) {
+            $.ajax({
+                url: `@Url.Action(nameof(TestCategoryController.GetGrammarViaAjax), NameUtils.ControllerName<TestCategoryController>())/${id}`,
+                method: 'GET'
+            }).then(function (res) {
+                $("#grammar").html(res.name);
+                if (res.content == null || res.content.length <= 0)
+                    $("#grammar-content").html("<i class=\"text-danger\">Empty</i>");
+                else
+                    $("#grammar-content").html(res.content);
+
+                $("#display-grammar").modal("show");
+                console.log(res);
+            }).catch(function () {
+                    @Html.Raw(Notification.Error("Not found"))
+                })
+        }
     </script>
 }

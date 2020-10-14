@@ -134,7 +134,16 @@ namespace TCU.English.Models.DataManager
             else
             {
                 // Tính điểm kỹ năng theo cho từng phần
-                var pieceOfTests = instantce.PieceOfTests.Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= 0);
+                var pieceOfTests = instantce
+                    .PieceOfTests
+                    .Select(x => new PieceOfTest
+                    {
+                        UserId = x.UserId,
+                        TypeCode = x.TypeCode,
+                        ResultOfUserJson = x.ResultOfUserJson,
+                        Scores = x.Scores
+                    })
+                    .Where(x => x.UserId == userId && x.TypeCode.ToUpper() == typeCode.ToUpper() && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= 0);
                 totalPiceOfTests = pieceOfTests.Count();
                 totalScores = pieceOfTests.Where(x => x.Scores >= 0).Sum(x => x.Scores);
 
