@@ -42,12 +42,16 @@ namespace TCU.English.Models.DataManager
 
         public IEnumerable<Topic> GetAll()
         {
-            return context.Topics.AsEnumerable();
+            return context.Topics.ToList();
         }
 
         public IEnumerable<Topic> GetByPagination(int start, int limit)
         {
-            return context.Topics.OrderByDescending(x => x.Id).Skip(start).Take(limit).AsEnumerable();
+            return context.Topics.OrderByDescending(x => x.Id).Skip(start).Take(limit).Select(x => new Topic
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToList();
         }
 
         public void Update(Topic entity)

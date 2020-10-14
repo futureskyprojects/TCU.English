@@ -5,6 +5,7 @@
     <!--<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>-->
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
     <UserSecretsId>d2b47c19-734a-4486-ab8a-e01fc07397f4</UserSecretsId>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
   <ItemGroup>
