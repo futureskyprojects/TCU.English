@@ -5,7 +5,7 @@ namespace TCU.English
 {
     public static class Config
     {
-        public static bool IsShowCorrectAnswer = true;
+        public static bool IsShowCorrectAnswer = false;
 
         public static string ProjectName = "TCU English";
         public static string CompanyName = "Vistark Inc.";
