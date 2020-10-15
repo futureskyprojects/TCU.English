@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
@@ -80,6 +77,7 @@ namespace TCU.English.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetGrammarViaAjax(long id)
         {
