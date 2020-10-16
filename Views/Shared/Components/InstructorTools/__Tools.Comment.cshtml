@@ -1,5 +1,6 @@
 ﻿@{
     var POT = (PieceOfTest)ViewBag.POT;
+    var WP2 = (WritingTestPaper.WritingPartTwoDTO)ViewBag.WP2;
 }
 
 @using (Html.BeginForm(nameof(InstructorController.SubmitToolResult), NameUtils.ControllerName<InstructorController>(), FormMethod.Post))
@@ -14,6 +15,19 @@
             <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(PieceOfTest.Scores), $"Student's speaking score achieved (0 - {Config.SCORES_FULL_SPEAKING})")</small>
             <hr />
         }
+
+        @if (POT.TypeCode == TestCategory.WRITING)
+        {
+            @Html.Label("Score of WRITING PART 2")
+            @Html.TextBox(nameof(WritingTestPaper.WritingPartTwos.Scores), WP2.Scores, new { @required = "required", @type = "number", @class = "form-control", @style = "width: unset;", @min = "0", @max = Config.SCORES_FULL_WRITING_PART_2 })
+            <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(WritingTestPaper.WritingPartTwos.Scores), $"Student's writing score achieved (0 - {Config.SCORES_FULL_WRITING_PART_2})")</small>
+            <hr />
+            @Html.Label("Your review for student test")
+            <small class="form-text text-info mr-3">@Html.ValidationMessage(nameof(WritingTestPaper.WritingPartTwos.TeacherReviewParagraph), "This field cannot be left blank. You can make corrections to make it interesting to students without affecting the original exam.")</small>
+            @Html.TextArea(nameof(WritingTestPaper.WritingPartTwos.TeacherReviewParagraph), WP2.TeacherReviewParagraph, new { id = "teacher-review", @required = "required" })
+            <hr />
+        }
+
         @Html.Label("Your comments")
         <small class="form-text text-danger mr-3">@Html.ValidationMessage(nameof(PieceOfTest.InstructorComments), null)</small>
         @Html.TextArea(nameof(PieceOfTest.InstructorComments), POT.InstructorComments, new { id = "instructor-comment", @required = "required" })
@@ -26,3 +40,12 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        if (CKEDITOR.instances['teacher-review']) {
+            CKEDITOR.instances['teacher-review'].destroy();
+        }
+        CKEDITOR.replace('teacher-review');
+    });
+</script>

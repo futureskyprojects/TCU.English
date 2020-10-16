@@ -22,7 +22,7 @@ namespace TCU.English.Components
             this._UserManager = (UserManager)_UserManager;
         }
 
-        public IViewComponentResult InvokeForGenralTest(int pieceOfTestId)
+        public IViewComponentResult InvokeForGeneralTest(int pieceOfTestId)
         {
             // Lấy bài thi theo mã cho trước
             PieceOfTest pot = _PieceOfTestManager.Get(pieceOfTestId);
@@ -79,7 +79,7 @@ namespace TCU.English.Components
 
             // Nếu là bài thi tổng, chuyển sang một tool riêng
             if (pot.TypeCode == TestCategory.TEST_ALL)
-                return InvokeForGenralTest(piceOfTestId);
+                return InvokeForGeneralTest(piceOfTestId);
 
             ViewBag.POT = pot;
 
@@ -104,7 +104,7 @@ namespace TCU.English.Components
                 wtp.WritingPartTwos.TeacherReviewParagraph = wtp.WritingPartTwos.UserParagraph;
 
             // Model truyền cho Writing
-            ViewBag.WTP = wtp;
+            ViewBag.WP2 = wtp.WritingPartTwos;
         }
     }
 }
