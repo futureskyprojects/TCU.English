@@ -23,7 +23,11 @@
 
     bool checkCorrectPart1(int index)
     {
-        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
+        return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x =>
+        Model.WritingPartOnes != null &&
+        Model.WritingPartOnes.WritingPart[index] != null &&
+        Model.WritingPartOnes.WritingPart[index].Answers != null &&
+        !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
         == Model.WritingPartOnes.WritingPart[index].Answers.ToLower().Trim());
     }
 

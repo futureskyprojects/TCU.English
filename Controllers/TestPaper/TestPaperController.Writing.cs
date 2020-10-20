@@ -87,74 +87,35 @@ namespace TCU.English.Controllers
         public IActionResult Writing(WritingTestPaper paper)
         {
             if (paper == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (paper.PiceOfTestId <= 0)
-                return NotFoundTest();
-
-            ViewBag.Title = "WRITING TESTING";
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
             if (piece == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
             {
                 this.NotifyError("You are not authorized to view or manipulate this test");
-                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
-
-            // Lấy chủ sở hữu của bài kiểm tra
-            User owner = _UserManager.Get(piece.UserId);
-            ViewData["Owner"] = new User
-            {
-                Avatar = owner.Avatar,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName
-            };
-
-            // Tránh timer bị reset
-            if (piece.CreatedTime != null)
-            {
-                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-            }
-
-            // Kiểm tra check full
-            //if (!paper.IsPaperFullSelection())
-            //{
-            //    this.NotifyError("Please complete all questions");
-
-            //    // Lưu trữ các câu trã lời trước đó của HV
-            //    var tempPart1Answered = paper.WritingPartOnes.WritingPart;
-
-            //    // Lưu trữ đoạn văn đã nhập của HV
-            //    var paragraph = paper.WritingPartTwos.UserParagraph;
-
-            //    // Load lại trang giấy thi
-            //    paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
-
-            //    // Gắn câu trả lời trước đã nhập của HV vào
-            //    for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
-            //    {
-            //        paper.WritingPartOnes.WritingPart[i].Answers = tempPart1Answered[i].Answers;
-            //    }
-
-            //    // Gắn lại đoạn văn
-            //    paper.WritingPartTwos.UserParagraph = paragraph;
-
-            //    return View(paper);
-            //}
 
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
-            {
-                this.NotifyError("The test does not have any questions");
-
-                paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
-                return View(paper);
-            }
+                return Json(new { status = false, message = "The test does not have any questions", location = string.Empty });
 
             // Tổng số câu đúng cho phần 1
             float scoresPart1 = paper.ScoreCalculate(piece.ResultOfTestJson);
@@ -181,7 +142,7 @@ namespace TCU.English.Controllers
             _PieceOfTestManager.Update(piece);
 
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), new { id = piece.Id, scoresPart = new float[] { scoresPart1 } });
+            return Json(new { status = true, message = "Successful submission of exams", location = $"{Url.Action(nameof(Result), NameUtils.ControllerName<TestPaperController>(), new { id = piece.Id, scoresPart = new float[] { scoresPart1 } })}" });
         }
 
         [HttpGet]

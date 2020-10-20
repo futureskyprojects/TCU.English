@@ -91,8 +91,6 @@ namespace TCU.English.Controllers
                 return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
-            ViewBag.Title = "READING TESTING";
-
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
@@ -106,21 +104,6 @@ namespace TCU.English.Controllers
             {
                 this.NotifyError("You are not authorized to view or manipulate this test");
                 return Json(new { status = false, message = string.Empty, location = "/" });
-            }
-
-            // Lấy chủ sở hữu của bài kiểm tra
-            User owner = _UserManager.Get(piece.UserId);
-            ViewData["Owner"] = new User
-            {
-                Avatar = owner.Avatar,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName
-            };
-
-            // Tránh timer bị reset
-            if (piece.CreatedTime != null)
-            {
-                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
             }
 
             int total = paper.TotalQuestions(); // Tổng số câu hỏi

@@ -98,18 +98,21 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> Speaking(SpeakingTestPaper paper, string audioBase64)
         {
             if (paper == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (paper.PiceOfTestId <= 0)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (string.IsNullOrEmpty(audioBase64))
             {
-                this.NotifyError("You have not recorded the reading yet");
-                return View(paper);
+                return Json(new { status = false, message = "You have not recorded the audio yet. Please Record atleast 1 second", location = "" });
             }
-
-            ViewBag.Title = "SPEAKING TESTING";
 
             // Lấy người dùng hiện tại
             var owner = _UserManager.Get(User.Id());
@@ -117,8 +120,8 @@ namespace TCU.English.Controllers
             // Nếu không tìm thấy người này là ai
             if (owner == null)
             {
-                this.NotifyError("Unable to determine your identity");
-                return View(paper);
+                this.NotifyError("You are not authorized to view or manipulate this test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
             // Chuyển base64 thành stream
@@ -129,12 +132,15 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
             if (piece == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
             {
                 this.NotifyError("You are not authorized to view or manipulate this test");
-                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
             string fileName = $"{owner.Username.ToLower()}_{piece.TypeCode}_{piece.Id}";
@@ -147,36 +153,14 @@ namespace TCU.English.Controllers
 
             // Nếu file null
             if (file == null)
-            {
-                this.NotifyError("Can not upload your audio, please try again!");
-                return View(paper);
-            }
+                return Json(new { status = false, message = "Can not upload your audio, please try again!", location = "/" });
 
             // Tiến hành lưu tệp tin cho người dùng
             string path = await host.UploadForUserAudio(file, owner);
 
             // Nếu path không đúng
             if (string.IsNullOrEmpty(path))
-            {
-                this.NotifyError("Can not upload your speaking, please try again!");
-                return View(paper);
-            }
-
-            // Nếu OK thì tiếp tục
-
-            // Lấy chủ sở hữu của bài kiểm tra
-            ViewData["Owner"] = new User
-            {
-                Avatar = owner.Avatar,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName
-            };
-
-            // Tránh timer bị reset
-            if (piece.CreatedTime != null)
-            {
-                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-            }
+                return Json(new { status = false, message = "Can not upload your speaking, please try again!", location = "/" });
 
             // Thời gian hoàn tất
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
@@ -197,7 +181,7 @@ namespace TCU.English.Controllers
             _PieceOfTestManager.Update(piece);
 
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), new { id = piece.Id });
+            return Json(new { status = true, message = "Successful submission of exams", location = $"{Url.Action(nameof(Result), NameUtils.ControllerName<TestPaperController>())}/{piece.Id}" });
         }
 
         [HttpGet]
