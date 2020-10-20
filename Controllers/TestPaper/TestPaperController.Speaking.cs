@@ -44,7 +44,7 @@ namespace TCU.English.Controllers
         [HttpGet]
         public IActionResult Speaking(int id)
         {
-            ViewBag.Title = "Speaking TESTING";
+            ViewBag.Title = "SPEAKING TESTING";
             if (id <= 0)
             {
                 return NotFoundTest();

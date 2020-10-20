@@ -149,7 +149,7 @@ namespace TCU.English.Controllers
             if (paper.PiceOfTestId <= 0)
                 return NotFoundTest();
 
-            ViewBag.Title = "READING TESTING";
+            ViewBag.Title = "LISTENING TESTING";
 
             // Sau khi hoàn tất lọc các lỗi, tiến hành xử lý, đếm số câu đúng
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);

@@ -136,12 +136,6 @@ namespace TCU.English.Controllers
 
             // Tính điểm
             float scores = paper.ScoresCalculate(piece.ResultOfTestJson);
-            Console.WriteLine("======================================");
-            Console.WriteLine(DateTime.UtcNow);
-            Console.WriteLine(piece.CreatedTime);
-            Console.WriteLine(DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime));
-            Console.WriteLine(DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds);
-            Console.WriteLine("======================================");
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
 
             // Cập nhật dữ liệu
