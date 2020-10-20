@@ -84,7 +84,9 @@
                                     {
                                         <button class="btn btn-lg btn-outline-green px-3 mr-2" data-toggle="tooltip" data-placement="top" title="Your working timer"><span class="mr-1" id="time-counter-top">00:00:00</span></button>
                                     }
-                                    @RenderSection("FinishButton", required: true)
+                                    <span id="finish-btn">
+                                        @RenderSection("FinishButton", required: true)
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -98,8 +100,11 @@
                 </div>
                 @if (ViewData["HideTimer"] == null || (Boolean)ViewData["HideTimer"] == false)
                 {
-                    <div id="float-br" class="float-br-hidden">
-                        <button onclick="topFunction()" class="btn btn-lg btn-outline-green pr-3 pl-3 rounded" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1" id="time-counter">00:00:00</span>&mdash;<i class="fa fa-arrow-up ml-1"></i></button>
+                    <div id="float-br" class="float-br-hidden" style="margin-right: -30px !important;">
+                        <div class="d-block">
+                            <button onclick="topFunction()" class="btn btn-outline-green px-2 rounded d-block mx-auto mb-2" data-toggle="tooltip" data-placement="top" title="Back to top"><span class="mr-1" id="time-counter">00:00:00</span></button>
+                        </div>
+                        <div id="float-finish-btn"></div>
                     </div>
                 }
             </div>
@@ -111,6 +116,8 @@
 
     <!-- Javascript for make menu item active -->
     <script>
+        $("#float-finish-btn").html($("#finish-btn").html().replace("btn-lg", ""));
+
         $('a.sidebar-link').each(function (i, obj) {
             var url = $(location).attr('href').split('#')[0];
             var a = url.indexOf("?");
