@@ -98,7 +98,10 @@ namespace TCU.English.Models.PiceOfTest
                         string answerInputed = WritingPartOnes.WritingPart[i].Answers;
 
                         // Nếu câu trả lời khớp với bất kỳ đáp án nào, tiến hành cho điểm
-                        if (resultPaper.WritingPartOnes.WritingPart[i].BaseAnswers.Any(x => x.AnswerContent.ToLower().Trim().Equals(answerInputed.ToLower().Trim())))
+                        if (resultPaper.WritingPartOnes
+                            .WritingPart[i]
+                            .BaseAnswers
+                            .Any(x => x.AnswerContent!= null && x.AnswerContent.ToLower().Trim() == answerInputed.ToLower().Trim()))
                             count++;
                     }
                     catch (Exception)

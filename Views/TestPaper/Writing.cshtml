@@ -22,7 +22,7 @@
     bool checkCorrectPart1(int index)
     {
         return resultPaper.WritingPartOnes.WritingPart[index].BaseAnswers.Any(x => !string.IsNullOrEmpty(x.AnswerContent) && x.AnswerContent.ToLower().Trim()
-        .Equals(Model.WritingPartOnes.WritingPart[index].Answers));
+        == Model.WritingPartOnes.WritingPart[index].Answers.ToLower().Trim());
     }
 
     string visibleAnswer(int index)
@@ -108,7 +108,7 @@ else
                 <div class="@Html.Raw(isReviewMode?"col-12":"col-md-8")">
                     <div class="row mt-2">
                         <span class="font-weight-light mr-2" style="text-decoration: underline;">Your answer:</span>
-                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(1)?"color:#0F0;":"text-decoration: line-through;color:#F00;")">
+                        <span class="mr-2" style="@Html.Raw(checkCorrectPart1(i)?"color:#0F0;":"text-decoration: line-through;color:#F00;")">
                             @Model.WritingPartOnes.WritingPart[i].Answers
                         </span>
 

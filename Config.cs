@@ -8,7 +8,7 @@ namespace TCU.English
         /// <summary>
         /// Hiển thị hết các đáp án đúng. (Chỉ nên dùng cho kiểm thử)
         /// </summary>
-        public static bool IsShowCorrectAnswer = true;
+        public static bool IsShowCorrectAnswer = false;
 
         /// <summary>
         /// Yêu cầu thí sinh phải làm xong hết các câu hỏi mới được nộp bài
