@@ -1,5 +1,7 @@
 ﻿@model ListeningTestPaper
 @{
+    ViewData["CheckFullAction"] = nameof(TestPaperController.CheckFullListening);
+
     // Truyền ID sang cho Layout
     ViewData["potID"] = Model.PiceOfTestId;
 

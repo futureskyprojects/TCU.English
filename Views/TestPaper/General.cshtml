@@ -1,5 +1,6 @@
 ﻿@model GeneralTestPaper
 @{
+    ViewData["CheckFullAction"] = nameof(TestPaperController.CheckFullGeneral);
     // Truyền ID sang cho Layout
     ViewData["potID"] = Model.PieceOfTestId;
 
@@ -27,7 +28,7 @@
         Listening
         @if (isReviewMode)
         {
-            <span class="text-danger text-sm font-weight-normal" >(Scores: @Model.TotalListeningScores().ToScores())</span>
+            <span class="text-danger text-sm font-weight-normal">(Scores: @Model.TotalListeningScores().ToScores())</span>
         }
     </span>
 </div>

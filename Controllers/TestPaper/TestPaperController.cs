@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using TCU.English.Models;
 using TCU.English.Models.DataManager;
+using TCU.English.Models.PiceOfTest;
 using TCU.English.Models.Repository;
 using TCU.English.Utils;
 
@@ -135,5 +136,58 @@ namespace TCU.English.Controllers
             this.NotifyError("Can't find this test");
             return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
         }
+
+        #region Kiểm tra xem trang đã chọn đủ chưa AJAX
+        [HttpPost]
+        public IActionResult CheckFullListening(ListeningTestPaper paper)
+        {
+            string message = string.Empty;
+
+            bool status = paper.IsPaperFullSelection();
+
+            return Json(new { status, message });
+        }
+
+        [HttpPost]
+        public IActionResult CheckFullReading(ReadingTestPaper paper)
+        {
+            string message = string.Empty;
+
+            bool status = paper.IsPaperFullSelection();
+
+            return Json(new { status, message });
+        }
+
+        [HttpPost]
+        public IActionResult CheckFullSpeaking(SpeakingTestPaper paper)
+        {
+            string message = string.Empty;
+
+            bool status = true;
+
+            return Json(new { status, message });
+        }
+
+        [HttpPost]
+        public IActionResult CheckFullWriting(WritingTestPaper paper)
+        {
+            string message = string.Empty;
+
+            bool status = paper.IsPaperFullSelection();
+
+            return Json(new { status, message });
+        }
+
+        [HttpPost]
+        public IActionResult CheckFullGeneral(GeneralTestPaper paper)
+        {
+            string message = paper.IsFullAnswers();
+
+            bool status = string.IsNullOrEmpty(message);
+
+            return Json(new { status, message });
+        }
+        #endregion
+
     }
 }

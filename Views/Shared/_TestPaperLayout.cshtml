@@ -7,6 +7,11 @@
 
     // Khai báo chủ nhân của bài kiểm tra
     User ownerOfTest = ViewData["Owner"] as User;
+
+    // action kiểm tra độ đầy đủ
+    string checkFullAction = (string)ViewData["CheckFullAction"];
+
+    string confirmFinish = Url.Action((string)ViewData["Action"], NameUtils.ControllerName<TestPaperController>());
 }
 <!DOCTYPE html>
 <html>
@@ -30,6 +35,8 @@
     <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
     <!-- Custom stylesheet - for your changes-->
     <link rel="stylesheet" href="css/custom.css">
+    <!-- Loading -->
+    <link rel="stylesheet" href="css/loading.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="img/favicon.ico">
     <!-- Tweaks for older IEs-->
@@ -63,6 +70,7 @@
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">Loading&#8230;</div>
     <!-- navbar-->
     @*@await Component.InvokeAsync(nameof(TCU.English.Components.Header))*@
     <div class="d-flex align-items-stretch">
@@ -100,10 +108,21 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            @using (Html.BeginForm((string)ViewData["Action"], (string)ViewData["Controller"], FormMethod.Post))
-                            {
+                            <form asp-controller="@((string)ViewData["Controller"])"
+                                  asp-action="@checkFullAction"
+                                  id="test-paper-form"
+                                  data-ajax-loading="#loading"
+                                  enctype="multipart/form-data"
+                                  data-ajax-begin="onBegin"
+                                  data-ajax-success="onSuccess"
+                                  data-ajax="true"
+                                  data-ajax-method="POST">
                                 @RenderBody()
-                            }
+                            </form>
+                            @*@using (Html.BeginForm((string)ViewData["Action"], (string)ViewData["Controller"], FormMethod.Post, new { @id = "test-paper-form" }))
+                                {
+                                    @RenderBody()
+                                }*@
                         </div>
                     </div>
                 </div>
@@ -202,6 +221,82 @@
         </script>
     }
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function onBegin() {
+            // Đóng modal
+            $("#confirm-finish").modal('hide');
+
+            // Trở về top
+            topFunction();
+        }
+
+        let isPreventSubmit = false;
+
+        function finishConfirm() {
+            if (isPreventSubmit)
+                return;
+
+            isPreventSubmit = true;
+
+            $("#loading").show();
+            $.ajax({
+                url: "@confirmFinish",
+                type: "POST",
+                dataType: 'json',
+                data: $('form#test-paper-form').serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $("#loading").hide();
+                    if (data.status == false) {
+                        isPreventSubmit = false;
+                        new Noty({
+                            text: data.message,
+                            type: 'error'
+                        }).show();
+                    } else {
+                        new Noty({
+                            text: data.message,
+                            type: 'success'
+                        }).show();
+                        if (data.location != null && data.location != undefined && data.location.length > 0)
+                            window.location.href = data.location;
+                    }
+                }
+            });
+        }
+
+        function onSuccess(data) {
+            if (data != null && data != undefined) {
+                if (data.status === true) {
+                    finishConfirm();
+                } else {
+                    let msg = "You have not yet answered all the questions!";
+                    if (data.message != null && data.message != undefined && data.message.length > 0)
+                        msg = data.message;
+
+                    swal({
+                        title: msg,
+                        text: "If this continues, the sentences that are left blank will be counted as false.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
+                            finishConfirm();
+                        }
+                    });
+                }
+            } else {
+                @Html.Raw(Notification.Error("Please try again"));
+            }
+        }
+    </script>
+
+
     @RenderSection("Scripts", required: false)
+    <script>
+        $("#loading").hide();
+    </script>
 </body>
 </html>

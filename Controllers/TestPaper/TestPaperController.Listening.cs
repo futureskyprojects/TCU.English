@@ -140,6 +140,8 @@ namespace TCU.English.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+
         [HttpPost]
         public IActionResult Listening(ListeningTestPaper paper)
         {
@@ -178,16 +180,17 @@ namespace TCU.English.Controllers
                 ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
             }
 
-            // Kiểm tra check full
-            if (!paper.IsPaperFullSelection())
-            {
-                this.NotifyError("Please complete all questions");
+            //// Kiểm tra check full
+            //if (!paper.IsPaperFullSelection())
+            //{
+            //    this.NotifyError("Please complete all questions");
 
-                paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
-                    .CopySelectedAnswers(paper);
+            //    paper = JsonConvert.DeserializeObject<ListeningTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
+            //        .CopySelectedAnswers(paper);
 
-                return View(paper);
-            }
+            //    return View(paper);
+            //}
+
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
             {

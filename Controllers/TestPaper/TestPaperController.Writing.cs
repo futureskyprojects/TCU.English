@@ -122,30 +122,31 @@ namespace TCU.English.Controllers
             }
 
             // Kiểm tra check full
-            if (!paper.IsPaperFullSelection())
-            {
-                this.NotifyError("Please complete all questions");
+            //if (!paper.IsPaperFullSelection())
+            //{
+            //    this.NotifyError("Please complete all questions");
 
-                // Lưu trữ các câu trã lời trước đó của HV
-                var tempPart1Answered = paper.WritingPartOnes.WritingPart;
+            //    // Lưu trữ các câu trã lời trước đó của HV
+            //    var tempPart1Answered = paper.WritingPartOnes.WritingPart;
 
-                // Lưu trữ đoạn văn đã nhập của HV
-                var paragraph = paper.WritingPartTwos.UserParagraph;
+            //    // Lưu trữ đoạn văn đã nhập của HV
+            //    var paragraph = paper.WritingPartTwos.UserParagraph;
 
-                // Load lại trang giấy thi
-                paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
+            //    // Load lại trang giấy thi
+            //    paper = JsonConvert.DeserializeObject<WritingTestPaper>(piece.ResultOfTestJson);
 
-                // Gắn câu trả lời trước đã nhập của HV vào
-                for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
-                {
-                    paper.WritingPartOnes.WritingPart[i].Answers = tempPart1Answered[i].Answers;
-                }
+            //    // Gắn câu trả lời trước đã nhập của HV vào
+            //    for (int i = 0; i < paper.WritingPartOnes.WritingPart.Count; i++)
+            //    {
+            //        paper.WritingPartOnes.WritingPart[i].Answers = tempPart1Answered[i].Answers;
+            //    }
 
-                // Gắn lại đoạn văn
-                paper.WritingPartTwos.UserParagraph = paragraph;
+            //    // Gắn lại đoạn văn
+            //    paper.WritingPartTwos.UserParagraph = paragraph;
 
-                return View(paper);
-            }
+            //    return View(paper);
+            //}
+
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
             {

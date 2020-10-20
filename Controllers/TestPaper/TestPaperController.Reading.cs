@@ -80,10 +80,16 @@ namespace TCU.English.Controllers
         public IActionResult Reading(ReadingTestPaper paper)
         {
             if (paper == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (paper.PiceOfTestId <= 0)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             ViewBag.Title = "READING TESTING";
 
@@ -91,12 +97,15 @@ namespace TCU.English.Controllers
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PiceOfTestId);
 
             if (piece == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
             {
                 this.NotifyError("You are not authorized to view or manipulate this test");
-                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
             // Lấy chủ sở hữu của bài kiểm tra
@@ -114,25 +123,9 @@ namespace TCU.English.Controllers
                 ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
             }
 
-            // Kiểm tra check full
-            if (!paper.IsPaperFullSelection())
-            {
-                this.NotifyError("Please complete all questions");
-
-                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
-                    .CopySelectedAnswers(paper);
-
-                return View(paper);
-            }
             int total = paper.TotalQuestions(); // Tổng số câu hỏi
             if (total <= 0)
-            {
-                this.NotifyError("The test does not have any questions");
-
-                paper = JsonConvert.DeserializeObject<ReadingTestPaper>(piece.ResultOfTestJson).RemoveCorrectAnswers()
-                    .CopySelectedAnswers(paper);
-                return View(paper);
-            }
+                return Json(new { status = false, message = "The test does not have any questions", location = string.Empty });
 
             // Tính điểm
             float scores = paper.ScoresCalculate(piece.ResultOfTestJson);
@@ -144,7 +137,7 @@ namespace TCU.English.Controllers
             piece.TimeToFinished = timeToFinished;
             _PieceOfTestManager.Update(piece);
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), new { id = piece.Id });
+            return Json(new { status = true, message = "Successful submission of exams", location = $"{Url.Action(nameof(Result), NameUtils.ControllerName<TestPaperController>())}/{piece.Id}" });
         }
 
         [HttpGet]

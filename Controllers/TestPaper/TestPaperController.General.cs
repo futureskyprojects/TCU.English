@@ -171,7 +171,7 @@ namespace TCU.English.Controllers
 
             if (!string.IsNullOrEmpty(validateString))
             {
-                this.NotifyError("Please complete all questions");
+                this.NotifyError(validateString);
 
                 //paper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson);
                 // Xóa đáp án của bài thi
