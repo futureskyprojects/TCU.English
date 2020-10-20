@@ -75,6 +75,9 @@ namespace TCU.English.Models.PiceOfTest
         /// </summary>
         public string IsFullAnswers()
         {
+            if (!Config.IsCheckFullTestPaper)
+                return string.Empty;
+
             if (!ListeningTestPaper.IsPaperFullSelection())
             {
                 return "You have not yet answered all the questions of the Listening test";

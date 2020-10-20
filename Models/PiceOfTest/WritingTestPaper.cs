@@ -97,7 +97,7 @@ namespace TCU.English.Models.PiceOfTest
                         // Lấy câu trả lời mà học viên đã nhập vào
                         string answerInputed = WritingPartOnes.WritingPart[i].Answers;
 
-                        // Nếu câu trả lời khớp với bất kỳ đáp án nào, tiến hành cho điể
+                        // Nếu câu trả lời khớp với bất kỳ đáp án nào, tiến hành cho điểm
                         if (resultPaper.WritingPartOnes.WritingPart[i].BaseAnswers.Any(x => x.AnswerContent.ToLower().Trim().Equals(answerInputed.ToLower().Trim())))
                             count++;
                     }
@@ -106,6 +106,7 @@ namespace TCU.English.Models.PiceOfTest
                         // Bỏ qua
                     }
                 }
+
                 // Tính điểm luôn cho part 1
                 WritingPartOnes.Scores = ScoresUtils.ScoresCalculate(count, TotalQuestions(), Config.SCORES_FULL_WRITING_PART_1);
                 return WritingPartOnes.Scores;
@@ -125,6 +126,9 @@ namespace TCU.English.Models.PiceOfTest
 
         public bool IsPaperFullSelection()
         {
+            if (!Config.IsCheckFullTestPaper)
+                return true;
+
             return !WritingPartOnes.WritingPart.Any(x => string.IsNullOrEmpty(x.Answers)) &&
                 !string.IsNullOrEmpty(WritingPartTwos.UserParagraph);
         }

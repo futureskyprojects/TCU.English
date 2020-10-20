@@ -238,6 +238,9 @@ namespace TCU.English.Models.PiceOfTest
         /// </summary>
         public bool IsPaperFullSelection()
         {
+            if (!Config.IsCheckFullTestPaper)
+                return true;
+
             foreach (var item in new[] { ListeningPartOnes, ListeningPartTwos })
             {
                 foreach (var question in item)

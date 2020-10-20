@@ -5,7 +5,15 @@ namespace TCU.English
 {
     public static class Config
     {
-        public static bool IsShowCorrectAnswer = false;
+        /// <summary>
+        /// Hiển thị hết các đáp án đúng. (Chỉ nên dùng cho kiểm thử)
+        /// </summary>
+        public static bool IsShowCorrectAnswer = true;
+
+        /// <summary>
+        /// Yêu cầu thí sinh phải làm xong hết các câu hỏi mới được nộp bài
+        /// </summary>
+        public static bool IsCheckFullTestPaper = false;
 
         public static string ProjectName = "TCU English";
         public static string CompanyName = "Vistark Inc.";
