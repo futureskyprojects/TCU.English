@@ -161,11 +161,17 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult CheckFullSpeaking(SpeakingTestPaper paper)
+        public IActionResult CheckFullSpeaking(string audioBase64)
         {
             string message = string.Empty;
 
             bool status = true;
+
+            if (string.IsNullOrEmpty(audioBase64))
+            {
+                message = "You have not recorded the audio yet. Please Record atleast 1 second";
+                status = false;
+            }
 
             return Json(new { status, message });
         }
@@ -181,11 +187,17 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult CheckFullGeneral(GeneralTestPaper paper)
+        public IActionResult CheckFullGeneral(GeneralTestPaper paper, string audioBase64)
         {
             string message = paper.IsFullAnswers();
 
             bool status = string.IsNullOrEmpty(message);
+
+            if (string.IsNullOrEmpty(audioBase64))
+            {
+                message = "\r\nYou have not recorded the audio yet";
+                status = false;
+            }
 
             return Json(new { status, message });
         }
