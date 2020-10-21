@@ -36,6 +36,10 @@ namespace TCU.English.Controllers
             ViewBag.WritingGPA = WritingGPA.ToScores();
             ViewBag.SpeakingGPA = SpeakingGPA.ToScores();
 
+            ViewBag.GFailed = _PieceOfTestManager.FaildTestsCount(userId, TestCategory.TEST_ALL);
+            ViewBag.GSuccess = _PieceOfTestManager.PassedTestsCount(userId, TestCategory.TEST_ALL);
+            ViewBag.GHighest = _PieceOfTestManager.HightestScore(userId, TestCategory.TEST_ALL);
+
             ViewBag.YourGPA = (ListeningGPA + ReadingGPA + WritingGPA + SpeakingGPA).ToScores();
 
             return View();

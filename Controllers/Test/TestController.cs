@@ -92,7 +92,7 @@ namespace TCU.English.Controllers
 
             // Thực hiện phần thống kê nho nhỏ
             ViewBag.Passed = _PieceOfTestManager.PassedTestsCount(User.Id(), type);
-            ViewBag.Failed = _PieceOfTestManager.PassedTestsCount(User.Id(), type);
+            ViewBag.Failed = _PieceOfTestManager.FaildTestsCount(User.Id(), type);
             ViewBag.HighestScore = _PieceOfTestManager.HightestScore(User.Id(), type).ToScores();
 
             return View(PieceOfTests);

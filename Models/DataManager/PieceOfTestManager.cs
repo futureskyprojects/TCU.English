@@ -110,37 +110,119 @@ namespace TCU.English.Models.DataManager
 
         public long PassedTestsCount(long userId, string typeCode = "")
         {
-            float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
-            float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
-            float thresholdSpeaking = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
-            float thresholdWriting = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
-            float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
-            return instantce.PieceOfTests
-                .Where(x => x.UserId == userId &&
-                x.TypeCode == typeCode &&
-                !string.IsNullOrEmpty(x.ResultOfUserJson) &&
-                ((x.TypeCode == TestCategory.LISTENING && x.Scores >= thresholdListening) ||
-                (x.TypeCode == TestCategory.READING && x.Scores >= thresholdReading) ||
-                (x.TypeCode == TestCategory.SPEAKING && x.Scores >= thresholdSpeaking) ||
-                (x.TypeCode == TestCategory.WRITING && x.Scores >= thresholdWriting) ||
-                (x.TypeCode == TestCategory.TEST_ALL && x.Scores >= thresholdGeneral))).Count();
+            float threshold = 0;
+
+            // Lấy các bài thi đã hoàn thành của user để xét
+            var query = instantce.PieceOfTests
+                .Where(x => x.UserId == userId && !string.IsNullOrEmpty(x.ResultOfUserJson));
+
+            // Nếu không có thì bỏ qua
+            if (query.Count() <= 0)
+                return 0;
+
+            // Lấy tiếp các bài thuộc kiểu nếu có
+            if (!string.IsNullOrEmpty(typeCode))
+                query = query.Where(x => x.TypeCode == typeCode);
+
+            // Nếu không có thì bỏ qua
+            if (query.Count() <= 0)
+                return 0;
+
+            // Nếu thuộc LISTENTING
+            if (TestCategory.LISTENING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
+
+            // Nếu thuộc READING
+            if (TestCategory.READING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.READING);
+
+            // Nếu thuộc SPEAKING
+            if (TestCategory.SPEAKING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
+
+            // Nếu thuộc WRITING
+            if (TestCategory.WRITING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
+
+            // Nếu thuộc GENERAL
+            if (TestCategory.TEST_ALL == typeCode)
+            {
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
+                // Trả về số lượng các bài thi dạt chuẩn
+                query = query.Where(x => x.Scores >= threshold);
+
+                List<string> gpJson = query.Select(x => x.ResultOfUserJson).ToList();
+                int res = 0;
+                foreach (string s in gpJson)
+                {
+                    var gp = JsonConvert.DeserializeObject<GeneralTestPaper>(s);
+                    if (gp != null && gp.IsPassed())
+                        res++;
+                }
+                return res;
+            }
+
+            // Trả về số lượng các bài thi dạt chuẩn
+            return query.Where(x => x.Scores >= threshold).Count();
         }
         public long FaildTestsCount(long userId, string typeCode = "")
         {
-            float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
-            float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
-            float thresholdSpeaking = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
-            float thresholdWriting = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
-            float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
-            return instantce.PieceOfTests
-                .Where(x => x.UserId == userId &&
-                x.TypeCode == typeCode &&
-                !string.IsNullOrEmpty(x.ResultOfUserJson) &&
-                ((x.TypeCode == TestCategory.LISTENING && x.Scores < thresholdListening) ||
-                (x.TypeCode == TestCategory.READING && x.Scores < thresholdReading) ||
-                (x.TypeCode == TestCategory.SPEAKING && x.Scores < thresholdSpeaking) ||
-                (x.TypeCode == TestCategory.WRITING && x.Scores < thresholdWriting) ||
-                (x.TypeCode == TestCategory.TEST_ALL && x.Scores < thresholdGeneral))).Count();
+            float threshold = 0;
+
+            // Lấy các bài thi đã hoàn thành của user để xét
+            var query = instantce.PieceOfTests
+                .Where(x => x.UserId == userId && !string.IsNullOrEmpty(x.ResultOfUserJson));
+
+            // Nếu không có thì bỏ qua
+            if (query.Count() <= 0)
+                return 0;
+
+            // Lấy tiếp các bài thuộc kiểu nếu có
+            if (!string.IsNullOrEmpty(typeCode))
+                query = query.Where(x => x.TypeCode == typeCode);
+
+            // Nếu không có thì bỏ qua
+            if (query.Count() <= 0)
+                return 0;
+
+            // Nếu thuộc LISTENTING
+            if (TestCategory.LISTENING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
+
+            // Nếu thuộc READING
+            if (TestCategory.READING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.READING);
+
+            // Nếu thuộc SPEAKING
+            if (TestCategory.SPEAKING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
+
+            // Nếu thuộc WRITING
+            if (TestCategory.WRITING == typeCode)
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
+
+            // Nếu thuộc GENERAL
+            if (TestCategory.TEST_ALL == typeCode)
+            {
+                threshold = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
+                // Đếm các bài thi không đạt chuẩn
+                int resNo = query.Where(x => x.Scores < threshold).Count();
+                // Trả về số lượng các bài thi dạt chuẩn để tìm các bài dính điểm liệt trong các phần
+                query = query.Where(x => x.Scores >= threshold);
+
+                List<string> gpJson = query.Select(x => x.ResultOfUserJson).ToList();
+                int res = 0;
+                foreach (string s in gpJson)
+                {
+                    var gp = JsonConvert.DeserializeObject<GeneralTestPaper>(s);
+                    if (gp != null && !gp.IsPassed())
+                        res++;
+                }
+                return res + resNo;
+            }
+
+            // Trả về số lượng các bài thi dạt chuẩn
+            return query.Where(x => x.Scores < threshold).Count();
         }
 
         /// <summary>

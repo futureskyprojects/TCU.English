@@ -174,6 +174,31 @@ namespace TCU.English.Models.PiceOfTest
 
             return scores;
         }
+
+        public bool IsPassed()
+        {
+            double l = ScoresUtils.GetMaxScores(TestCategory.LISTENING) * 0.3;
+            double r = ScoresUtils.GetMaxScores(TestCategory.READING) * 0.3;
+            double s = ScoresUtils.GetMaxScores(TestCategory.SPEAKING) * 0.3;
+            double w = ScoresUtils.GetMaxScores(TestCategory.WRITING) * 0.3;
+
+            if (ListeningTestPaper.Part1Scores + ListeningTestPaper.Part1Scores < l)
+                return false;
+
+            if (ReadingTestPaper.ReadingPartOnes.Scores +
+                ReadingTestPaper.ReadingPartTwos.Scores +
+                ReadingTestPaper.ReadingPartThrees.Scores +
+                ReadingTestPaper.ReadingPartFours.Scores < r)
+                return false;
+
+            if (SpeakingTestPaper.SpeakingPart.Scores < s)
+                return false;
+
+            if (WritingTestPaper.WritingPartOnes.Scores + WritingTestPaper.WritingPartTwos.Scores < w)
+                return false;
+
+            return true;
+        }
     }
 
 
