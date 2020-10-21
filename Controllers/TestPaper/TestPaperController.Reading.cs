@@ -58,7 +58,7 @@ namespace TCU.English.Controllers
             // Nếu bài thi đã hoàn thành, thì chuyển sang màn hình review
             if (piece.ResultOfUserJson != null && piece.ResultOfUserJson.Length > 0 && piece.UpdatedTime != null)
             {
-                return RedirectToAction(nameof(ReadingReview), new { id = id });
+                return RedirectToAction(nameof(ReadingReview), new { id });
             }
 
             // Tránh timer bị reset

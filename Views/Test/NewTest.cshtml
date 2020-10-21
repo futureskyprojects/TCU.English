@@ -118,6 +118,10 @@
                 if (slectedInstructorId != 'null')
                     address = `${address}/${slectedInstructorId}`;
 
+                // Hiển thị loading
+                $("#loading").show();
+
+                // Điều hướng trang
                 window.location.href = address;
             } else {
                 @Html.Raw(Notification.Warning("Sorry, currently there is not enough data in this section."))

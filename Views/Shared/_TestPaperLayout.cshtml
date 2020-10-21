@@ -165,20 +165,6 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
 
-        //Get the button
-        var floatBottomRight = document.getElementById("float-br");
-
-        // When the user scrolls down 20px from the top of the document, show the button
-        window.onscroll = function () { scrollFunction(); };
-
-        function scrollFunction() {
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
-                floatBottomRight.style.display = "block";
-            }
-            else {
-                floatBottomRight.style.display = "none";
-            }
-        }
         function topFunction() {
             $("html, body").animate({ scrollTop: 0 }, 300);
         }
@@ -218,6 +204,21 @@
                 $("#time-counter-top").html(displayTimer);
                 $("#time-counter").html(displayTimer);
             }, 1000);
+
+            //Get the button
+            var floatBottomRight = document.getElementById("float-br");
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () { scrollFunction(); };
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 20) {
+                    floatBottomRight.style.display = "block";
+                }
+                else {
+                    floatBottomRight.style.display = "none";
+                }
+            }
         </script>
     }
     <partial name="_ValidationScriptsPartial" />

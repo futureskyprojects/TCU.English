@@ -50,6 +50,7 @@
     @RenderSection("headers", false)
 </head>
 <body>
+    <div class="loading" id="loading">Loading&#8230;</div>
     <!-- navbar-->
     @await Component.InvokeAsync(nameof(TCU.English.Components.Header))
     <div class="d-flex align-items-stretch">
@@ -123,5 +124,8 @@
 
     <partial name="_ValidationScriptsPartial" />
     @RenderSection("Scripts", required: false)
+    <script>
+        $("#loading").hide();
+    </script>
 </body>
 </html>

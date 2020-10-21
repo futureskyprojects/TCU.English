@@ -103,10 +103,12 @@ namespace TCU.English.Controllers
 
             if (piece.TypeCode == TestCategory.TEST_ALL)
             {
-                ViewBag.Title = "GENERAL TESTING RESULT";
-                ViewBag.IsGeneral = true;
-                // Đổi tin nhắn thông báo thành công
-                ViewBag.Msg = "<i class=\"\">Congratulations, you finished the test, your teacher will review your test and mark for you later.</i>";
+                //ViewBag.Title = "GENERAL TESTING RESULT";
+                //ViewBag.IsGeneral = true;
+                //// Đổi tin nhắn thông báo thành công
+                //ViewBag.Msg = "<i class=\"\">Congratulations, you finished the test, your teacher will review your test and mark for you later.</i>";
+                this.NotifySuccess("Here are the results of your test");
+                return RedirectToAction(nameof(GeneralReview), new { piece.Id });
             }
 
 

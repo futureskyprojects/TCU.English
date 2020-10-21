@@ -96,86 +96,63 @@ namespace TCU.English.Controllers
         public async Task<IActionResult> General(GeneralTestPaper paper, string audioBase64)
         {
             if (paper == null)
-                return NotFoundTest();
-
-            if (paper.PieceOfTestId <= 0)
-                return NotFoundTest();
-
-            ViewBag.Title = "GENERAL TESTING";
-
-            if (string.IsNullOrEmpty(audioBase64))
             {
-                // Xóa đáp án của bài thi
-                this.NotifyError("You have not recorded the reading yet");
-                return View(paper);
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
-            // Chuyển base64 thành stream
-            var bytes = Convert.FromBase64String(audioBase64.Replace("data:audio/mpeg;base64,", ""));
-            var memoryStream = new MemoryStream(bytes);
+            if (paper.PieceOfTestId <= 0)
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             // Lấy bài thi từ mã số
             PieceOfTest piece = _PieceOfTestManager.Get(paper.PieceOfTestId);
 
             if (piece == null)
-                return NotFoundTest();
+            {
+                this.NotifyError("Not found yor test");
+                return Json(new { status = false, message = string.Empty, location = "/" });
+            }
 
             if (piece.InstructorId != User.Id() && piece.UserId != User.Id())
             {
                 this.NotifyError("You are not authorized to view or manipulate this test");
-                return RedirectToAction(nameof(HomeController.Index), NameUtils.ControllerName<HomeController>());
+                return Json(new { status = false, message = string.Empty, location = "/" });
             }
 
             // Lấy chủ sở hữu của bài kiểm tra
             User owner = _UserManager.Get(piece.UserId);
-            ViewData["Owner"] = new User
-            {
-                Avatar = owner.Avatar,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName
-            };
 
             string fileName = $"{owner.Username.ToLower()}_{piece.TypeCode}_{piece.Id}";
-            // Tạo tệp tin
-            IFormFile file = new FormFile(memoryStream, 0, bytes.Length, null, $"{fileName}.mp3")
+
+            if (!string.IsNullOrEmpty(audioBase64))
             {
-                Headers = new HeaderDictionary(),
-                ContentType = "audio/mpeg"
-            };
+                // Chuyển base64 thành stream
+                var bytes = Convert.FromBase64String(audioBase64.Replace("data:audio/mpeg;base64,", ""));
+                var memoryStream = new MemoryStream(bytes);
 
-            // Nếu file null
-            if (file == null)
-            {
-                this.NotifyError("Can not upload your audio, please try again!");
-                return View(paper);
-            }
+                // Tạo tệp tin
+                IFormFile file = new FormFile(memoryStream, 0, bytes.Length, null, $"{fileName}.mp3")
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = "audio/mpeg"
+                };
 
-            // Tiến hành lưu tệp tin cho người dùng
-            string path = await host.UploadForUserAudio(file, owner);
+                // Nếu file null
+                if (file == null)
+                    return Json(new { status = false, message = "Can not upload your audio, please try again!", location = "/" });
 
-            // Nếu path không đúng
-            if (string.IsNullOrEmpty(path))
-            {
-                this.NotifyError("Can not upload your speaking, please try again!");
-                return View(paper);
-            }
+                // Tiến hành lưu tệp tin cho người dùng
+                string path = await host.UploadForUserAudio(file, owner);
 
-            // Tránh timer bị reset
-            if (piece.CreatedTime != null)
-            {
-                ViewBag.Timer = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds;
-            }
+                // Nếu path không đúng
+                if (string.IsNullOrEmpty(path))
+                    return Json(new { status = false, message = "Can not upload your audio, please try again!", location = "/" });
 
-            // Kiểm tra check full
-            string validateString = paper.IsFullAnswers();
-
-            if (!string.IsNullOrEmpty(validateString))
-            {
-                this.NotifyError(validateString);
-
-                //paper = JsonConvert.DeserializeObject<GeneralTestPaper>(piece.ResultOfTestJson);
-                // Xóa đáp án của bài thi
-                return View(paper);
+                // Cập nhật đường dẫn bài nói của HV cho bài thi
+                paper.SpeakingTestPaper.SpeakingPart.UserAudioPath = path;
             }
 
             // Tính toán số điểm
@@ -184,16 +161,13 @@ namespace TCU.English.Controllers
             // Thời gian kết thúc bài thi
             float timeToFinished = DateTime.UtcNow.Subtract((DateTime)piece.CreatedTime).TotalSeconds.ToFloat();
 
-            // Cập nhật đường dẫn bài nói của HV cho bài thi
-            paper.SpeakingTestPaper.SpeakingPart.UserAudioPath = path;
-
             // Cập nhật dữ liệu
             piece.ResultOfUserJson = JsonConvert.SerializeObject(paper);
             piece.TimeToFinished = timeToFinished;
             _PieceOfTestManager.Update(piece);
 
             // Chuyển đến trang kết quả
-            return RedirectToAction(nameof(Result), new { id = piece.Id });
+            return Json(new { status = true, message = "Successful submission of exams", location = $"{Url.Action(nameof(Result), NameUtils.ControllerName<TestPaperController>())}/{piece.Id}" });
         }
         [HttpGet]
         public IActionResult GeneralReview(int id)
