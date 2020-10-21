@@ -73,6 +73,8 @@ namespace TCU.English.Controllers
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
             int PiceOfTestId = GeneralTestPaper.Generate(
                 _TestCategoryManager,
+                _ReadingPartOneManager,
+                _ReadingPartTwoManager,
                 _ListeningBaseQuestionManager,
                 _ListeningMediaManager,
                 _WritingPartTwoManager,

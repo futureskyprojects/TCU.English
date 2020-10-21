@@ -24,6 +24,8 @@ namespace TCU.English.Models.PiceOfTest
         /// </summary>
         public static GeneralTestPaper Generate(
             TestCategoryManager _TestCategoryManager,
+            ReadingPartOneManager _ReadingPartOneManager,
+            ReadingPartTwoManager _ReadingPartTwoManager,
             ListeningBaseQuestionManager _ListeningBaseQuestionManager,
             ListeningMediaManager _ListeningMediaManager,
             WritingPartTwoManager _WritingPartTwoManager,
@@ -32,23 +34,25 @@ namespace TCU.English.Models.PiceOfTest
             int UserId,
             int? InstructorId)
         {
-            GeneralTestPaper generateTestPaper = new GeneralTestPaper();
-
-            // Tạo bài thi Listening
-            generateTestPaper.ListeningTestPaper = new ListeningTestPaper
+            GeneralTestPaper generateTestPaper = new GeneralTestPaper
             {
-                ListeningPartOnes = ListeningTestPaper.Generate(1, _TestCategoryManager, _ListeningMediaManager, _ListeningBaseQuestionManager),
-                ListeningPartTwos = ListeningTestPaper.Generate(2, _TestCategoryManager, _ListeningMediaManager, _ListeningBaseQuestionManager),
+
+                // Tạo bài thi Listening
+                ListeningTestPaper = new ListeningTestPaper
+                {
+                    ListeningPartOnes = ListeningTestPaper.Generate(1, _TestCategoryManager, _ListeningMediaManager, _ListeningBaseQuestionManager),
+                    ListeningPartTwos = ListeningTestPaper.Generate(2, _TestCategoryManager, _ListeningMediaManager, _ListeningBaseQuestionManager),
+                },
+
+                // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
+                ReadingTestPaper = _TestCategoryManager.GenerateReadingTestPaper(_ReadingPartOneManager, _ReadingPartTwoManager),
+
+                // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
+                WritingTestPaper = _TestCategoryManager.GenerateWritingTestPaper(_WritingPartTwoManager),
+
+                // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
+                SpeakingTestPaper = _TestCategoryManager.GenerateSpeakingTestPaper(_SpeakingEmbedManager)
             };
-
-            // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            generateTestPaper.ReadingTestPaper = _TestCategoryManager.GenerateReadingTestPaper();
-
-            // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            generateTestPaper.WritingTestPaper = _TestCategoryManager.GenerateWritingTestPaper(_WritingPartTwoManager);
-
-            // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            generateTestPaper.SpeakingTestPaper = _TestCategoryManager.GenerateSpeakingTestPaper(_SpeakingEmbedManager);
 
             // Khởi tạo đối tượng lưu trữ bài kiểm tra này và lưu paper mặc định có đáp án đúng vào
             var piceOfTest = new PieceOfTest

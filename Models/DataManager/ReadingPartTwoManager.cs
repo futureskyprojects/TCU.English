@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using TCU.English.Models.Repository;
 
@@ -115,6 +116,37 @@ namespace TCU.English.Models.DataManager
             entity.UpdatedTime = DateTime.UtcNow;
             instantce.ReadingPartTwos.Update(entity);
             instantce.SaveChanges();
+        }
+
+        internal List<ReadingPartTwo> TakeRandom(int part, int questionSize)
+        {
+            Random rand = new Random();
+
+            var query = instantce.ReadingPartTwos.Join(
+                instantce.TestCategories,
+                r => r.TestCategoryId,
+                t => t.Id,
+                (r, t) => new { r, t })
+                .Where(x => x.t.PartId == part)
+                .Select(x => x.r);
+
+            int size = query.Count();
+
+            List<ReadingPartTwo> readings = new List<ReadingPartTwo>();
+            for (int i = 0; i < questionSize; i++)
+            {
+                int toSkip = rand.Next(0, size);
+                var res = query.Skip(toSkip).Take(1).FirstOrDefault();
+                if (res == null || readings.Any(x => x.Id == res.Id))
+                {
+                    i--;
+                }
+                else
+                {
+                    readings.Add(res);
+                }
+            }
+            return readings;
         }
     }
 }

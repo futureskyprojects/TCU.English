@@ -11,20 +11,28 @@ namespace TCU.English.Utils
 {
     public static partial class TestCategoryUtils
     {
-        public static ReadingTestPaper GenerateReadingTestPaper(this TestCategoryManager _TestCategoryManager)
+        public static ReadingTestPaper GenerateReadingTestPaper(this TestCategoryManager _TestCategoryManager,
+            ReadingPartOneManager _ReadingPartOneManager,
+            ReadingPartTwoManager _ReadingPartTwoManager)
         {
             return new ReadingTestPaper
             {
-                ReadingPartOnes = ReadingTestPaper.GeneratePart1(_TestCategoryManager),
-                ReadingPartTwos = ReadingTestPaper.GeneratePart2(_TestCategoryManager),
+                ReadingPartOnes = ReadingTestPaper.GeneratePart1(_ReadingPartOneManager),
+                ReadingPartTwos = ReadingTestPaper.GeneratePart2(_ReadingPartTwoManager),
                 ReadingPartThrees = ReadingTestPaper.GeneratePart3(_TestCategoryManager),
                 ReadingPartFours = ReadingTestPaper.GeneratePart4(_TestCategoryManager)
             };
         }
-        public static int GenerateReadingTestPaper(this TestCategoryManager _TestCategoryManager, PieceOfTestManager _PieceOfTestManager, int UserId, int? InstructorId)
+        public static int GenerateReadingTestPaper(
+            this TestCategoryManager _TestCategoryManager,
+            PieceOfTestManager _PieceOfTestManager,
+            ReadingPartOneManager _ReadingPartOneManager,
+            ReadingPartTwoManager _ReadingPartTwoManager,
+            int UserId,
+            int? InstructorId)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper();
+            ReadingTestPaper paper = _TestCategoryManager.GenerateReadingTestPaper(_ReadingPartOneManager, _ReadingPartTwoManager);
             // Khởi tạo đối tượng lưu trữ bài kiểm tra này và lưu paper mặc định có đáp án đúng vào
             var piceOfTest = new PieceOfTest
             {

@@ -12,7 +12,10 @@ namespace TCU.English.Controllers
         public IActionResult ReadingNewTest(int? id)
         {
             // Kiến tạo danh sách câu hỏi và câu trả lời, đồng thời xáo trộn câu trả lời
-            int PiceOfTestId = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager, User.Id(), id);
+            int PiceOfTestId = _TestCategoryManager.GenerateReadingTestPaper(_PieceOfTestManager,
+                _ReadingPartOneManager,
+                _ReadingPartTwoManager,
+                User.Id(), id);
             if (PiceOfTestId > 0)
             {
                 // Nếu lưu trữ thành công, thì tiến hành cho thí sinh làm

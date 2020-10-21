@@ -13,13 +13,13 @@ namespace TCU.English.Models.PiceOfTest
     public class ReadingTestPaper
     {
         [JsonIgnore]
-        const int MAX_QUESTION_READING_PART_1 = 10;
+        public const int MAX_QUESTION_READING_PART_1 = 10;
         [JsonIgnore]
-        const int MAX_QUESTION_READING_PART_2 = 5;
+        public const int MAX_QUESTION_READING_PART_2 = 5;
         [JsonIgnore]
-        const int MAX_QUESTION_READING_PART_3 = 5;
+        public const int MAX_QUESTION_READING_PART_3 = 5;
         [JsonIgnore]
-        const int MAX_QUESTION_READING_PART_4 = 10;
+        public const int MAX_QUESTION_READING_PART_4 = 10;
 
         public class ReadingPartOneDTO
         {
@@ -130,21 +130,9 @@ namespace TCU.English.Models.PiceOfTest
         }
 
         #region GENRATE QUESTION
-        public static ReadingPartOneDTO GeneratePart1(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartOneDTO GeneratePart1(ReadingPartOneManager _ReadingPartOneManager)
         {
-            // Lấy danh mục
-            var category = _TestCategoryManager
-                .GetForGenerateTest(TestCategory.READING, 1)
-                .ToList()
-                .Shuffle()
-                .First();
-            // Lấy danh sách câu hỏi
-            var questions = category
-                .ReadingPartOnes
-                .ToList()
-                .Shuffle() // Trộn câu hỏi
-                .Take(MAX_QUESTION_READING_PART_1)
-                .ToList();
+            List<ReadingPartOne> questions = _ReadingPartOneManager.TakeRandom();
             // Kiến tạo, trộn đáp án
             for (int i = 0; i < questions.Count; i++)
             {
@@ -156,23 +144,14 @@ namespace TCU.English.Models.PiceOfTest
             }
             return new ReadingPartOneDTO
             {
-                TestCategory = category,
+                TestCategory = new TestCategory(),
                 ReadingPart = questions
             };
         }
-        public static ReadingPartTwoDTO GeneratePart2(TestCategoryManager _TestCategoryManager)
+        public static ReadingPartTwoDTO GeneratePart2(ReadingPartTwoManager _ReadingPartTwoManager)
         {
-            var category = _TestCategoryManager
-                .GetForGenerateTest(TestCategory.READING, 2)
-                .ToList()
-                .Shuffle()
-                .First();
-            var questions = category
-                .ReadingPartTwos
-                .ToList()
-                .Shuffle()
-                .Take(MAX_QUESTION_READING_PART_2)
-                .ToList();
+            List<ReadingPartTwo> questions = _ReadingPartTwoManager.TakeRandom(2, MAX_QUESTION_READING_PART_2);
+
             // Kiến tạo, trộn đáp án
             for (int i = 0; i < questions.Count; i++)
             {
@@ -184,7 +163,7 @@ namespace TCU.English.Models.PiceOfTest
             }
             return new ReadingPartTwoDTO
             {
-                TestCategory = category,
+                TestCategory = new TestCategory(),
                 ReadingPart = questions
             };
         }
