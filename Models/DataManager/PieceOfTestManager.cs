@@ -79,18 +79,36 @@ namespace TCU.English.Models.DataManager
         }
 
         #region FOR HOME INDEX
-        public long CompletedTestsCount(long userId)
+        public long CompletedTestsCount(long userId, string typeCode = "")
         {
             try
             {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0).Count();
+                return instantce.PieceOfTests.Where(x => x.UserId == userId &&
+                x.TypeCode == typeCode &&
+                x.ResultOfUserJson != null &&
+                x.ResultOfUserJson.Length > 0).Count();
             }
             catch (Exception)
             {
                 return 0;
             }
         }
-        public long PassedTestsCount(long userId)
+        public float HightestScore(long userId, string typeCode = "")
+        {
+            try
+            {
+                return instantce.PieceOfTests
+                        .Where(x => x.UserId == userId &&
+                        x.TypeCode == typeCode &&
+                        x.Scores >= 0).Max(x => x.Scores);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        public long PassedTestsCount(long userId, string typeCode = "")
         {
             float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
             float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
@@ -99,6 +117,7 @@ namespace TCU.English.Models.DataManager
             float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
             return instantce.PieceOfTests
                 .Where(x => x.UserId == userId &&
+                x.TypeCode == typeCode &&
                 !string.IsNullOrEmpty(x.ResultOfUserJson) &&
                 ((x.TypeCode == TestCategory.LISTENING && x.Scores >= thresholdListening) ||
                 (x.TypeCode == TestCategory.READING && x.Scores >= thresholdReading) ||
@@ -106,7 +125,7 @@ namespace TCU.English.Models.DataManager
                 (x.TypeCode == TestCategory.WRITING && x.Scores >= thresholdWriting) ||
                 (x.TypeCode == TestCategory.TEST_ALL && x.Scores >= thresholdGeneral))).Count();
         }
-        public long FaildTestsCount(long userId)
+        public long FaildTestsCount(long userId, string typeCode = "")
         {
             float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
             float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
@@ -115,6 +134,7 @@ namespace TCU.English.Models.DataManager
             float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
             return instantce.PieceOfTests
                 .Where(x => x.UserId == userId &&
+                x.TypeCode == typeCode &&
                 !string.IsNullOrEmpty(x.ResultOfUserJson) &&
                 ((x.TypeCode == TestCategory.LISTENING && x.Scores < thresholdListening) ||
                 (x.TypeCode == TestCategory.READING && x.Scores < thresholdReading) ||

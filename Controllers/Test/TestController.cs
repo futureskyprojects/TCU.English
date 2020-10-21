@@ -47,7 +47,11 @@ namespace TCU.English.Controllers
         public IActionResult Index(string type = "ALL", int page = 1, string searchKey = "", int instructorId = -1)
         {
             // Truyền gửi tên bảng
-            ViewBag.TableName = type.ToUpper();
+            if (type.ToUpper() == TestCategory.TEST_ALL)
+                ViewBag.TableName = "GENERAL";
+            else
+                ViewBag.TableName = type.ToUpper();
+
             ViewBag.SearchKey = searchKey;
             // Lấy các đếm chuẩn
             ViewBag.UserTestCountOfAll = _PieceOfTestManager.UserTestCountOfType(User.Id(), "ALL", string.Empty, instructorId);
@@ -55,10 +59,10 @@ namespace TCU.English.Controllers
             ViewBag.UserTestCountOfReading = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.READING, string.Empty, instructorId);
             ViewBag.UserTestCountOfSpeaking = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.SPEAKING, string.Empty, instructorId);
             ViewBag.UserTestCountOfWriting = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.WRITING, string.Empty, instructorId);
-            ViewBag.UserTestCountOfCrash = _PieceOfTestManager.UserTestCountOfType(User.Id(), "CRASH", string.Empty, instructorId);
+            ViewBag.UserTestCountOfGeneral = _PieceOfTestManager.UserTestCountOfType(User.Id(), TestCategory.TEST_ALL, string.Empty, instructorId);
 
             // Tiến hành cấu hình phân trang
-            
+
             int start = (page - 1) * Config.PAGE_PAGINATION_LIMIT;
             // Lấy danh sách
             IEnumerable<PieceOfTest> PieceOfTests = _PieceOfTestManager.GetByPagination(User.Id(), type, start, Config.PAGE_PAGINATION_LIMIT, searchKey, instructorId);
@@ -82,6 +86,14 @@ namespace TCU.English.Controllers
             // Lấy GVHD nếu có
             if (instructorId > 0)
                 ViewBag.Instructor = _UserManager.Get(instructorId);
+
+            if (type == "ALL")
+                type = string.Empty;
+
+            // Thực hiện phần thống kê nho nhỏ
+            ViewBag.Passed = _PieceOfTestManager.PassedTestsCount(User.Id(), type);
+            ViewBag.Failed = _PieceOfTestManager.PassedTestsCount(User.Id(), type);
+            ViewBag.HighestScore = _PieceOfTestManager.HightestScore(User.Id(), type).ToScores();
 
             return View(PieceOfTests);
         }
