@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using TCU.English.Utils;
 
 namespace TCU.English.Models
 {
@@ -38,5 +39,10 @@ namespace TCU.English.Models
         [ForeignKey(nameof(InstructorId))]
         [JsonIgnore]
         public virtual User Instructor { get; set; }
+
+        public bool IsPassed()
+        {
+            return Scores >= ScoresUtils.GetThresholdPoint(TypeCode);
+        }
     }
 }

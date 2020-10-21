@@ -92,25 +92,35 @@ namespace TCU.English.Models.DataManager
         }
         public long PassedTestsCount(long userId)
         {
-            try
-            {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores >= ScoresUtils.GetThresholdPoint(x.TypeCode)).Count();
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
+            float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
+            float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
+            float thresholdSpeaking = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
+            float thresholdWriting = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
+            float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
+            return instantce.PieceOfTests
+                .Where(x => x.UserId == userId &&
+                !string.IsNullOrEmpty(x.ResultOfUserJson) &&
+                ((x.TypeCode == TestCategory.LISTENING && x.Scores >= thresholdListening) ||
+                (x.TypeCode == TestCategory.READING && x.Scores >= thresholdReading) ||
+                (x.TypeCode == TestCategory.SPEAKING && x.Scores >= thresholdSpeaking) ||
+                (x.TypeCode == TestCategory.WRITING && x.Scores >= thresholdWriting) ||
+                (x.TypeCode == TestCategory.TEST_ALL && x.Scores >= thresholdGeneral))).Count();
         }
         public long FaildTestsCount(long userId)
         {
-            try
-            {
-                return instantce.PieceOfTests.Where(x => x.UserId == userId && x.ResultOfUserJson != null && x.ResultOfUserJson.Length > 0 && x.Scores < ScoresUtils.GetThresholdPoint(x.TypeCode)).Count();
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
+            float thresholdListening = ScoresUtils.GetThresholdPoint(TestCategory.LISTENING);
+            float thresholdReading = ScoresUtils.GetThresholdPoint(TestCategory.READING);
+            float thresholdSpeaking = ScoresUtils.GetThresholdPoint(TestCategory.SPEAKING);
+            float thresholdWriting = ScoresUtils.GetThresholdPoint(TestCategory.WRITING);
+            float thresholdGeneral = ScoresUtils.GetThresholdPoint(TestCategory.TEST_ALL);
+            return instantce.PieceOfTests
+                .Where(x => x.UserId == userId &&
+                !string.IsNullOrEmpty(x.ResultOfUserJson) &&
+                ((x.TypeCode == TestCategory.LISTENING && x.Scores < thresholdListening) ||
+                (x.TypeCode == TestCategory.READING && x.Scores < thresholdReading) ||
+                (x.TypeCode == TestCategory.SPEAKING && x.Scores < thresholdSpeaking) ||
+                (x.TypeCode == TestCategory.WRITING && x.Scores < thresholdWriting) ||
+                (x.TypeCode == TestCategory.TEST_ALL && x.Scores < thresholdGeneral))).Count();
         }
 
         /// <summary>
@@ -218,6 +228,7 @@ namespace TCU.English.Models.DataManager
             }
             return query;
         }
+
         private IQueryable<PieceOfTest> QueryableOfTestsForInstructor(long instructorId, string typeCode)
         {
             IQueryable<PieceOfTest> query = null;

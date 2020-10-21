@@ -15,7 +15,7 @@ namespace TCU.English.Utils
 
         public static float GetThresholdPoint(string typeCode)
         {
-            return (GetMaxScores(typeCode) / (float)2);
+            return (GetMaxScores(typeCode) / 2);
         }
 
         public static float GetMaxScores(string typeCode)
