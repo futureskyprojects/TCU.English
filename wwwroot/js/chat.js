@@ -54,6 +54,9 @@ document.getElementById("sendButton").addEventListener("click", function (event)
 
     var message = $("#messageInput").val();
 
+    if (message.length <= 0)
+        return;
+
     $("#messageInput").val("");
 
     var message = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
