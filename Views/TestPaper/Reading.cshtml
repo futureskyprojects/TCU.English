@@ -324,7 +324,7 @@ else
     <div class="my-2">@Html.Raw(Model.ReadingPartFours.TestCategory.Description)</div>
     @if (Model.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
     {
-        <div class="p-3 border border-dark mb-4">
+        <div class="p-3 border border-dark mb-4" id="rp4">
             @Html.Raw(Model.ReadingPartFours.TestCategory.WYSIWYGContent)
         </div>
     }
