@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TCU.English.Models.PiceOfTest;
 using TCU.English.Models.Repository;
 
 namespace TCU.English.Models.DataManager
@@ -64,6 +66,33 @@ namespace TCU.English.Models.DataManager
             entity.UpdatedTime = DateTime.UtcNow;
             instantce.ReadingPartOnes.Update(entity);
             instantce.SaveChanges();
+        }
+
+        internal List<ReadingPartOne> TakeRandom()
+        {
+            Random rand = new Random();
+            int size = instantce.ReadingPartOnes.Count();
+
+            List<ReadingPartOne> readings = new List<ReadingPartOne>();
+            for (int i = 0; i < ReadingTestPaper.MAX_QUESTION_READING_PART_1; i++)
+            {
+                int toSkip = rand.Next(0, size);
+                var res = instantce.ReadingPartOnes
+                    .Include(x => x.TestCategory)
+                    .Skip(toSkip).Take(1)
+                    .FirstOrDefault();
+                if (res == null || readings.Any(x => x.Id == res.Id))
+                {
+                    i--;
+                }
+                else
+                {
+                    res.Hint = res.TestCategory?.WYSIWYGContent;
+                    res.ExplainLink = res.TestCategory?.Name;
+                    readings.Add(res);
+                }
+            }
+            return readings;
         }
     }
 }

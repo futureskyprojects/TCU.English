@@ -43,12 +43,6 @@
 
 @Html.HiddenFor(x => x.PiceOfTestId)
 @* PART 1 *@
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Id, new { @value = Model.ReadingPartOnes.TestCategory.Id })
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.TypeCode, new { @value = Model.ReadingPartOnes.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.PartId, new { @value = Model.ReadingPartOnes.TestCategory.PartId })
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Name, new { @value = Model.ReadingPartOnes.TestCategory.Name })
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.Description, new { @value = Model.ReadingPartOnes.TestCategory.Description })
-@Html.HiddenFor(x => x.ReadingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartOnes.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartOnes.TestCategory == null || Model.ReadingPartOnes.ReadingPart == null || Model.ReadingPartOnes.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 1</div>
@@ -61,11 +55,7 @@
 else
 {
     <div class="h6 font-weight-bold my-auto">
-        Part 1. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.TestCategory.Name</span>
-        @if (!string.IsNullOrEmpty(Model.ReadingPartOnes.TestCategory.WYSIWYGContent))
-        {
-            <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes.TestCategory.WYSIWYGContent"></i>
-        }
+        Part 1@*. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.TestCategory.Name</span>*@
     </div>
     <div class="my-2">@Html.Raw(Model.ReadingPartOnes.TestCategory.Description)</div>
     <div>
@@ -80,9 +70,16 @@ else
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].Id)
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].QuestionText)
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].TestCategory.WYSIWYGContent)
             @Html.HiddenFor(x => x.ReadingPartOnes.ReadingPart[i].UpdatedTime)
             string uuid = Guid.NewGuid().ToString();
-            <div class="pt-3">@(qIndex++). @Model.ReadingPartOnes.ReadingPart[i].QuestionText</div>
+            <div class="pt-3">
+                @(qIndex++). @Model.ReadingPartOnes.ReadingPart[i].QuestionText
+                @if (!string.IsNullOrEmpty(Model.ReadingPartOnes.ReadingPart[i].Hint))
+                {
+                    <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes?.ReadingPart[i].ExplainLink<hr/>@Model.ReadingPartOnes?.ReadingPart[i].Hint"></i>
+                }
+            </div>
             if (Model.ReadingPartOnes.ReadingPart[i].AnswerList == null || Model.ReadingPartOnes.ReadingPart[i].AnswerList.Count <= 0)
             {
                 <div class="alert alert-danger mt-2" role="alert">
@@ -122,12 +119,6 @@ else
 <div class="my-3"></div>
 
 @* PART 2 *@
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Id, new { @value = Model.ReadingPartTwos.TestCategory.Id })
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.TypeCode, new { @value = Model.ReadingPartTwos.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.PartId, new { @value = Model.ReadingPartTwos.TestCategory.PartId })
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Name, new { @value = Model.ReadingPartTwos.TestCategory.Name })
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.Description, new { @value = Model.ReadingPartTwos.TestCategory.Description })
-@Html.HiddenFor(x => x.ReadingPartTwos.TestCategory.WYSIWYGContent, new { @value = Model.ReadingPartTwos.TestCategory.WYSIWYGContent })
 @if (Model.ReadingPartTwos.TestCategory == null || Model.ReadingPartTwos.ReadingPart == null || Model.ReadingPartTwos.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 2</div>
@@ -139,8 +130,8 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingPartTwos.TestCategory.Name</span></div>
-    <div class="my-2">@Html.Raw(Model.ReadingPartTwos.TestCategory.Description)</div>
+    <div class="h6 font-weight-bold my-auto">Part 2@*. <span class="text-uppercase ml-3">@Model.ReadingPartTwos.TestCategory.Name</span>*@</div>
+    @*<div class="my-2">@Html.Raw(Model.ReadingPartTwos.TestCategory.Description)</div>*@
     <div>
         @for (int i = 0; i < Model.ReadingPartTwos.ReadingPart.Count(); i++)
         {
@@ -225,7 +216,7 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 3. <span class="text-uppercase ml-3">@Model.ReadingPartThrees.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 3@*. <span class="text-uppercase ml-3">@Model.ReadingPartThrees.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.ReadingPartThrees.TestCategory.Description)</div>
     @if (Model.ReadingPartThrees.TestCategory.WYSIWYGContent != null && Model.ReadingPartThrees.TestCategory.WYSIWYGContent.Length > 0)
     {
@@ -320,7 +311,7 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 4. <span class="text-uppercase ml-3">@Model.ReadingPartFours.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 4@*. <span class="text-uppercase ml-3">@Model.ReadingPartFours.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.ReadingPartFours.TestCategory.Description)</div>
     @if (Model.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
     {

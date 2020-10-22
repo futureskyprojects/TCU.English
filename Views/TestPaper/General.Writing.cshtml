@@ -51,7 +51,7 @@
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartOnes.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 1@*. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartOnes.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.WritingTestPaper.WritingPartOnes.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.WritingTestPaper.WritingPartOnes.WritingPart.Count(); i++)
@@ -136,7 +136,7 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 2@*. <span class="text-uppercase ml-3">@Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.WritingTestPaper.WritingPartTwos.WritingPart2.TestCategory.Description)</div>
     <div>
         @Html.HiddenFor(x => x.WritingTestPaper.WritingPartTwos.WritingPart2.WritingPartTwo.Questions)

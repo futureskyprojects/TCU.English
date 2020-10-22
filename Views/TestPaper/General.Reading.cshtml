@@ -24,12 +24,6 @@
 }
 
 @* PART 1 *@
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Id })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.PartId })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Description })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartOnes.TestCategory.WYSIWYGContent })
 @if (Model.ReadingTestPaper.ReadingPartOnes.TestCategory == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">
@@ -46,7 +40,7 @@
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 1. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 1@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count(); i++)
@@ -60,6 +54,7 @@ else
             @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].Id)
             @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].QuestionText)
             @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].TestCategoryId)
+            @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].TestCategory.WYSIWYGContent)
             @Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].UpdatedTime)
             string uuid = Guid.NewGuid().ToString();
             <div class="pt-3">@(qIndex++). @Model.ReadingTestPaper.ReadingPartOnes.ReadingPart[i].QuestionText</div>
@@ -124,7 +119,7 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 2. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 2@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count(); i++)
@@ -205,7 +200,7 @@ else
 else
 {
     <div class="h6 font-weight-bold my-auto">
-        Part 3. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name</span>  @if (isReviewMode)
+        Part 3@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartThrees.TestCategory.Name</span>*@  @if (isReviewMode)
         {
             <span class="text-danger text-sm font-weight-normal">(Scores: @Model.ReadingTestPaper.ReadingPartThrees.Scores.ToScores())</span>
         }
@@ -303,7 +298,7 @@ else
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 4. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartFours.TestCategory.Name</span></div>
+    <div class="h6 font-weight-bold my-auto">Part 4@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartFours.TestCategory.Name</span>*@</div>
     <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartFours.TestCategory.Description)</div>
     @if (Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
     {
