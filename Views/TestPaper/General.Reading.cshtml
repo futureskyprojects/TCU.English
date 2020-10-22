@@ -24,7 +24,7 @@
 }
 
 @* PART 1 *@
-@if (Model.ReadingTestPaper.ReadingPartOnes.TestCategory == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count <= 0)
+@if (Model.ReadingTestPaper.ReadingPartOnes.ReadingPart == null || Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">
         Part 1 @if (isReviewMode)
@@ -41,7 +41,6 @@
 else
 {
     <div class="h6 font-weight-bold my-auto">Part 1@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Name</span>*@</div>
-    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartOnes.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count(); i++)
         {
@@ -97,12 +96,6 @@ else
 <div class="my-3"></div>
 
 @* PART 2 *@
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Id, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Id })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.TypeCode, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.TypeCode })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.PartId, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.PartId })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Name, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.Description, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Description })
-@Html.HiddenFor(x => x.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent, new { @value = Model.ReadingTestPaper.ReadingPartTwos.TestCategory.WYSIWYGContent })
 @if (Model.ReadingTestPaper.ReadingPartTwos.TestCategory == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart == null || Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">
@@ -120,7 +113,6 @@ else
 else
 {
     <div class="h6 font-weight-bold my-auto">Part 2@*. <span class="text-uppercase ml-3">@Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Name</span>*@</div>
-    <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartTwos.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count(); i++)
         {
@@ -302,7 +294,7 @@ else
     <div class="my-2">@Html.Raw(Model.ReadingTestPaper.ReadingPartFours.TestCategory.Description)</div>
     @if (Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent != null && Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent.Length > 0)
     {
-        <div class="p-3 border border-dark mb-4">
+        <div class="p-3 border border-dark mb-4" id="rp4">
             @Html.Raw(Model.ReadingTestPaper.ReadingPartFours.TestCategory.WYSIWYGContent)
         </div>
     }
@@ -369,3 +361,18 @@ else
     </div>
 }
 @* END PART 4 *@
+
+<script>
+    var firstIndexForReadingPart4 = @Html.Raw(Model.ReadingTestPaper.ReadingPartOnes.ReadingPart.Count + Model.ReadingTestPaper.ReadingPartTwos.ReadingPart.Count + Model.ReadingTestPaper.ReadingPartThrees.ReadingPart.Count) + 1;
+
+    // Lấy giá trị của doạn văn
+    let p = $("#rp4").html();
+
+    // Đếm số phần tử cần thay thế
+    let count = (p.match(/\(<strong>{\$\$}<\/strong>\)/g) || []).length;
+
+    for (var i = 0; i < count; i++) {
+        p = p.replace("(<strong>{$$}<\/strong>)", `(<strong>${firstIndexForReadingPart4++}<\/strong>)`);
+    }
+    $("#rp4").html(p);
+</script>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TCU.English.Models;
 using TCU.English.Utils;
@@ -14,12 +15,29 @@ namespace TCU.English.Data
         public static void Initialize(SystemDatabaseContext context)
         {
             context.Database.EnsureCreated();
-            // Khởi tạo các quyền
-            InitializeRoles(context);
-            // Khởi tạo tài khoản quản trị viên cấp cao mặc định
-            InitializeAdministration(context);
-            // Cấp Full quyền cho tài khoản quản trị viên này
-            InitializeAdministrationRoles(context);
+            //// Khởi tạo các quyền
+            //InitializeRoles(context);
+            //// Khởi tạo tài khoản quản trị viên cấp cao mặc định
+            //InitializeAdministration(context);
+            //// Cấp Full quyền cho tài khoản quản trị viên này
+            //InitializeAdministrationRoles(context);
+            StandardData(context);
+        }
+
+        private static void StandardData(SystemDatabaseContext context)
+        {
+            // Lấy danh sách các bản ghi của Reading part 4
+            var rp4 = context.TestCategories.Where(x => x.TypeCode == TestCategory.READING && x.PartId == 4 && !string.IsNullOrEmpty(x.WYSIWYGContent)).ToList();
+
+            // Cập nhật các chỉ số có liên quan
+            for (int i = 0; i < rp4.Count; i++)
+            {
+                rp4[i].WYSIWYGContent = rp4[i].WYSIWYGContent.Replace(@"\(<strong>{$$}</strong>\)", "(<strong>{$$}</strong>)");
+                context.TestCategories.Update(rp4[i]);
+
+                Console.WriteLine($"progess: {i+1}/{rp4.Count}");
+            }
+            context.SaveChanges();
         }
 
         private static void InitializeAdministrationRoles(SystemDatabaseContext context)

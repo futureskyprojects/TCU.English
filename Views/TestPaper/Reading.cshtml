@@ -409,6 +409,19 @@ else
 
 @section Scripts {
     <script>
+        var firstIndexForReadingPart4 = @Html.Raw(Model.ReadingPartOnes.ReadingPart.Count + Model.ReadingPartTwos.ReadingPart.Count + Model.ReadingPartThrees.ReadingPart.Count) + 1;
+
+        // Lấy giá trị của doạn văn
+        let p = $("#rp4").html();
+
+        // Đếm số phần tử cần thay thế
+        let count = (p.match(/\(<strong>{\$\$}<\/strong>\)/g) || []).length;
+
+        for (var i = 0; i < count; i++) {
+            p = p.replace("(<strong>{$$}<\/strong>)", `(<strong>${firstIndexForReadingPart4++}<\/strong>)`);
+        }
+        $("#rp4").html(p);
+
         $(document).ready(function () {
             // Đoạn mã căn đều kích cỡ ảnh ở READING PART 2
             $('.reading-part-2-image').each(function () {
