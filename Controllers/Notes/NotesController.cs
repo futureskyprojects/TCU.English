@@ -50,7 +50,9 @@ namespace TCU.English.Controllers
         public IActionResult Create(UserNote note)
         {
             if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Note invalid" });
+                return Json(new { status = false, message = "Please input your note content" });
+
+            note.UserId = User.Id();
 
             _UserNoteManager.Add(note);
             return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
@@ -73,11 +75,12 @@ namespace TCU.English.Controllers
             _un.WYSIWYGContent = note.WYSIWYGContent;
 
             _UserNoteManager.Update(_un);
-            return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
+            return Json(new { status = true, message = "Successfully updated, the list will refresh again in 1 second." });
         }
 
         public IActionResult LoadNote(int id)
         {
+            ViewBag.IsShowImmediately = true;
             return Content(_UserNoteManager.Get(id)?.WYSIWYGContent ?? string.Empty);
         }
     }

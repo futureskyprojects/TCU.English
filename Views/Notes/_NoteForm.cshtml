@@ -3,11 +3,13 @@
 @{
     string uniqueId = $"WYSIWYGContent_{Guid.NewGuid().ToString()}";
 }
-
-@Html.HiddenFor(x => x.Id)
-@Html.HiddenFor(x => x.CreatedTime)
-@Html.HiddenFor(x => x.UpdatedTime)
-@Html.HiddenFor(x => x.Active)
+@if (Model != null && Model.Id > 0)
+{
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.CreatedTime)
+    @Html.HiddenFor(x => x.UpdatedTime)
+    @Html.HiddenFor(x => x.Active)
+}
 <div class="form-group">
     @Html.LabelFor(x => x.WYSIWYGContent)
     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WYSIWYGContent)</small>
@@ -19,13 +21,6 @@
         if (CKEDITOR.instances['@Html.Raw(uniqueId)']) {
             CKEDITOR.instances['@Html.Raw(uniqueId)'].destroy();
         }
-        CKEDITOR.replace('@Html.Raw(uniqueId)', {
-            toolbar:
-                [
-                    { name: 'basicstyles', items: ['Bold', 'Italic'] },
-                    { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
-                    { name: 'tools', items: ['Maximize', '-', 'About'] }
-                ]
-        });
+        CKEDITOR.replace('@Html.Raw(uniqueId)');
     });
 </script>

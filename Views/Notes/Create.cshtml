@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
 
-    $("#@(modalId)_loading").hide();
+     $("#@(modalId)_loading").hide();
 
     $("#@(modalId)_body").show();
 
@@ -55,36 +55,26 @@
 
 
     var onComplete = function () {
-        $("#@(modalId)_loading").hide();
-        $("#@(modalId)_body").show();
+        $("#loading").hide();
     };
     var onBegin  = function () {
-        $("#@(modalId)_loading").show();
-        $("#@(modalId)_body").hide();
+        $("#loading").show();
     };
     var onSuccess = function (data, status, xhr) {
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
-                toastr["success"](data.message);
-                $("#@(modalId)").hide();
+                notySuccess(data.message);
+                $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
-                toastr["error"](data.message);
+                notyError(data.message);
             }
             return;
         }
-        toastr["error"]("@errorMsg");
-        //console.log("data", data);
-        //console.log("status", status);
-        //console.log("xhr", xhr);
+        @Html.Raw(Notification.Error(modalId))
     }
     var onFailed = function (xhr, status, error) {
-        toastr["error"]("@errorMsg");
-        //console.log("xhr", xhr);
-        //console.log("status", status);
-
-        //// TODO: make me pretty
-        //alert(error);
+        @Html.Raw(Notification.Error(errorMsg))
     };
 </script>

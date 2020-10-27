@@ -49,6 +49,7 @@ namespace TCU.English.Models
 
         // Một người có thể tham dự nhiều cuộc thảo luận
         public virtual ICollection<DiscussionUser> DiscussionUsers { get; set; }
+        public virtual ICollection<UserNote> UserNotes { get; set; }
 
         [JsonIgnore]
         public static (int, string)[] Genders = new (int, string)[]
