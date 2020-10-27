@@ -8,12 +8,12 @@
 
 <div class="py-5">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="align-items-center row">
                         <h2 class="h6 text-uppercase">Your notes</h2>
-                        <button type="button" class="btn btn-primary d-block ml-auto">Add new</button>
+                        <button type="button" data-toggle="modal" data-target="#@nameof(UserNote)_Create" class="btn btn-primary d-block ml-auto">Add new</button>
                     </div>
                 </div>
                 <div class="card-body p-3">
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -57,6 +57,9 @@
     </div>
 </div>
 
+<div id="modal-create-note"></div>
+<div id="modal-update-note"></div>
+
 @section Scripts {
     <script>
         function loadNote(id) {
@@ -69,5 +72,9 @@
                     $("#loading").hide();
                 });
         }
+
+        window.onload = function () {
+            $("#modal-create-note").load("@Url.Action(nameof(NotesController.Create), NameUtils.ControllerName<NotesController>())");
+        };
     </script>
 }

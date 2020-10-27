@@ -1,11 +1,9 @@
-﻿@model TCU.English.Models.TestCategory
-@{
-    string modalId = nameof(TCU.English.Models.TestCategory) + "_Update";
-    string modalTitle = "Update category";
-    string controller = TCU.English.Utils.NameUtils.ControllerName<TCU.English.Controllers.TestCategoryController>();
-    string actionName = nameof(TCU.English.Controllers.TestCategoryController.UpdateAjax);
+﻿@{
+    string modalId = nameof(UserNote) + "_Update";
+    string modalTitle = "Update note";
+    string controller = NameUtils.ControllerName<NotesController>();
+    string actionName = nameof(NotesController.Update);
     string errorMsg = "An error occurred during operation, please try again.";
-    string formName = ViewBag.FromName ?? "_BaseTestCategoryForm";
 
     bool isShowImmediately = ViewBag.IsShowImmediately ?? false;
 }
@@ -29,10 +27,7 @@
                 @*//========= MODAL BODY =============//*@
                 <div class="modal-body">
                     <div id="@(modalId)_body">
-                        <partial name="@formName" />
-                    </div>
-                    <div id="@(modalId)_loading">
-                        <partial name="__Loading" />
+                        <partial name="_NoteForm" />
                     </div>
                 </div>
                 @*//========= END MODAL BODY =============//*@

@@ -40,6 +40,13 @@ namespace TCU.English.Controllers
             return View(userNotes);
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
         public IActionResult Create(UserNote note)
         {
             if (!ModelState.IsValid)
@@ -49,6 +56,13 @@ namespace TCU.English.Controllers
             return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
         }
 
+        [HttpGet]
+        public IActionResult Update()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
         public IActionResult Update(UserNote note)
         {
             if (!ModelState.IsValid)
