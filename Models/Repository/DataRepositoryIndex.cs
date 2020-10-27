@@ -25,6 +25,7 @@ namespace TCU.English.Models.Repository
             services.AddScoped<IDataRepository<DiscussionUserMessage>, DiscussionUserMessageManager>();
             services.AddScoped<IDataRepository<Topic>, TopicManager>();
             services.AddScoped<IDataRepository<Vocabulary>, VocabularyManager>();
+            services.AddScoped<IDataRepository<UserNote>, UserNoteManager>();
         }
     }
 }

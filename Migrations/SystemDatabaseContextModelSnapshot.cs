@@ -475,6 +475,34 @@ namespace TCU.English.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("TCU.English.Models.UserNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("UpdatedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WYSIWYGContent")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserNotes");
+                });
+
             modelBuilder.Entity("TCU.English.Models.UserType", b =>
                 {
                     b.Property<int>("Id")
@@ -778,6 +806,15 @@ namespace TCU.English.Migrations
                     b.HasOne("TCU.English.Models.User", "User")
                         .WithMany("TestCategories")
                         .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TCU.English.Models.UserNote", b =>
+                {
+                    b.HasOne("TCU.English.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
