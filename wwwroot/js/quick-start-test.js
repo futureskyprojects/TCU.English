@@ -20,5 +20,10 @@ if (getCookieValue("quick-test") == undefined || getCookieValue("quick-test") ==
     // Thực hiện bài test
     $("#quick-test").modal("show");
 } else {
-    alert("Đã có");
+    var current = Math.floor(Date.now() / 1000);
+    var old = parseInt(getCookieValue("quick-test").replace("=", ""));
+
+    if (current - old > 24 * 60 * 60 - 1) {
+        $("#quick-test").modal("show");
+    }
 }

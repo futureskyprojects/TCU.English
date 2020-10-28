@@ -22,26 +22,27 @@
                             if (correctAns == null)
                                 continue;
 
-                            <input type="hidden" id="correct-ans-@(i + 1)" value="@correctAns.Id" />
-
-                            <p>@(i + 1). @correctAns.Word</p>
-                            <div class="pt-1 row">
-                                @{
-                                    var temp = Model.ElementAt(i).vocabularies.Shuffle();
-
-                                    @Html.Raw(JsonConvert.SerializeObject(temp));
-
-                                    for (int j = 0; j < temp.Count; j++)
-                                    {
-                                        string answerAlphapet = ((char)((int)'A' + j)).ToString();
-                                        <div class="col-md-3">
-                                            <div id="@($"answer_group_{i + 1}")">
-                                                <span class="" id="ans-@i-@j">@answerAlphapet.</span> @temp[j].Meaning
-                                                <input id="inp-@i-@j" type="hidden" asp-for="@temp[j].Meaning" value="false" />
-                                            </div>
-                                        </div>
-                                    }
-                                }
+                            <div class="card mb-3 no-anchor-style">
+                                <div class="card-body py-2">
+                                    <p class="mb-1 mt-2 font-weight-bold">@(i + 1). @correctAns.Word</p>
+                                    <hr class="my-1" />
+                                    <div class="pt-1 row">
+                                        @{
+                                            var temp = Model.ElementAt(i).vocabularies.Shuffle();
+                                            <input type="hidden" id="correct-ans-@(i + 1)" value="@correctAns.Id" />
+                                            @for (int j = 0; j < temp.Count; j++)
+                                            {
+                                                string answerAlphapet = ((char)((int)'A' + j)).ToString();
+                                                <div class="col-md-6 mb-1">
+                                                    <div id="@($"answer_group_{i + 1}")">
+                                                        <span class="" id="@Html.Raw(temp[j].Id==correctAns.Id?$"ans-{i+1}-{correctAns.Id}":"")">@answerAlphapet.</span> @temp[j].Meaning
+                                                        <input id="inp-@i-@j" type="hidden" asp-for="@temp[j].Meaning" value="false" />
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         }
                     }
@@ -50,8 +51,8 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
-                <button type="button" class="btn btn-info" data-dismiss="modal">Result</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="skip-btn">Skip</button>
+                <button type="button" class="btn btn-info" id="result-btn">Result</button>
             </div>
 
         </div>
@@ -59,10 +60,13 @@
 </div>
 
 <script>
+    var isResultPressed = false;
     // Mã chọn đáp án
     $(document).ready(function () {
         // Đoạn mã khoanh phương án đúng
         $('div[id^="answer_group_"]').click(function () {
+            if (isResultPressed)
+                return;
             let ans_group_name = $(this).attr('id');
             // Tạm xóa bỏ hết
             $(`#${ans_group_name} span`).removeClass("border border-dark rounded-circle px-2");
@@ -71,5 +75,25 @@
             $(this).children('span').addClass("border border-dark rounded-circle px-2");
             $(this).children('input').val(true);
         });
+    });
+
+    $("#result-btn").click(function () {
+        isResultPressed = true;
+        $('div[id^="answer_group_"]').each(function () {
+            let ans_group_name = $(this).attr('id');
+            let index = parseInt(ans_group_name.replace("answer_group_", ""));
+            let correctId = $(`#correct-ans-${index}`).val();
+
+            $(`#ans-${index}-${correctId}`).removeClass();
+            $(`#ans-${index}-${correctId}`).addClass("border border-success rounded-circle px-2");
+
+            $("#skip-btn").html("Close");
+            $("#result-btn").hide();
+        });
+    });
+
+    $("#skip-btn").click(function () {
+        var x = Math.floor(Date.now() / 1000);
+        updateCookie("quick-test", x);
     });
 </script>
