@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace TCU.English.Models
         public string TypeOfWord { get; set; }
         public string Use { get; set; }
 
+        [JsonIgnore]
         // Dẫn khóa đến topic
         [ForeignKey(nameof(TopicId))]
         public virtual Topic Topic { get; set; }

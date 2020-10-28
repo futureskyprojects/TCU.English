@@ -40,7 +40,7 @@ namespace TCU.English.Models.DataManager
             {
                 VocabularyQuickTest vocabularyQuickTest = new VocabularyQuickTest
                 {
-                    vocabularies = instance.Vocabularies.OrderBy(x => Guid.NewGuid()).Take(4).ToList()
+                    vocabularies = instance.Vocabularies.Where(x => !string.IsNullOrEmpty(x.Meaning)).OrderBy(x => Guid.NewGuid()).Take(4).ToList()
                 };
 
                 int id = vocabularyQuickTest.vocabularies?.FirstOrDefault()?.Id ?? -1;
