@@ -59,9 +59,10 @@ namespace TCU.English.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return PartialView();
+            ViewBag.IsShowImmediately = true;
+            return PartialView(_UserNoteManager.Get(id));
         }
 
         [HttpPost]
@@ -80,7 +81,6 @@ namespace TCU.English.Controllers
 
         public IActionResult LoadNote(int id)
         {
-            ViewBag.IsShowImmediately = true;
             return Content(_UserNoteManager.Get(id)?.WYSIWYGContent ?? string.Empty);
         }
     }

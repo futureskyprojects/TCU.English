@@ -27,8 +27,8 @@
                                         <div class="col-10">
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span id="note-@Model.ElementAt(i).Id">@Html.Raw($"Note #{Model.ElementAt(i).Id} {Model.ElementAt(i).CreatedTime?.ToLocalTime().ToString("HH:mm dd/MM/yyyy")}")</span></p>
                                         </div>
-                                        <div class="col-2" onclick="editNote(@Model.ElementAt(i).Id)">
-                                            <button type="button" class="btn btn-warning btn-sm px-2"><i class="fa fa-pencil-alt"></i></button>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-warning btn-sm px-2" onclick="editNote(@Model.ElementAt(i).Id); event.preventDefault();"><i class="fa fa-pencil-alt"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -77,11 +77,7 @@
 
         function editNote(id) {
             $("#loading").show();
-            $("#modal-update-note").load('@Url.Action(nameof(NotesController.Update), NameUtils.ControllerName<NotesController>())/'+id,
-                function (data) {
-                    $("#modal-update-note").html(data);
-                    $("#loading").hide();
-                });
+            $("#modal-update-note").load('@Url.Action(nameof(NotesController.Update), NameUtils.ControllerName<NotesController>())/'+id);
         }
 
         window.onload = function () {

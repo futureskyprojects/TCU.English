@@ -16,11 +16,11 @@ namespace TCU.English
         public static bool IsCheckFullTestPaper = true;
 
         public static string ProjectName = "TCU English";
-        public static string CompanyName = "Vistark Inc.";
+        public static string CompanyName = "Telecommunications University";
         public static string FromYear = "2020";
         public static string ToYear = DateTime.Now.Year.ToString();
-        public static string ProjectAuthor = "services@vistark@gmail.com";
-        public static string ProjectPortfolioAddress = "https://fb.com/tx.trongnghia98";
+        public static string ProjectAuthor = "TCU";
+        public static string ProjectPortfolioAddress = "http://www.tcu.edu.vn/";
 
         /// <summary>
         /// Thời gian sống của cookie và phiên đăng nhập
