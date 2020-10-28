@@ -70,7 +70,6 @@
     </div>
 
     <div>
-
         @* Dành cho giáo viên hướng dẫn *@
         <div class="float-br">
             <div class="d-inline-block mr-2">
@@ -84,6 +83,8 @@
         </div>
         @* End dành cho GVHD *@
     </div>
+
+    @await Component.InvokeAsync(nameof(TCU.English.Components.QuickTest))
 
     <!-- Javascript for make menu item active -->
     <script>
@@ -123,6 +124,7 @@
     </script>
 
     <script src="~/js/custom.js"></script>
+    <script src="~/js/quick-start-test.js"></script>
 
     <partial name="_ValidationScriptsPartial" />
     @RenderSection("Scripts", required: false)

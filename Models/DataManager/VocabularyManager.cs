@@ -32,6 +32,28 @@ namespace TCU.English.Models.DataManager
             return instance.Vocabularies.Count();
         }
 
+        public IEnumerable<VocabularyQuickTest> GenerateQuickTestQuenstion(int size = 5)
+        {
+            List<VocabularyQuickTest> vocabularyQuickTests = new List<VocabularyQuickTest>();
+
+            for (int i = 0; i < size; i++)
+            {
+                VocabularyQuickTest vocabularyQuickTest = new VocabularyQuickTest
+                {
+                    vocabularies = instance.Vocabularies.OrderBy(x => Guid.NewGuid()).Take(4).ToList()
+                };
+
+                int id = vocabularyQuickTest.vocabularies?.FirstOrDefault()?.Id ?? -1;
+
+                if (id <= 0 || !vocabularyQuickTests.Any(x => x.Id == id))
+                    vocabularyQuickTests.Add(vocabularyQuickTest);
+                else
+                    i--;
+            }
+
+            return vocabularyQuickTests;
+        }
+
         public long CountFor(long topicId)
         {
             if (topicId <= 0)
