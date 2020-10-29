@@ -30,6 +30,8 @@ namespace TCU.English.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                TempData["ShowQuickTest"] = true;
+
                 this.NotifySuccess("Welcome back");
 
                 if (User.IsInRole(UserType.ROLE_INSTRUCTOR_USER))
@@ -57,6 +59,7 @@ namespace TCU.English.Controllers
         // https://viblo.asia/p/su-dung-cookie-authentication-trong-aspnet-core-djeZ1VG8lWz
         public async Task<IActionResult> LogIn(UserLogin userLogin)
         {
+            TempData["ShowQuickTest"] = true;
             if (ModelState.IsValid)
             {
                 User user = _UserManager.Get(userLogin.Identity);

@@ -7,7 +7,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Quick test</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
             </div>
 
             <!-- Modal body -->
@@ -35,7 +35,7 @@
                                                 string answerAlphapet = ((char)((int)'A' + j)).ToString();
                                                 <div class="col-md-6 mb-1">
                                                     <div id="@($"answer_group_{i + 1}")">
-                                                        <span class="" id="@Html.Raw(temp[j].Id==correctAns.Id?$"ans-{i+1}-{correctAns.Id}":"")">@answerAlphapet.</span> @temp[j].Meaning
+                                                        <span class="" id="@Html.Raw(temp[j].Id==correctAns.Id?$"ans-{i+1}-{correctAns.Id}":"ans-"+Guid.NewGuid().ToString())">@answerAlphapet.</span> @temp[j].Meaning
                                                         <input id="inp-@i-@j" type="hidden" asp-for="@temp[j].Meaning" value="false" />
                                                     </div>
                                                 </div>
@@ -78,6 +78,12 @@
     });
 
     $("#result-btn").click(function () {
+        $('span[id^="ans-"]').each(function () {
+            if ($(this).hasClass("border-dark")) {
+                $(this).removeClass("border-dark");
+                $(this).addClass("border-danger");
+            }
+        });
         isResultPressed = true;
         $('div[id^="answer_group_"]').each(function () {
             let ans_group_name = $(this).attr('id');

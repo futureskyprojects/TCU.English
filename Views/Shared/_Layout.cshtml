@@ -131,5 +131,14 @@
     <script>
         $("#loading").hide();
     </script>
+
+    @if (TempData["ShowQuickTest"] != null && ((bool)TempData["ShowQuickTest"]) == true)
+    {
+        TempData["ShowQuickTest"] = false;
+        <script>
+            updateCookie("quick-test", 0);
+            $("#quick-test").modal("show");
+        </script>
+    }
 </body>
 </html>
