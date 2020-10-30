@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using TCU.English.Models;
@@ -82,6 +83,19 @@ namespace TCU.English.Controllers
         public IActionResult LoadNote(int id)
         {
             return Content(_UserNoteManager.Get(id)?.WYSIWYGContent ?? string.Empty);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var note = _UserNoteManager.Get(id);
+            if (note.UserId != User.Id())
+            {
+                return Json(new { success = false, responseText = "This is not your Note." });
+            }
+
+            _UserNoteManager.Delete(note);
+            return Json(new { success = true, category = JsonConvert.SerializeObject(note), responseText = "Deleted" });
         }
     }
 }

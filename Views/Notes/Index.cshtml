@@ -21,14 +21,15 @@
                     {
                         for (int i = 0; i < Model.Count(); i++)
                         {
-                            <div class="card mb-2 bg-hover-gradient-blue no-anchor-style cursor" onclick="loadNote(@Model.ElementAt(i).Id)">
+                            <div id="note-content-@Model.ElementAt(i).Id" class="card mb-2 bg-hover-gradient-blue no-anchor-style cursor" onclick="loadNote(@Model.ElementAt(i).Id)">
                                 <div class="card-body p-3">
                                     <div class="row align-items-center flex-row">
-                                        <div class="col-10">
+                                        <div class="col-9">
                                             <p class="mb-0 d-flex align-items-center font-weight-bold"><span id="note-@Model.ElementAt(i).Id">@Html.Raw($"Note #{Model.ElementAt(i).Id} {Model.ElementAt(i).CreatedTime?.ToLocalTime().ToString("HH:mm dd/MM/yyyy")}")</span></p>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-3">
                                             <button type="button" class="btn btn-warning btn-sm px-2" onclick="editNote(@Model.ElementAt(i).Id); event.preventDefault();"><i class="fa fa-pencil-alt"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm px-2 ml-1" onclick="deleteNote(@Model.ElementAt(i).Id); event.preventDefault();"><i class="fa fa-trash-alt"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -83,5 +84,49 @@
         window.onload = function () {
             $("#modal-create-note").load("@Url.Action(nameof(NotesController.Create), NameUtils.ControllerName<NotesController>())");
         };
+
+        function deleteNote(id) {
+        swal({
+            title: "Are you sure?",
+            text: `Once deleted, this action cannot be undone.`,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $("#loading").show();
+                    fetch(`@Url.Action(nameof(NotesController.Delete), NameUtils.ControllerName<NotesController>())/${id}`, {
+                        method: 'DELETE'
+                    }).then(function (response) {
+                        response.json().then(function (data) {
+                            $("#loading").hide();
+                            if (data.success) {
+                                $(`#note-content-${id}`).hide();
+                                swal(`OK! Listening test has been deleted.`, {
+                                    icon: "success",
+                                });
+                                //$("#loading").show();
+                                //setTimeout(function () { location.reload(); }, 100);
+                            } else {
+                                swal(`${data.responseText}`, {
+                                    icon: "error",
+                                });
+                            }
+                        }).catch(function (error) {
+                            $("#loading").hide();
+                            swal(`Sorry! Listening test has not been deleted.`, {
+                                icon: "error",
+                            });
+                        });
+                    }).catch(function (error) {
+                        $("#loading").hide();
+                        swal(`Sorry! Listening test has not been deleted.`, {
+                            icon: "error",
+                        });
+                    })
+                }
+            });
+        }
     </script>
 }
