@@ -73,21 +73,21 @@
         if (data != undefined && data != null && data.status != undefined && data.status != null && data.message != undefined && data.message != null) {
 
             if (data.status) {
-                toastr["success"](data.message);
+                notySuccess(data.message);
                 $("#@modalId").hide();
                 setTimeout(function () { location.reload(); }, 1000);
             } else {
-                toastr["error"](data.message);
+                notyError(data.message);
             }
             return;
         }
-        toastr["error"]("@errorMsg");
+        @Html.Raw(Notification.Error(errorMsg))
         //console.log("data", data);
         //console.log("status", status);
         //console.log("xhr", xhr);
     }
     var onFailed = function (xhr, status, error) {
-        toastr["error"]("@errorMsg");
+        @Html.Raw(Notification.Error(errorMsg))
         //console.log("xhr", xhr);
         //console.log("status", status);
 

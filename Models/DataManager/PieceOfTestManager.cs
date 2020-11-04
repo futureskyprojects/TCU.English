@@ -46,6 +46,7 @@ namespace TCU.English.Models.DataManager
                          piceOfTest => piceOfTest.UserId,
                          (u, pot) => new { u, pot })
                          .Where(full => full.pot.InstructorId == instructorId)
+                         .DistinctBy(x => x.u.Id)
                          .Count();
             }
             catch (Exception)
@@ -70,6 +71,7 @@ namespace TCU.English.Models.DataManager
                          piceOfTest => piceOfTest.InstructorId,
                          (u, pot) => new { u, pot })
                          .Where(full => full.pot.UserId == studentId)
+                         .DistinctBy(x => x.u.Id)
                          .Count();
             }
             catch (Exception)
@@ -380,7 +382,9 @@ namespace TCU.English.Models.DataManager
             try
             {
                 var x = QueryableOfUserTest(userId, typeCode)
-                    .Where(x => x.ResultOfTestJson.Contains(searchKey) && (instructorId <= 0 || x.InstructorId == instructorId))
+                    .Where(x => x.ResultOfTestJson.Contains(searchKey) &&
+                    (instructorId <= 0 || x.InstructorId == instructorId) &&
+                    !string.IsNullOrEmpty(x.ResultOfUserJson))
                     .Count();
                 return x;
             }

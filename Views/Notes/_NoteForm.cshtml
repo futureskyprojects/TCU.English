@@ -11,6 +11,11 @@
     @Html.HiddenFor(x => x.Active)
 }
 <div class="form-group">
+    @Html.LabelFor(x => x.Note)
+    @Html.TextBoxFor(x => x.Note, new { @placeholder = "Note name", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Note)</small>
+</div>
+<div class="form-group">
     @Html.LabelFor(x => x.WYSIWYGContent)
     <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.WYSIWYGContent)</small>
     @Html.TextAreaFor(x => x.WYSIWYGContent, new { id = uniqueId })

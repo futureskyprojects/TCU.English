@@ -487,6 +487,10 @@ namespace TCU.English.Migrations
                     b.Property<DateTime?>("CreatedTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime?>("UpdatedTime")
                         .HasColumnType("datetime(6)");
 
@@ -494,6 +498,7 @@ namespace TCU.English.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("WYSIWYGContent")
+                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
@@ -813,7 +818,7 @@ namespace TCU.English.Migrations
             modelBuilder.Entity("TCU.English.Models.UserNote", b =>
                 {
                     b.HasOne("TCU.English.Models.User", "User")
-                        .WithMany()
+                        .WithMany("UserNotes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

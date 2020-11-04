@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 
 namespace TCU.English.Models.DataManager
 {
@@ -129,6 +130,7 @@ namespace TCU.English.Models.DataManager
                 du => du.DiscussionId,
                 (d, du) => new { d, du })
                 .Where(x => x.d.CreatorId == userId || x.du.UserId == userId)
+                .DistinctBy(x => x.du.Id) // Lọc lặp
                 .Select(x => x.d)
                 .Distinct()
                 .OrderByDescending(x => x.Id)

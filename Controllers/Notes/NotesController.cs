@@ -48,14 +48,14 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(UserNote note)
+        public IActionResult Create(UserNote _note)
         {
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "Please input your note content" });
 
-            note.UserId = User.Id();
+            _note.UserId = User.Id();
 
-            _UserNoteManager.Add(note);
+            _UserNoteManager.Add(_note);
             return Json(new { status = true, message = "Successfully created, the list will refresh again in 1 second." });
         }
 
@@ -67,14 +67,14 @@ namespace TCU.English.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UserNote note)
+        public IActionResult Update(UserNote _note)
         {
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "Note invalid" });
 
-            UserNote _un = _UserNoteManager.Get(note.Id);
+            UserNote _un = _UserNoteManager.Get(_note.Id);
 
-            _un.WYSIWYGContent = note.WYSIWYGContent;
+            _un.WYSIWYGContent = _note.WYSIWYGContent;
 
             _UserNoteManager.Update(_un);
             return Json(new { status = true, message = "Successfully updated, the list will refresh again in 1 second." });

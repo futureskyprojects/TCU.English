@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using TCU.English.Models.Repository;
+using TCU.English.Utils;
 using TCU.English.Utils.PasswordUtils;
 
 namespace TCU.English.Models.DataManager
@@ -181,6 +182,7 @@ namespace TCU.English.Models.DataManager
                                 full.u.FirstName.Contains(instructorName) ||
                                 full.u.LastName.Contains(instructorName)))
                          .Select(full => full.u)
+                         .DistinctBy(x => x.Id)
                          .OrderByDescending(x => x.Id)
                          .Skip(start)
                          .Take(limit)
@@ -211,6 +213,7 @@ namespace TCU.English.Models.DataManager
                                 full.u.FirstName.Contains(studentName) ||
                                 full.u.LastName.Contains(studentName)))
                          .Select(full => full.u)
+                         .DistinctBy(x => x.Id)
                          .OrderByDescending(x => x.Id)
                          .Skip(start)
                          .Take(limit)
