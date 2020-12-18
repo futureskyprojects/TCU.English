@@ -62,7 +62,7 @@
 }
 else
 {
-    <div class="h6 font-weight-bold my-auto">Part 1@*. <span class="text-uppercase ml-3">@Model.SpeakingPart.Speaking.TestCategory.Name</span>*@ <i class="far fa-question-circle text-blue" data-toggle="modal" data-target="#transcript_modal" onclick="LoadTranscript()"></i></div>
+    <div class="h6 font-weight-bold my-auto">Part 1@*. <span class="text-uppercase ml-3">@Model.SpeakingPart.Speaking.TestCategory.Name</span>*@ <i class="far fa-question-circle text-blue" id="speaking-transcript"></i></div>
     <div class="my-2">@Html.Raw(Model.SpeakingPart.Speaking.TestCategory.Description)</div>
     @* Khu vực dành cho phát *@
     <div class="p-2 text-center align-self-center my-2">
@@ -139,11 +139,17 @@ else
 }
 
 <script>
-    function LoadTranscript() {
+    $('#speaking-transcript').click(function () {
+        $('#transcript_modal').modal('show');
         $('#transcript-content-loading').hide();
-        $('#transcript-content').html("@Html.Raw(Model.SpeakingPart.Speaking.TestCategory.WYSIWYGContent.Trim().Replace("\"","\\\""))");
-        $('#transcript-content').append(transcript);
-    }
+        $('#transcript-content').html('@Html.Raw(Model.SpeakingPart.Speaking.TestCategory.WYSIWYGContent
+                                      .Trim()
+                                      .Replace("\"","\\\"")
+                                      .Replace("\r", "")
+                                      .Replace("\n", ""))');
+        //$('#transcript-content').append(transcript);
+    });
+
 </script>
 
 @if (!isReviewMode)

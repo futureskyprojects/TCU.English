@@ -115,7 +115,11 @@
 
         function ShowTranscript() {
             $('#transcript-content-loading').hide();
-            $('#transcript-content').html("@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.WYSIWYGContent.Trim().Replace("\"","\\\""))");
+            $('#transcript-content').html("@Html.Raw(Model.SpeakingTestPaper.SpeakingPart.Speaking.TestCategory.WYSIWYGContent
+                                          .Trim()
+                                      .Replace("\"", "\\\"")
+                                      .Replace("\r", "")
+                                      .Replace("\n", ""))");
         }
     </script>
 }
