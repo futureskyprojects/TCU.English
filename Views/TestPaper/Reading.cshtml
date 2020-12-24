@@ -77,7 +77,8 @@ else
                 @(qIndex++). @Model.ReadingPartOnes.ReadingPart[i].QuestionText
                 @if (!string.IsNullOrEmpty(Model.ReadingPartOnes.ReadingPart[i].Hint))
                 {
-                    <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes?.ReadingPart[i].ExplainLink<hr/>@Model.ReadingPartOnes?.ReadingPart[i].Hint"></i>
+                    <i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes?.ReadingPart[i].ExplainLink"></i>
+                    @*<i class="fas fa-info-circle text-blue" data-toggle="tooltip" data-html="true" title="@Model.ReadingPartOnes?.ReadingPart[i].ExplainLink<hr/>@Model.ReadingPartOnes?.ReadingPart[i].Hint"></i>*@
                 }
             </div>
             if (Model.ReadingPartOnes.ReadingPart[i].AnswerList == null || Model.ReadingPartOnes.ReadingPart[i].AnswerList.Count <= 0)
