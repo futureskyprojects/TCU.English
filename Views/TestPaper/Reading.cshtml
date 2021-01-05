@@ -43,7 +43,7 @@
 
 @Html.HiddenFor(x => x.PiceOfTestId)
 @* PART 1 *@
-@if (Model.ReadingPartOnes.TestCategory == null || Model.ReadingPartOnes.ReadingPart == null || Model.ReadingPartOnes.ReadingPart.Count <= 0)
+@if (Model.ReadingPartOnes.ReadingPart == null || Model.ReadingPartOnes.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 1</div>
     <div class="alert alert-danger mt-2" role="alert">
@@ -57,7 +57,6 @@ else
     <div class="h6 font-weight-bold my-auto">
         Part 1@*. <span class="text-uppercase ml-3">@Model.ReadingPartOnes.TestCategory.Name</span>*@
     </div>
-    <div class="my-2">@Html.Raw(Model.ReadingPartOnes.TestCategory.Description)</div>
     <div>
         @for (int i = 0; i < Model.ReadingPartOnes.ReadingPart.Count(); i++)
         {
@@ -120,7 +119,8 @@ else
 <div class="my-3"></div>
 
 @* PART 2 *@
-@if (Model.ReadingPartTwos.TestCategory == null || Model.ReadingPartTwos.ReadingPart == null || Model.ReadingPartTwos.ReadingPart.Count <= 0)
+
+@if (Model.ReadingPartTwos.ReadingPart.Count <= 0)
 {
     <div class="h6 font-weight-bold my-auto">Part 2</div>
     <div class="alert alert-danger mt-2" role="alert">

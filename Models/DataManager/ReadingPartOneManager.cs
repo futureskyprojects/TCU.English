@@ -74,24 +74,28 @@ namespace TCU.English.Models.DataManager
             int size = instantce.ReadingPartOnes.Count();
 
             List<ReadingPartOne> readings = new List<ReadingPartOne>();
-            for (int i = 0; i < ReadingTestPaper.MAX_QUESTION_READING_PART_1; i++)
+
+            // Lấy từng câu hỏi trong bộ câu hỏi cho đủ 10 câu
+            while (true)
             {
+                // Nếu đã đủ 10 câu trong bộ rồi thì thoát ra
+                if (readings.Count >= ReadingTestPaper.MAX_QUESTION_READING_PART_1)
+                    break;
+
+                // Tiến hành trộn và bốc ngẫu nhiên
                 int toSkip = rand.Next(0, size);
                 var res = instantce.ReadingPartOnes
                     .Include(x => x.TestCategory)
                     .Skip(toSkip).Take(1)
                     .FirstOrDefault();
-                if (res == null || readings.Any(x => x.Id == res.Id))
-                {
-                    i--;
-                }
-                else
+                if (res != null && !readings.Any(x => x.Id == res.Id))
                 {
                     res.Hint = res.TestCategory?.WYSIWYGContent;
                     res.ExplainLink = res.TestCategory?.Name;
                     readings.Add(res);
                 }
             }
+
             return readings;
         }
     }

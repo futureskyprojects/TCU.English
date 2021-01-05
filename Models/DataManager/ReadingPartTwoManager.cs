@@ -133,19 +133,21 @@ namespace TCU.English.Models.DataManager
             int size = query.Count();
 
             List<ReadingPartTwo> readings = new List<ReadingPartTwo>();
-            for (int i = 0; i < questionSize; i++)
+
+            while (true)
             {
+                if (readings.Count >= questionSize)
+                    break;
+
                 int toSkip = rand.Next(0, size);
                 var res = query.Skip(toSkip).Take(1).FirstOrDefault();
-                if (res == null || readings.Any(x => x.Id == res.Id))
-                {
-                    i--;
-                }
-                else
+
+                if (res != null && !readings.Any(x => x.Id == res.Id))
                 {
                     readings.Add(res);
                 }
             }
+
             return readings;
         }
     }
