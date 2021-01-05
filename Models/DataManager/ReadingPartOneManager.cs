@@ -90,8 +90,8 @@ namespace TCU.English.Models.DataManager
                     .FirstOrDefault();
                 if (res != null && !readings.Any(x => x.Id == res.Id))
                 {
-                    res.Hint = res.TestCategory?.WYSIWYGContent;
-                    res.ExplainLink = res.TestCategory?.Name;
+                    //res.Hint = res.TestCategory?.Name;
+                    //res.ExplainLink = res.TestCategory?.Name;
                     readings.Add(res);
                 }
             }

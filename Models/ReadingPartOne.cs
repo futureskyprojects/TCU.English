@@ -12,6 +12,7 @@ namespace TCU.English.Models
         [DisplayName("Question Text")]
         [Required]
         public string QuestionText { get; set; }
+        [DisplayName("Explain")]
         public string Hint { get; set; }
         [Required]
         public string Answers { get; set; }

@@ -26,12 +26,12 @@
     @Html.TextBoxFor(x => x.QuestionText, new { @placeholder = "Question text", @class = "form-control" })
     @*<small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.QuestionText)</small>*@
 </div>
-@*<div class="form-group">
-        @Html.LabelFor(x => x.Hint)
-        @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Hint for answer", @class = "form-control" })
-        <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
-    </div>
-    <div class="form-group">
+<div class="form-group">
+    @Html.LabelFor(x => x.Hint)
+    @Html.TextBoxFor(x => x.Hint, new { @placeholder = "Explain for answer", @class = "form-control" })
+    <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.Hint)</small>
+</div>
+@*    <div class="form-group">
         @Html.LabelFor(x => x.ExplainLink)
         @Html.TextBoxFor(x => x.ExplainLink, new { @placeholder = "Explain for answer", @class = "form-control" })
         <small class="form-text text-danger mr-3">@Html.ValidationMessageFor(x => x.ExplainLink)</small>

@@ -20,12 +20,15 @@ namespace TCU.English.Controllers
             string categorySearchKey = "",
             string questionSearchKey = "")
         {
-            
+
             int questionStart = (questionPage - 1) * Config.PAGE_PAGINATION_LIMIT;
 
             ViewBag.TestCategories = CategoryRender(nameof(Part1), TestCategory.READING, 1, categoryPage, categorySearchKey);
 
             ViewBag.Questions = QuestionRender(nameof(Part1), TestCategory.READING, 1, questionPage, category.ToInt(), questionSearchKey);
+
+            ViewBag.CategoryPage = categoryPage;
+            ViewBag.QuestionPage = questionPage;
 
             return View($"{nameof(Part1)}/Index");
         }
